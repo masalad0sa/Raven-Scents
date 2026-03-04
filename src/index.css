@@ -1,0 +1,409 @@
+@import "tailwindcss";
+
+/* ─── Custom Design Tokens ─────────────────────── */
+@theme {
+  --color-primary: #1A0A2E;
+  --color-primary-dark: #0D051A;
+  --color-secondary: #2C1654;
+  --color-gold: #D4AF37;
+  --color-gold-light: #E8C94F;
+  --color-gold-dark: #B8960A;
+  --color-rose: #C9A0A0;
+  --color-ivory: #FAF6EE;
+  --color-surface: #F5F0E8;
+  --color-text: #1A1A1A;
+  --color-muted: #6B5B95;
+  --color-success: #2ECC71;
+  --color-error: #E74C3C;
+
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Montserrat", sans-serif;
+}
+
+/* ─── Base Reset ────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-ivory);
+  color: var(--color-text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ─── Custom Scrollbar ──────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ivory);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-dark);
+}
+
+/* ─── Custom Selection ──────────────────────────── */
+::selection {
+  background: var(--color-gold);
+  color: var(--color-primary);
+}
+
+/* ─── Typography Helpers ────────────────────────── */
+.font-serif { font-family: var(--font-serif); }
+.font-display { font-family: var(--font-display); }
+.font-sans { font-family: var(--font-sans); }
+
+/* ─── Custom Cursor ─────────────────────────────── */
+.cursor-outer {
+  position: fixed;
+  top: 0; left: 0;
+  width: 40px; height: 40px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s, width 0.25s, height 0.25s, border-color 0.25s, background 0.25s;
+  mix-blend-mode: multiply;
+}
+
+.cursor-inner {
+  position: fixed;
+  top: 0; left: 0;
+  width: 8px; height: 8px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-outer.hovered {
+  width: 60px;
+  height: 60px;
+  background: rgba(212, 175, 55, 0.1);
+  border-color: var(--color-gold);
+}
+
+/* ─── Gradient Blob Texture ─────────────────────── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 150px 150px;
+}
+
+/* ─── Line Pattern Overlay (itsoffbrand dashed circles) ─ */
+.hud-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(26, 10, 46, 0.08);
+  pointer-events: none;
+}
+
+/* ─── Scroll Animations ─────────────────────────── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Button Base ───────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.875rem 2rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: none;
+  outline: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-ivory);
+}
+.btn-primary:hover {
+  background: var(--color-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(26, 10, 46, 0.25);
+}
+
+.btn-gold {
+  background: var(--color-gold);
+  color: var(--color-primary);
+}
+.btn-gold:hover {
+  background: var(--color-gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+.btn-outline:hover {
+  background: var(--color-primary);
+  color: var(--color-ivory);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-primary);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+}
+.btn-ghost:hover {
+  border-bottom-color: var(--color-gold);
+}
+
+/* ─── Card ──────────────────────────────────────── */
+.card {
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(26, 10, 46, 0.12);
+}
+
+/* ─── Product Image Hover ────────────────────────── */
+.product-img-wrap {
+  overflow: hidden;
+  position: relative;
+}
+.product-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.product-img-wrap:hover img {
+  transform: scale(1.07);
+}
+
+/* ─── Badge ─────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+}
+.badge-gold {
+  background: var(--color-gold);
+  color: var(--color-primary);
+}
+.badge-dark {
+  background: var(--color-primary);
+  color: var(--color-ivory);
+}
+.badge-rose {
+  background: var(--color-rose);
+  color: #fff;
+}
+
+/* ─── Input ─────────────────────────────────────── */
+.input {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  padding: 0.875rem 1rem;
+  background: #fff;
+  border: 1.5px solid #E0D5C5;
+  border-radius: 4px;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.25s ease;
+}
+.input:focus {
+  border-color: var(--color-gold);
+}
+.input::placeholder {
+  color: #B0A090;
+}
+
+/* ─── Section spacing ────────────────────────────── */
+.section {
+  padding: 5rem 0;
+}
+
+/* ─── Container ─────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+  .section {
+    padding: 3.5rem 0;
+  }
+}
+
+/* ─── Skeleton loading ───────────────────────────── */
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #EDE8DE 25%, #F5F0E8 50%, #EDE8DE 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 4px;
+}
+
+/* ─── Divider ────────────────────────────────────── */
+.divider {
+  width: 48px;
+  height: 2px;
+  background: var(--color-gold);
+  margin: 1.25rem 0;
+}
+
+/* ─── Embla Carousel ─────────────────────────────── */
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+  gap: 1.5rem;
+}
+.embla__slide {
+  flex: 0 0 320px;
+  min-width: 0;
+}
+
+/* ─── Cart Drawer ────────────────────────────────── */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 10, 46, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+}
+.cart-drawer {
+  position: fixed;
+  top: 0; right: 0;
+  height: 100vh;
+  width: min(480px, 100vw);
+  background: var(--color-ivory);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -20px 0 60px rgba(26, 10, 46, 0.2);
+}
+
+/* ─── Fragrance Pyramid ──────────────────────────── */
+.pyramid-tier {
+  transition: background 0.3s ease;
+}
+
+/* ─── Tab ────────────────────────────────────────── */
+.tab-btn {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: #888;
+  transition: color 0.25s, border-color 0.25s;
+}
+.tab-btn.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-gold);
+}
+
+/* ─── Mobile nav ─────────────────────────────────── */
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+  }
+  .cursor-outer, .cursor-inner {
+    display: none;
+  }
+}
+
+/* ─── Checkout Steps ────────────────────────────── */
+.step-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+.step-dot.active {
+  background: var(--color-gold);
+  color: var(--color-primary);
+}
+.step-dot.done {
+  background: var(--color-primary);
+  color: #fff;
+}
+.step-dot.inactive {
+  background: #E0D5C5;
+  color: #999;
+}
+
+/* ─── Rating Stars ───────────────────────────────── */
+.star {
+  color: var(--color-gold);
+}
+.star-empty {
+  color: #DDD;
+}
+
+/* ─── No-scrollbar ───────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
