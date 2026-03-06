@@ -19,6 +19,10 @@
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-display: "Montserrat", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  --color-bg: #0d0d0d;
+  --color-text-muted: #9a9590;
 }
 
 /* ─── Base Reset ────────────────────────────────── */
@@ -326,7 +330,7 @@ body {
   right: 0;
   height: 100vh;
   width: min(480px, 100vw);
-  background: var(--color-ivory);
+  background: #111111;
   z-index: 999;
   display: flex;
   flex-direction: column;

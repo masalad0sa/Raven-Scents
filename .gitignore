@@ -48,6 +48,9 @@ pnpm-debug.log*
 # Temporary files
 *.tmp
 *.temp
+
+# Product images
+apps/web/public/products
 /tmp/
 
 # Misc helper scripts from dev

@@ -78,11 +78,19 @@ export const useCartStore = create<CartStore>()(
 
       getTotalItems: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
       getSubtotal: () =>
-        get().items.reduce((sum, i) => sum + i.variant.price * i.quantity, 0),
+        get().items.reduce(
+          (sum, i) => sum + (i.variant?.price ?? 0) * i.quantity,
+          0,
+        ),
     }),
     {
       name: "raven-cart",
       partialize: (state) => ({ items: state.items }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.items = state.items.filter((i) => i?.product && i?.variant);
+        }
+      },
     },
   ),
 );

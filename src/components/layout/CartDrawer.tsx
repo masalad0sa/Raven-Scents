@@ -240,7 +240,7 @@ export function CartDrawer() {
                               fontFamily: "var(--font-serif)",
                               fontSize: "1rem",
                               fontWeight: 500,
-                              color: "var(--color-primary)",
+                              color: "var(--color-text)",
                               marginBottom: "0.3rem",
                             }}
                           >
@@ -287,7 +287,7 @@ export function CartDrawer() {
                                 background: "none",
                                 border: "none",
                                 cursor: "pointer",
-                                color: "var(--color-primary)",
+                                color: "var(--color-text)",
                                 display: "flex",
                                 padding: 0,
                               }}
@@ -301,7 +301,7 @@ export function CartDrawer() {
                                 fontWeight: 600,
                                 minWidth: 16,
                                 textAlign: "center",
-                                color: "var(--color-primary)",
+                                color: "var(--color-text)",
                               }}
                             >
                               {item.quantity}
@@ -318,7 +318,7 @@ export function CartDrawer() {
                                 background: "none",
                                 border: "none",
                                 cursor: "pointer",
-                                color: "var(--color-primary)",
+                                color: "var(--color-text)",
                                 display: "flex",
                                 padding: 0,
                               }}
@@ -338,7 +338,7 @@ export function CartDrawer() {
                                 fontFamily: "var(--font-display)",
                                 fontSize: "0.85rem",
                                 fontWeight: 700,
-                                color: "var(--color-primary)",
+                                color: "var(--color-text)",
                               }}
                             >
                               ₹
@@ -408,7 +408,7 @@ export function CartDrawer() {
                       fontFamily: "var(--font-display)",
                       fontSize: "0.85rem",
                       fontWeight: 600,
-                      color: "var(--color-primary)",
+                      color: "var(--color-text)",
                     }}
                   >
                     ₹{subtotal.toLocaleString("en-IN")}
@@ -438,7 +438,7 @@ export function CartDrawer() {
                       color:
                         shippingFee === 0
                           ? "var(--color-success)"
-                          : "var(--color-primary)",
+                          : "var(--color-text)",
                     }}
                   >
                     {shippingFee === 0 ? "Free" : `₹${shippingFee}`}
