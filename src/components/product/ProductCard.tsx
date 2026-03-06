@@ -24,6 +24,7 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!defaultVariant) return;
     addItem(product, defaultVariant);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);

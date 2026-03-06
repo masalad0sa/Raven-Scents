@@ -5,13 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 export function CartDrawer() {
   const {
-    items,
+    items: rawItems,
     isOpen,
     closeDrawer,
     removeItem,
     updateQuantity,
     getSubtotal,
   } = useCartStore();
+  const items = rawItems.filter((i) => i?.product && i?.variant);
   const subtotal = getSubtotal();
   const navigate = useNavigate();
 

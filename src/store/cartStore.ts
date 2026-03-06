@@ -27,6 +27,7 @@ export const useCartStore = create<CartStore>()(
       isOpen: false,
 
       addItem: (product, variant, quantity = 1) => {
+        if (!variant) return;
         set((state) => {
           const existing = state.items.find(
             (i) => i.product.id === product.id && i.variant.sku === variant.sku,
