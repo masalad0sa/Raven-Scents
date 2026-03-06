@@ -42,12 +42,10 @@ export const useCartStore = create<CartStore>()(
                   ? { ...i, quantity: i.quantity + quantity }
                   : i,
               ),
-              isOpen: true,
             };
           }
           return {
             items: [...state.items, { product, variant, quantity }],
-            isOpen: true,
           };
         });
       },

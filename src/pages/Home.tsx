@@ -416,7 +416,7 @@ export default function Home() {
               </Link>
             </motion.div>
 
-            <div
+            {/* <div
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
@@ -448,7 +448,7 @@ export default function Home() {
                 image="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
                 link="/shop"
               />
-            </div>
+            </div> */}
 
             <div
               style={{
@@ -561,7 +561,6 @@ export default function Home() {
                 {[
                   "https://images.unsplash.com/photo-1619994403073-2cec844b8e63?w=400&q=80",
                   "https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=400&q=80",
-                  "https://images.unsplash.com/photo-1594035491768-73b0cbb7c0fa?w=400&q=80",
                   "https://images.unsplash.com/photo-1524638431109-93d95c968f03?w=400&q=80",
                 ].map((url, i) => (
                   <img
