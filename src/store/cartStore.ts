@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { CartItem, Product, Variant } from "../types";
+import { supabase } from "../lib/supabase";
 
 interface CartStore {
   items: CartItem[];
@@ -18,6 +19,8 @@ interface CartStore {
   openDrawer: () => void;
   getTotalItems: () => number;
   getSubtotal: () => number;
+  syncToSupabase: (userId: string) => Promise<void>;
+  hydrate: (userId: string) => Promise<void>;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -83,6 +86,40 @@ export const useCartStore = create<CartStore>()(
           (sum, i) => sum + (i.variant?.price ?? 0) * i.quantity,
           0,
         ),
+
+      syncToSupabase: async (userId) => {
+        const { items } = get();
+        if (!items.length) return;
+        const rows = items.map((item) => ({
+          user_id: userId,
+          product_id: item.product.id,
+          variant_sku: item.variant.sku,
+          quantity: item.quantity,
+          item_data: item,
+          updated_at: new Date().toISOString(),
+        }));
+        await supabase
+          .from("cart_items")
+          .upsert(rows, { onConflict: "user_id,variant_sku" });
+      },
+
+      hydrate: async (userId) => {
+        const { data } = await supabase
+          .from("cart_items")
+          .select("item_data, quantity")
+          .eq("user_id", userId);
+        if (!data?.length) return;
+        const serverItems: CartItem[] = data.map((row) => ({
+          ...(row.item_data as CartItem),
+          quantity: row.quantity as number,
+        }));
+        // Merge: keep any local items whose variant isn't already on the server
+        const serverSkus = new Set(serverItems.map((i) => i.variant.sku));
+        const extraLocal = get().items.filter(
+          (i) => !serverSkus.has(i.variant.sku),
+        );
+        set({ items: [...serverItems, ...extraLocal] });
+      },
     }),
     {
       name: "raven-cart",

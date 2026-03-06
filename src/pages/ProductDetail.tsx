@@ -13,6 +13,8 @@ import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { ProductCard } from "../components/product/ProductCard";
 import { useCartStore } from "../store/cartStore";
+import { useWishlistStore } from "../store/wishlistStore";
+import { useAuthStore } from "../store/authStore";
 import { useProduct, useProducts } from "../hooks/useProducts";
 import { Variant } from "../types";
 
@@ -144,11 +146,20 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState(0);
   const [activeTab, setActiveTab] = useState<Tab>("Description");
-  const [wishlisted, setWishlisted] = useState(false);
   const [added, setAdded] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [direction, setDirection] = useState(1);
   const { addItem } = useCartStore();
+
+  // Set default variant once product loads (useState initial is null while loading)
+  useEffect(() => {
+    if (product && !selectedVariant) {
+      setSelectedVariant(product.variants[1] ?? product.variants[0] ?? null);
+    }
+  }, [product]);
+  const { toggle, isWishlisted } = useWishlistStore();
+  const { user } = useAuthStore();
+  const wishlisted = product ? isWishlisted(product.id) : false;
 
   const goTo = (next: number, dir: number) => {
     setDirection(dir);
@@ -737,7 +748,9 @@ export default function ProductDetail() {
 
                 {/* Wishlist */}
                 <button
-                  onClick={() => setWishlisted(!wishlisted)}
+                  onClick={() =>
+                    product && toggle(product.id, user?.id ?? null)
+                  }
                   style={{
                     display: "flex",
                     alignItems: "center",

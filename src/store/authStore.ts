@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
+import { useCartStore } from "./cartStore";
+import { useWishlistStore } from "./wishlistStore";
 
 interface AuthStore {
   user: User | null;
@@ -8,7 +10,7 @@ interface AuthStore {
   isLoading: boolean;
   initialized: boolean;
 
-  initialize: () => Promise<void>;
+  initialize: () => Promise<() => void>;
   login: (email: string, password: string) => Promise<{ error: string | null }>;
   signup: (
     email: string,
@@ -30,9 +32,25 @@ export const useAuthStore = create<AuthStore>((set) => ({
     } = await supabase.auth.getSession();
     set({ user: session?.user ?? null, session, initialized: true });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      set({ user: session?.user ?? null, session });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        set({ user: null, session: null });
+        useCartStore.getState().clearCart();
+        useWishlistStore.getState().clear();
+      } else if (
+        event === "SIGNED_IN" ||
+        event === "TOKEN_REFRESHED" ||
+        event === "USER_UPDATED" ||
+        event === "INITIAL_SESSION"
+      ) {
+        set({ user: session?.user ?? null, session });
+      }
     });
+
+    // Return unsubscribe so App.tsx can clean up on unmount
+    return () => subscription.unsubscribe();
   },
 
   login: async (email, password) => {
