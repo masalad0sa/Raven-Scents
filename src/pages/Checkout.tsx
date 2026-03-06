@@ -289,7 +289,10 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="container" style={{ padding: isMobile ? '1.5rem 1rem' : '3rem 2rem' }}>
+        <div
+          className="container"
+          style={{ padding: isMobile ? "1.5rem 1rem" : "3rem 2rem" }}
+        >
           <div
             style={{
               display: "grid",

@@ -319,7 +319,11 @@ export default function About() {
                     gap: isMobile ? "1.25rem" : "3rem",
                     alignItems: "flex-start",
                     marginBottom: "3rem",
-                    flexDirection: isMobile ? "row" : (i % 2 === 0 ? "row" : "row-reverse"),
+                    flexDirection: isMobile
+                      ? "row"
+                      : i % 2 === 0
+                        ? "row"
+                        : "row-reverse",
                   }}
                 >
                   {isMobile ? (
@@ -374,59 +378,59 @@ export default function About() {
                     </>
                   ) : (
                     <>
-                  <div
-                    style={{
-                      flex: 1,
-                      textAlign: i % 2 === 0 ? "right" : "left",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "var(--font-serif)",
-                        fontSize: "2.5rem",
-                        fontWeight: 300,
-                        color: "var(--color-gold)",
-                        display: "block",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {item.year}
-                    </span>
-                    <h3
-                      style={{
-                        fontFamily: "var(--font-serif)",
-                        fontSize: "1.25rem",
-                        fontWeight: 500,
-                        color: "var(--color-text)",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.875rem",
-                        color: "var(--color-muted)",
-                        lineHeight: 1.8,
-                      }}
-                    >
-                      {item.desc}
-                    </p>
-                  </div>
-                  {/* Center dot */}
-                  <div
-                    style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      background: "var(--color-gold)",
-                      flexShrink: 0,
-                      marginTop: "2.5rem",
-                      boxShadow: "0 0 0 4px rgba(212,175,55,0.2)",
-                    }}
-                  />
-                  <div style={{ flex: 1 }} />
+                      <div
+                        style={{
+                          flex: 1,
+                          textAlign: i % 2 === 0 ? "right" : "left",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: "var(--font-serif)",
+                            fontSize: "2.5rem",
+                            fontWeight: 300,
+                            color: "var(--color-gold)",
+                            display: "block",
+                            lineHeight: 1,
+                          }}
+                        >
+                          {item.year}
+                        </span>
+                        <h3
+                          style={{
+                            fontFamily: "var(--font-serif)",
+                            fontSize: "1.25rem",
+                            fontWeight: 500,
+                            color: "var(--color-text)",
+                            marginBottom: "0.5rem",
+                          }}
+                        >
+                          {item.title}
+                        </h3>
+                        <p
+                          style={{
+                            fontFamily: "var(--font-sans)",
+                            fontSize: "0.875rem",
+                            color: "var(--color-muted)",
+                            lineHeight: 1.8,
+                          }}
+                        >
+                          {item.desc}
+                        </p>
+                      </div>
+                      {/* Center dot */}
+                      <div
+                        style={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: "50%",
+                          background: "var(--color-gold)",
+                          flexShrink: 0,
+                          marginTop: "2.5rem",
+                          boxShadow: "0 0 0 4px rgba(212,175,55,0.2)",
+                        }}
+                      />
+                      <div style={{ flex: 1 }} />
                     </>
                   )}
                 </motion.div>

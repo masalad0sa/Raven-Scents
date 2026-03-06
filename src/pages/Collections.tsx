@@ -253,8 +253,9 @@ export default function Collections() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns:
-                      isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(260px, 1fr))",
+                    gridTemplateColumns: isMobile
+                      ? "repeat(2, 1fr)"
+                      : "repeat(auto-fill, minmax(260px, 1fr))",
                     gap: "2rem",
                   }}
                 >

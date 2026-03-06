@@ -193,7 +193,10 @@ export default function Shop() {
           </div>
         </div>
 
-        <div className="container" style={{ padding: isMobile ? "1rem" : "2rem 2rem" }}>
+        <div
+          className="container"
+          style={{ padding: isMobile ? "1rem" : "2rem 2rem" }}
+        >
           {/* Controls bar */}
           <div
             style={{
@@ -282,212 +285,234 @@ export default function Shop() {
           >
             {/* Sidebar — overlay on mobile, inline on desktop */}
             <AnimatePresence>
-            {sidebarOpen && (
-              <>
-                {/* Mobile overlay backdrop */}
-                {isMobile && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={() => setSidebarOpen(false)}
-                    style={{
-                      position: "fixed",
-                      inset: 0,
-                      background: "rgba(0,0,0,0.6)",
-                      zIndex: 998,
-                    }}
-                  />
-                )}
-                <motion.aside
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  style={{
-                    width: isMobile ? "85vw" : 240,
-                    maxWidth: isMobile ? 320 : 240,
-                    flexShrink: 0,
-                    background: "#1a1a1a",
-                    borderRadius: isMobile ? 0 : 6,
-                    padding: "1.5rem",
-                    border: isMobile ? "none" : "1px solid rgba(212,175,55,0.15)",
-                    ...(isMobile
-                      ? { position: "fixed" as const, top: 0, left: 0, bottom: 0, zIndex: 999, overflowY: "auto" as const }
-                      : { position: "sticky" as const, top: 92, maxHeight: "calc(100vh - 110px)", overflowY: "auto" as const }),
-                  }}
-                  className="no-scrollbar"
-                >
+              {sidebarOpen && (
+                <>
+                  {/* Mobile overlay backdrop */}
                   {isMobile && (
-                    <button
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                       onClick={() => setSidebarOpen(false)}
                       style={{
-                        position: "absolute",
-                        top: 16,
-                        right: 16,
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        color: "var(--color-muted)",
-                      }}
-                    >
-                      <X size={20} />
-                    </button>
-                  )}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "1.5rem",
-                  }}
-                >
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "0.7rem",
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      color: "var(--color-text)",
-                    }}
-                  >
-                    Filters
-                  </h3>
-                  {hasFilters && (
-                    <button
-                      onClick={clearAll}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        color: "var(--color-gold)",
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.6rem",
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Clear All
-                    </button>
-                  )}
-                </div>
-
-                {/* Price — at top */}
-                {filterSection(
-                  "Max Price",
-                  <>
-                    <input
-                      type="range"
-                      min={0}
-                      max={50000}
-                      step={500}
-                      value={priceMax}
-                      onChange={(e) => setPriceMax(Number(e.target.value))}
-                      style={{
-                        width: "100%",
-                        accentColor: "var(--color-gold)",
-                        display: "block",
-                        marginBottom: "0.5rem",
+                        position: "fixed",
+                        inset: 0,
+                        background: "rgba(0,0,0,0.6)",
+                        zIndex: 998,
                       }}
                     />
-                    <span
+                  )}
+                  <motion.aside
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    style={{
+                      width: isMobile ? "85vw" : 240,
+                      maxWidth: isMobile ? 320 : 240,
+                      flexShrink: 0,
+                      background: "#1a1a1a",
+                      borderRadius: isMobile ? 0 : 6,
+                      padding: "1.5rem",
+                      border: isMobile
+                        ? "none"
+                        : "1px solid rgba(212,175,55,0.15)",
+                      ...(isMobile
+                        ? {
+                            position: "fixed" as const,
+                            top: 0,
+                            left: 0,
+                            bottom: 0,
+                            zIndex: 999,
+                            overflowY: "auto" as const,
+                          }
+                        : {
+                            position: "sticky" as const,
+                            top: 92,
+                            maxHeight: "calc(100vh - 110px)",
+                            overflowY: "auto" as const,
+                          }),
+                    }}
+                    className="no-scrollbar"
+                  >
+                    {isMobile && (
+                      <button
+                        onClick={() => setSidebarOpen(false)}
+                        style={{
+                          position: "absolute",
+                          top: 16,
+                          right: 16,
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          color: "var(--color-muted)",
+                        }}
+                      >
+                        <X size={20} />
+                      </button>
+                    )}
+                    <div
                       style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.75rem",
-                        fontWeight: 700,
-                        color: "var(--color-gold)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        marginBottom: "1.5rem",
                       }}
                     >
-                      Up to ₹{priceMax.toLocaleString("en-IN")}
-                    </span>
-                  </>,
-                )}
-
-                {/* Collection */}
-                {filterSection(
-                  "Collection",
-                  <>
-                    {[
-                      { label: "New Arrivals", val: showNew, set: setShowNew },
-                      {
-                        label: "Bestsellers",
-                        val: showBestseller,
-                        set: setShowBestseller,
-                      },
-                    ].map(({ label, val, set }) => (
-                      <label key={label} style={checkStyle(val)}>
-                        <input
-                          type="checkbox"
-                          checked={val}
-                          onChange={() => set(!val)}
-                          style={{ accentColor: "var(--color-gold)" }}
-                        />
-                        {label}
-                      </label>
-                    ))}
-                  </>,
-                )}
-
-                {/* Gender */}
-                {filterSection(
-                  "Gender",
-                  <>
-                    {["masculine", "feminine", "unisex"].map((g) => (
-                      <label
-                        key={g}
-                        style={checkStyle(selectedGender.includes(g))}
+                      <h3
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: "0.7rem",
+                          letterSpacing: "0.15em",
+                          textTransform: "uppercase",
+                          color: "var(--color-text)",
+                        }}
                       >
-                        <input
-                          type="checkbox"
-                          checked={selectedGender.includes(g)}
-                          onChange={() =>
-                            toggleFilter(selectedGender, g, setSelectedGender)
-                          }
-                          style={{ accentColor: "var(--color-gold)" }}
-                        />
-                        {g.charAt(0).toUpperCase() + g.slice(1)}
-                      </label>
-                    ))}
-                  </>,
-                )}
+                        Filters
+                      </h3>
+                      {hasFilters && (
+                        <button
+                          onClick={clearAll}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            color: "var(--color-gold)",
+                            fontFamily: "var(--font-display)",
+                            fontSize: "0.6rem",
+                            letterSpacing: "0.1em",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          Clear All
+                        </button>
+                      )}
+                    </div>
 
-                {/* Scent Family */}
-                <div>
-                  <h4
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "0.62rem",
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
-                      color: "var(--color-muted)",
-                      marginBottom: "0.75rem",
-                    }}
-                  >
-                    Scent Family
-                  </h4>
-                  {scentFamilies.map((sf) => (
-                    <label
-                      key={sf}
-                      style={checkStyle(selectedScentFamilies.includes(sf))}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedScentFamilies.includes(sf)}
-                        onChange={() =>
-                          toggleFilter(
-                            selectedScentFamilies,
-                            sf,
-                            setSelectedScentFamilies,
-                          )
-                        }
-                        style={{ accentColor: "var(--color-gold)" }}
-                      />
-                      {sf}
-                    </label>
-                  ))}
-                </div>
-              </motion.aside>
-              </>
-            )}
+                    {/* Price — at top */}
+                    {filterSection(
+                      "Max Price",
+                      <>
+                        <input
+                          type="range"
+                          min={0}
+                          max={50000}
+                          step={500}
+                          value={priceMax}
+                          onChange={(e) => setPriceMax(Number(e.target.value))}
+                          style={{
+                            width: "100%",
+                            accentColor: "var(--color-gold)",
+                            display: "block",
+                            marginBottom: "0.5rem",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontFamily: "var(--font-display)",
+                            fontSize: "0.75rem",
+                            fontWeight: 700,
+                            color: "var(--color-gold)",
+                          }}
+                        >
+                          Up to ₹{priceMax.toLocaleString("en-IN")}
+                        </span>
+                      </>,
+                    )}
+
+                    {/* Collection */}
+                    {filterSection(
+                      "Collection",
+                      <>
+                        {[
+                          {
+                            label: "New Arrivals",
+                            val: showNew,
+                            set: setShowNew,
+                          },
+                          {
+                            label: "Bestsellers",
+                            val: showBestseller,
+                            set: setShowBestseller,
+                          },
+                        ].map(({ label, val, set }) => (
+                          <label key={label} style={checkStyle(val)}>
+                            <input
+                              type="checkbox"
+                              checked={val}
+                              onChange={() => set(!val)}
+                              style={{ accentColor: "var(--color-gold)" }}
+                            />
+                            {label}
+                          </label>
+                        ))}
+                      </>,
+                    )}
+
+                    {/* Gender */}
+                    {filterSection(
+                      "Gender",
+                      <>
+                        {["masculine", "feminine", "unisex"].map((g) => (
+                          <label
+                            key={g}
+                            style={checkStyle(selectedGender.includes(g))}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedGender.includes(g)}
+                              onChange={() =>
+                                toggleFilter(
+                                  selectedGender,
+                                  g,
+                                  setSelectedGender,
+                                )
+                              }
+                              style={{ accentColor: "var(--color-gold)" }}
+                            />
+                            {g.charAt(0).toUpperCase() + g.slice(1)}
+                          </label>
+                        ))}
+                      </>,
+                    )}
+
+                    {/* Scent Family */}
+                    <div>
+                      <h4
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: "0.62rem",
+                          letterSpacing: "0.12em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted)",
+                          marginBottom: "0.75rem",
+                        }}
+                      >
+                        Scent Family
+                      </h4>
+                      {scentFamilies.map((sf) => (
+                        <label
+                          key={sf}
+                          style={checkStyle(selectedScentFamilies.includes(sf))}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedScentFamilies.includes(sf)}
+                            onChange={() =>
+                              toggleFilter(
+                                selectedScentFamilies,
+                                sf,
+                                setSelectedScentFamilies,
+                              )
+                            }
+                            style={{ accentColor: "var(--color-gold)" }}
+                          />
+                          {sf}
+                        </label>
+                      ))}
+                    </div>
+                  </motion.aside>
+                </>
+              )}
             </AnimatePresence>
 
             {/* Product Grid */}
@@ -496,8 +521,9 @@ export default function Shop() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns:
-                      isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(250px, 1fr))",
+                    gridTemplateColumns: isMobile
+                      ? "repeat(2, 1fr)"
+                      : "repeat(auto-fill, minmax(250px, 1fr))",
                     gap: isMobile ? "0.75rem" : "1.25rem",
                   }}
                 >
@@ -534,8 +560,9 @@ export default function Shop() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns:
-                      isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(250px, 1fr))",
+                    gridTemplateColumns: isMobile
+                      ? "repeat(2, 1fr)"
+                      : "repeat(auto-fill, minmax(250px, 1fr))",
                     gap: isMobile ? "0.75rem" : "1.25rem",
                   }}
                 >

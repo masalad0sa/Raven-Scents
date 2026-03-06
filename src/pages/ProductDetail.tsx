@@ -301,7 +301,10 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        <div className="container" style={{ padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem" }}>
+        <div
+          className="container"
+          style={{ padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem" }}
+        >
           <div
             style={{
               display: "grid",
@@ -317,7 +320,11 @@ export default function ProductDetail() {
               transition={{ duration: 0.6 }}
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
-              style={{ display: "flex", flexDirection: isMobile ? "column-reverse" : "row", gap: "0.6rem" }}
+              style={{
+                display: "flex",
+                flexDirection: isMobile ? "column-reverse" : "row",
+                gap: "0.6rem",
+              }}
             >
               {/* Thumbnail strip */}
               <div
@@ -860,7 +867,12 @@ export default function ProductDetail() {
                 </button>
               ))}
             </div>
-            <div style={{ padding: isMobile ? "1.25rem 0" : "2rem 0", maxWidth: isMobile ? "100%" : 700 }}>
+            <div
+              style={{
+                padding: isMobile ? "1.25rem 0" : "2rem 0",
+                maxWidth: isMobile ? "100%" : 700,
+              }}
+            >
               {activeTab === "Description" && (
                 <p
                   style={{
@@ -1070,7 +1082,9 @@ export default function ProductDetail() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(240px, 1fr))",
+                  gridTemplateColumns: isMobile
+                    ? "repeat(2, 1fr)"
+                    : "repeat(auto-fill, minmax(240px, 1fr))",
                   gap: isMobile ? "0.75rem" : "1.25rem",
                 }}
               >

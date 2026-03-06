@@ -455,7 +455,9 @@ export default function Home() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px, 1fr))",
+                gridTemplateColumns: isMobile
+                  ? "repeat(2, 1fr)"
+                  : "repeat(auto-fill, minmax(280px, 1fr))",
                 gap: "1.5rem",
               }}
             >
@@ -623,7 +625,9 @@ export default function Home() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(260px, 1fr))",
+                gridTemplateColumns: isMobile
+                  ? "repeat(2, 1fr)"
+                  : "repeat(auto-fill, minmax(260px, 1fr))",
                 gap: "1.5rem",
               }}
             >

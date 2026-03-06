@@ -105,13 +105,11 @@ export default function Account() {
   const saveProfile = async () => {
     if (!user) return;
     setProfileSaving(true);
-    await supabase
-      .from("profiles")
-      .upsert({
-        id: user.id,
-        ...profileDraft,
-        updated_at: new Date().toISOString(),
-      });
+    await supabase.from("profiles").upsert({
+      id: user.id,
+      ...profileDraft,
+      updated_at: new Date().toISOString(),
+    });
     setProfile(profileDraft);
     setProfileEditing(false);
     setProfileSaving(false);
@@ -595,7 +593,9 @@ export default function Account() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px,1fr))",
+                    gridTemplateColumns: isMobile
+                      ? "repeat(2, 1fr)"
+                      : "repeat(auto-fill, minmax(280px,1fr))",
                     gap: "1rem",
                   }}
                 >

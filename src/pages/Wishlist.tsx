@@ -147,7 +147,9 @@ export default function Wishlist() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px,1fr))",
+                gridTemplateColumns: isMobile
+                  ? "repeat(2, 1fr)"
+                  : "repeat(auto-fill, minmax(280px,1fr))",
                 gap: "1.5rem",
               }}
             >
@@ -170,7 +172,9 @@ export default function Wishlist() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px,1fr))",
+                gridTemplateColumns: isMobile
+                  ? "repeat(2, 1fr)"
+                  : "repeat(auto-fill, minmax(280px,1fr))",
                 gap: "1.5rem",
               }}
             >
