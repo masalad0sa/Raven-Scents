@@ -4,6 +4,7 @@ import { ArrowRight, Leaf, FlaskConical, Sparkles, Globe } from "lucide-react";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { GradientBlob } from "../components/effects/GradientBlob";
+import { useFeaturedProducts } from "../hooks/useProducts";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -65,6 +66,11 @@ const timeline = [
 ];
 
 export default function About() {
+  const { data: featured } = useFeaturedProducts();
+  const processImages = (featured ?? [])
+    .slice(0, 3)
+    .map((p: any) => p.images?.[0])
+    .filter(Boolean);
   return (
     <>
       <Header />
@@ -643,12 +649,7 @@ export default function About() {
                   gap: "1rem",
                 }}
               >
-                {[
-                  "https://images.unsplash.com/photo-1619994403073-2cec844b8e63?w=500&q=80",
-                  "https://images.unsplash.com/photo-1566977776052-6e61e35bf9be?w=500&q=80",
-                  "https://images.unsplash.com/photo-1594035491768-73b0cbb7c0fa?w=500&q=80",
-                  "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=500&q=80",
-                ].map((url, i) => (
+                {processImages.map((url: string, i: number) => (
                   <img
                     key={i}
                     src={url}
