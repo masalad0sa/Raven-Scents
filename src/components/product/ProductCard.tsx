@@ -20,11 +20,13 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
   const wishlisted = isWishlisted(product.id);
 
   const defaultVariant = product.variants[0];
+  const isOutOfStock =
+    !defaultVariant || product.variants.every((v) => v.stock <= 0);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!defaultVariant) return;
+    if (isOutOfStock) return;
     addItem(product, defaultVariant);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
@@ -177,6 +179,38 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
               )}
             </div>
 
+            {/* Out of stock overlay */}
+            {isOutOfStock && (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "rgba(0,0,0,0.55)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: "#fff",
+                    background: "rgba(0,0,0,0.72)",
+                    border: "1px solid rgba(255,255,255,0.25)",
+                    borderRadius: 3,
+                    padding: "0.45rem 1rem",
+                  }}
+                >
+                  Out of Stock
+                </span>
+              </div>
+            )}
+
             {/* Add to cart hover overlay */}
             <div
               style={{
@@ -194,12 +228,15 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
             >
               <button
                 onClick={handleAddToCart}
+                disabled={isOutOfStock}
                 style={{
                   width: "100%",
-                  background: added
-                    ? "var(--color-success)"
-                    : "var(--color-gold)",
-                  color: "var(--color-primary)",
+                  background: isOutOfStock
+                    ? "#333"
+                    : added
+                      ? "var(--color-success)"
+                      : "var(--color-gold)",
+                  color: isOutOfStock ? "#666" : "var(--color-primary)",
                   border: "none",
                   borderRadius: 3,
                   padding: "0.65rem 1rem",
@@ -208,7 +245,7 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
                   fontWeight: 700,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  cursor: "pointer",
+                  cursor: isOutOfStock ? "not-allowed" : "pointer",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -217,7 +254,11 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
                 }}
               >
                 <ShoppingBag size={12} />
-                {added ? "Added!" : "Add to Cart"}
+                {isOutOfStock
+                  ? "Out of Stock"
+                  : added
+                    ? "Added!"
+                    : "Add to Cart"}
               </button>
             </div>
           </div>
