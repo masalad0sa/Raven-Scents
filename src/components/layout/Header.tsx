@@ -16,6 +16,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -29,7 +31,16 @@ export function Header() {
   const wishlistCount = wishlistIds.length;
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 0);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 0);
+      if (y > lastScrollY.current && y > 72) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+      lastScrollY.current = y;
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -69,7 +80,9 @@ export function Header() {
           left: 0,
           right: 0,
           zIndex: 100,
-          transition: "all 0.4s ease",
+          transition:
+            "transform 0.35s ease, background 0.4s ease, border-color 0.4s ease",
+          transform: hidden ? "translateY(-100%)" : "translateY(0)",
           background: scrolled ? "rgba(13, 13, 13, 0.92)" : "transparent",
           backdropFilter: scrolled ? "blur(16px)" : "none",
           borderBottom: scrolled
@@ -103,7 +116,7 @@ export function Header() {
 
           {/* Desktop Nav */}
           <nav
-            style={{ display: "flex", alignItems: "center", gap: "2.5rem" }}
+            style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}
             className="desktop-nav"
           >
             {[
@@ -116,9 +129,9 @@ export function Header() {
                 to={item.to}
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "0.7rem",
+                  fontSize: "0.65rem",
                   fontWeight: 600,
-                  letterSpacing: "0.15em",
+                  letterSpacing: "0.1em",
                   textTransform: "uppercase",
                   color: "var(--color-text)",
                   textDecoration: "none",

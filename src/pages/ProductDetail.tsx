@@ -1,7 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ShoppingBag, Heart, Minus, Plus, ChevronLeft } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ShoppingBag,
+  Heart,
+  Minus,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { ProductCard } from "../components/product/ProductCard";
@@ -11,7 +18,7 @@ import { Variant } from "../types";
 
 const TABS = [
   "Description",
-  "Fragrance Notes",
+  "Fragrance Pyramid",
   "How to Wear",
   "Reviews",
 ] as const;
@@ -46,19 +53,7 @@ function FragrancePyramid({
     },
   ];
   return (
-    <div style={{ padding: "1.5rem 0" }}>
-      <h3
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "0.7rem",
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-          color: "var(--color-muted)",
-          marginBottom: "1.5rem",
-        }}
-      >
-        Fragrance Pyramid
-      </h3>
+    <div style={{ padding: "0.75rem 0" }}>
       <div
         style={{
           display: "flex",
@@ -76,7 +71,11 @@ function FragrancePyramid({
               style={{
                 borderRadius:
                   i === 2 ? "0 0 6px 6px" : i === 0 ? "6px 6px 0 0" : "0",
-                padding: "1rem 1.5rem",
+                padding: "0.6rem 1rem",
+                minHeight: 68,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
                 background: `linear-gradient(135deg, ${i === 0 ? "#d4af37, #e8c94f" : i === 1 ? "#8a7e6b, #9a9590" : "#0d0d0d, #1a1a1a"})`,
                 color: i === 2 ? "var(--color-text)" : "#0d0d0d",
               }}
@@ -147,7 +146,23 @@ export default function ProductDetail() {
   const [activeTab, setActiveTab] = useState<Tab>("Description");
   const [wishlisted, setWishlisted] = useState(false);
   const [added, setAdded] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [direction, setDirection] = useState(1);
   const { addItem } = useCartStore();
+
+  const goTo = (next: number, dir: number) => {
+    setDirection(dir);
+    setMainImage(next);
+  };
+
+  useEffect(() => {
+    if (!product || (product.images?.length ?? 0) <= 1 || isHovering) return;
+    const timer = setInterval(() => {
+      setDirection(1);
+      setMainImage((prev) => (prev + 1) % product.images.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [product, isHovering]);
 
   if (isLoading) {
     return (
@@ -239,7 +254,7 @@ export default function ProductDetail() {
         <div
           style={{
             background: "var(--color-surface)",
-            padding: "1rem 0",
+            padding: "0.45rem 0",
             borderBottom: "1px solid rgba(212,175,55,0.15)",
           }}
         >
@@ -268,67 +283,57 @@ export default function ProductDetail() {
               <ChevronLeft size={12} /> Shop
             </Link>
             <span style={{ color: "var(--color-muted)" }}>/</span>
-            <span style={{ color: "var(--color-primary)", fontWeight: 600 }}>
+            <span style={{ color: "var(--color-text)", fontWeight: 600 }}>
               {product.name}
             </span>
           </div>
         </div>
 
-        <div className="container" style={{ padding: "3rem 2rem" }}>
+        <div className="container" style={{ padding: "0.75rem 1.5rem" }}>
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "4rem",
+              gridTemplateColumns: "52% 1fr",
+              gap: "3rem",
               alignItems: "start",
             }}
           >
-            {/* Left — Images */}
+            {/* Left — Images: vertical thumbnails + main image */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+              style={{ display: "flex", gap: "0.6rem" }}
             >
-              {/* Main image */}
+              {/* Vertical thumbnail strip */}
               <div
                 style={{
-                  borderRadius: 8,
-                  overflow: "hidden",
-                  aspectRatio: "4/5",
-                  marginBottom: "1rem",
-                  background: "#1a1a1a",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                  flexShrink: 0,
                 }}
               >
-                <img
-                  src={product.images[mainImage]}
-                  alt={product.name}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    transition: "opacity 0.3s ease",
-                  }}
-                />
-              </div>
-              {/* Thumbnails */}
-              <div style={{ display: "flex", gap: "0.75rem" }}>
                 {product.images.map((img: string, i: number) => (
                   <button
                     key={i}
-                    onClick={() => setMainImage(i)}
+                    onClick={() => goTo(i, i > mainImage ? 1 : -1)}
                     style={{
                       width: 72,
-                      height: 72,
-                      borderRadius: 4,
+                      height: 80,
+                      borderRadius: 6,
                       overflow: "hidden",
                       border:
                         i === mainImage
                           ? "2px solid var(--color-gold)"
-                          : "2px solid transparent",
+                          : "2px solid rgba(255,255,255,0.08)",
                       cursor: "pointer",
-                      background: "none",
+                      background: "#1a1a1a",
                       padding: 0,
                       transition: "border-color 0.2s",
+                      flexShrink: 0,
                     }}
                   >
                     <img
@@ -343,6 +348,88 @@ export default function ProductDetail() {
                   </button>
                 ))}
               </div>
+
+              {/* Main image */}
+              <div
+                style={{
+                  flex: 1,
+                  borderRadius: 8,
+                  overflow: "hidden",
+                  height: "calc(100vh - 200px)",
+                  maxHeight: 560,
+                  background: "#1a1a1a",
+                  position: "relative",
+                }}
+              >
+                <AnimatePresence
+                  initial={false}
+                  custom={direction}
+                  mode="popLayout"
+                >
+                  <motion.img
+                    key={mainImage}
+                    src={product.images[mainImage]}
+                    alt={product.name}
+                    custom={direction}
+                    variants={{
+                      enter: (d: number) => ({
+                        x: d > 0 ? "100%" : "-100%",
+                        opacity: 0,
+                      }),
+                      center: { x: 0, opacity: 1 },
+                      exit: (d: number) => ({
+                        x: d > 0 ? "-100%" : "100%",
+                        opacity: 0,
+                      }),
+                    }}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.38, ease: "easeInOut" }}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </AnimatePresence>
+                {/* Dot indicators */}
+                {product.images.length > 1 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: 12,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      display: "flex",
+                      gap: "6px",
+                      zIndex: 2,
+                    }}
+                  >
+                    {product.images.map((_: string, i: number) => (
+                      <button
+                        key={i}
+                        onClick={() => goTo(i, i > mainImage ? 1 : -1)}
+                        style={{
+                          width: i === mainImage ? 20 : 7,
+                          height: 7,
+                          borderRadius: 4,
+                          background:
+                            i === mainImage
+                              ? "var(--color-gold)"
+                              : "rgba(255,255,255,0.35)",
+                          border: "none",
+                          cursor: "pointer",
+                          padding: 0,
+                          transition: "all 0.3s ease",
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             </motion.div>
 
             {/* Right — Product Info */}
@@ -350,113 +437,39 @@ export default function ProductDetail() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
+              style={{
+                paddingRight: "0.25rem",
+              }}
             >
-              {/* Badges */}
-              <div
-                style={{
-                  display: "flex",
-                  gap: "0.5rem",
-                  marginBottom: "1rem",
-                  flexWrap: "wrap",
-                }}
-              >
-                {product.isNew && <span className="badge badge-gold">New</span>}
-                {product.isBestseller && (
-                  <span className="badge badge-dark">Bestseller</span>
-                )}
-                <span
-                  className="badge"
-                  style={{
-                    background: "rgba(212,175,55,0.1)",
-                    color: "var(--color-muted)",
-                  }}
-                >
-                  {product.gender}
-                </span>
-                <span
-                  className="badge"
-                  style={{
-                    background: "rgba(212,175,55,0.1)",
-                    color: "var(--color-muted)",
-                  }}
-                >
-                  {product.concentration}
-                </span>
-              </div>
-
+              {/* Brand */}
               <p
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "0.7rem",
-                  letterSpacing: "0.15em",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.18em",
                   textTransform: "uppercase",
                   color: "var(--color-muted)",
-                  marginBottom: "0.5rem",
+                  marginBottom: "0.3rem",
                 }}
               >
                 {product.brand}
               </p>
+
+              {/* Name */}
               <h1
                 style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "clamp(2rem, 4vw, 3rem)",
-                  fontWeight: 300,
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(1.5rem, 2.5vw, 2.2rem)",
+                  fontWeight: 700,
                   color: "var(--color-text)",
                   lineHeight: 1.1,
-                  marginBottom: "0.75rem",
+                  letterSpacing: "0.02em",
+                  marginBottom: "0.5rem",
+                  textTransform: "uppercase",
                 }}
               >
                 {product.name}
               </h1>
-
-              {/* Rating */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  marginBottom: "1.25rem",
-                }}
-              >
-                <div style={{ display: "flex" }}>
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <span
-                      key={s}
-                      style={{
-                        color:
-                          s <= Math.round(product.rating)
-                            ? "var(--color-gold)"
-                            : "#444",
-                        fontSize: "1rem",
-                      }}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-                <span
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.85rem",
-                    color: "var(--color-muted)",
-                  }}
-                >
-                  {product.rating} ({product.reviewCount.toLocaleString()}{" "}
-                  reviews)
-                </span>
-              </div>
-
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.95rem",
-                  color: "var(--color-muted)",
-                  lineHeight: 1.8,
-                  marginBottom: "1.75rem",
-                }}
-              >
-                {product.shortDescription}
-              </p>
 
               {/* Price */}
               <div
@@ -464,13 +477,13 @@ export default function ProductDetail() {
                   display: "flex",
                   alignItems: "baseline",
                   gap: "0.75rem",
-                  marginBottom: "1.75rem",
+                  marginBottom: "0.5rem",
                 }}
               >
                 <span
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "1.75rem",
+                    fontSize: "1.6rem",
                     fontWeight: 700,
                     color: "var(--color-gold)",
                   }}
@@ -485,7 +498,7 @@ export default function ProductDetail() {
                     style={{
                       fontFamily: "var(--font-sans)",
                       fontSize: "1rem",
-                      color: "#9a9590",
+                      color: "var(--color-muted)",
                       textDecoration: "line-through",
                     }}
                   >
@@ -494,42 +507,109 @@ export default function ProductDetail() {
                 )}
               </div>
 
+              {/* Rating */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  marginBottom: "0.9rem",
+                }}
+              >
+                <div style={{ display: "flex" }}>
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <span
+                      key={s}
+                      style={{
+                        color:
+                          s <= Math.round(product.rating)
+                            ? "var(--color-gold)"
+                            : "#444",
+                        fontSize: "0.95rem",
+                      }}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <span
+                  style={{ color: "var(--color-muted)", fontSize: "0.75rem" }}
+                >
+                  ·
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.78rem",
+                    color: "var(--color-muted)",
+                  }}
+                >
+                  {product.rating} / 5 · {product.reviewCount.toLocaleString()}{" "}
+                  reviews
+                </span>
+              </div>
+
+              {/* Description */}
+              <p
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.82rem",
+                  color: "var(--color-muted)",
+                  lineHeight: 1.7,
+                  marginBottom: "0.9rem",
+                  paddingLeft: "0.75rem",
+                  borderLeft: "2px solid var(--color-gold)",
+                }}
+              >
+                {product.shortDescription}
+              </p>
+
+              {/* Divider */}
+              <div
+                style={{
+                  borderTop: "1px solid rgba(255,255,255,0.08)",
+                  marginBottom: "0.9rem",
+                }}
+              />
+
               {/* Size Selector */}
-              <div style={{ marginBottom: "1.75rem" }}>
-                <label
+              <div style={{ marginBottom: "0.9rem" }}>
+                <p
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "0.65rem",
+                    fontSize: "0.6rem",
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
                     color: "var(--color-muted)",
-                    display: "block",
-                    marginBottom: "0.75rem",
+                    marginBottom: "0.4rem",
                   }}
                 >
                   Size — {selectedVariant?.size}
                   {selectedVariant?.unit}
-                </label>
+                </p>
                 <div
-                  style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}
+                  style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}
                 >
                   {product.variants.map((v: Variant) => (
                     <button
                       key={v.sku}
                       onClick={() => setSelectedVariant(v)}
                       style={{
-                        padding: "0.6rem 1.1rem",
+                        padding: "0.3rem 0.7rem",
                         borderRadius: 4,
-                        border: `1.5px solid ${selectedVariant?.sku === v.sku ? "var(--color-gold)" : "#333"}`,
+                        border: `1.5px solid ${selectedVariant?.sku === v.sku ? "var(--color-gold)" : "rgba(255,255,255,0.12)"}`,
                         background:
                           selectedVariant?.sku === v.sku
                             ? "rgba(212,175,55,0.08)"
-                            : "#1a1a1a",
+                            : "transparent",
                         cursor: "pointer",
                         fontFamily: "var(--font-display)",
-                        fontSize: "0.75rem",
+                        fontSize: "0.72rem",
                         fontWeight: 600,
-                        color: "var(--color-primary)",
+                        color:
+                          selectedVariant?.sku === v.sku
+                            ? "var(--color-gold)"
+                            : "var(--color-text)",
                         transition: "all 0.2s",
                       }}
                     >
@@ -538,7 +618,7 @@ export default function ProductDetail() {
                       <span
                         style={{
                           display: "block",
-                          fontSize: "0.6rem",
+                          fontSize: "0.58rem",
                           color: "var(--color-muted)",
                           fontWeight: 400,
                         }}
@@ -550,120 +630,174 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Quantity + Add to cart */}
+              {/* Quantity + Add to Cart + Wishlist */}
               <div
                 style={{
                   display: "flex",
-                  gap: "1rem",
-                  marginBottom: "1rem",
-                  flexWrap: "wrap",
+                  gap: "0.5rem",
+                  marginBottom: "0.9rem",
+                  alignItems: "stretch",
                 }}
               >
+                {/* Qty box */}
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "0.75rem",
-                    border: "1.5px solid #333",
+                    border: "1.5px solid rgba(255,255,255,0.15)",
                     borderRadius: 4,
-                    padding: "0.5rem 1rem",
+                    overflow: "hidden",
+                    flexShrink: 0,
                   }}
                 >
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      color: "var(--color-primary)",
-                      display: "flex",
-                    }}
-                  >
-                    <Minus size={14} />
-                  </button>
                   <span
                     style={{
                       fontFamily: "var(--font-display)",
                       fontWeight: 700,
-                      fontSize: "0.9rem",
-                      minWidth: 24,
+                      fontSize: "0.95rem",
+                      minWidth: 36,
                       textAlign: "center",
-                      color: "var(--color-primary)",
+                      color: "var(--color-text)",
+                      padding: "0 0.5rem",
                     }}
                   >
                     {quantity}
                   </span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
+                  <div
                     style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      color: "var(--color-primary)",
                       display: "flex",
+                      flexDirection: "column",
+                      borderLeft: "1px solid rgba(255,255,255,0.1)",
                     }}
                   >
-                    <Plus size={14} />
-                  </button>
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        borderBottom: "1px solid rgba(255,255,255,0.1)",
+                        cursor: "pointer",
+                        color: "var(--color-text)",
+                        padding: "0.25rem 0.5rem",
+                        lineHeight: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Plus size={10} />
+                    </button>
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        color: "var(--color-text)",
+                        padding: "0.25rem 0.5rem",
+                        lineHeight: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Minus size={10} />
+                    </button>
+                  </div>
                 </div>
+
+                {/* Add to Cart */}
                 <button
                   onClick={handleAddToCart}
-                  className="btn btn-gold"
                   style={{
                     flex: 1,
+                    display: "flex",
+                    alignItems: "center",
                     justifyContent: "center",
+                    gap: "0.5rem",
                     background: added
-                      ? "var(--color-success)"
-                      : "var(--color-gold)",
+                      ? "rgba(39,174,96,0.9)"
+                      : "var(--color-text)",
+                    color: added ? "#fff" : "#0d0d0d",
+                    border: "none",
+                    borderRadius: 4,
+                    padding: "0.65rem 1rem",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "0.7rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
                   }}
                 >
                   <ShoppingBag size={14} />
-                  {added ? "Added to Cart!" : "Add to Cart"}
+                  {added ? "Added!" : "Add to Cart"}
                 </button>
+
+                {/* Wishlist */}
                 <button
                   onClick={() => setWishlisted(!wishlisted)}
                   style={{
-                    background: wishlisted ? "rgba(231,76,60,0.1)" : "#1a1a1a",
-                    border: `1.5px solid ${wishlisted ? "#E74C3C" : "#333"}`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 42,
+                    flexShrink: 0,
+                    background: wishlisted
+                      ? "rgba(231,76,60,0.08)"
+                      : "transparent",
+                    border: `1.5px solid ${wishlisted ? "#E74C3C" : "rgba(255,255,255,0.15)"}`,
                     borderRadius: 4,
-                    padding: "0.5rem 0.85rem",
                     cursor: "pointer",
                     color: wishlisted ? "#E74C3C" : "var(--color-muted)",
-                    transition: "all 0.25s",
+                    transition: "all 0.2s",
                   }}
                 >
-                  <Heart size={16} fill={wishlisted ? "#E74C3C" : "none"} />
+                  <Heart size={15} fill={wishlisted ? "#E74C3C" : "none"} />
                 </button>
               </div>
 
-              {/* Quick props */}
+              {/* Divider */}
               <div
                 style={{
-                  background: "#1a1a1a",
-                  border: "1px solid rgba(212,175,55,0.15)",
-                  borderRadius: 6,
-                  padding: "1.25rem",
+                  borderTop: "1px solid rgba(255,255,255,0.08)",
+                  marginBottom: "0.9rem",
+                }}
+              />
+
+              {/* Characteristics grid */}
+              <div
+                style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
-                  gap: "1rem",
-                  marginBottom: "1.75rem",
+                  gap: "0.6rem",
+                  marginBottom: "0.75rem",
                 }}
               >
                 {[
-                  { label: "Sillage", value: product.sillage },
-                  { label: "Longevity", value: product.longevity },
                   { label: "Scent Family", value: product.scentFamily },
                   { label: "Concentration", value: product.concentration },
+                  { label: "Sillage", value: product.sillage },
+                  { label: "Longevity", value: product.longevity },
                 ].map((item) => (
-                  <div key={item.label}>
+                  <div
+                    key={item.label}
+                    style={{
+                      background: "rgba(255,255,255,0.02)",
+                      border: "1px solid rgba(255,255,255,0.06)",
+                      borderRadius: 6,
+                      padding: "0.45rem 0.6rem",
+                    }}
+                  >
                     <p
                       style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: "0.58rem",
+                        fontSize: "0.5rem",
                         letterSpacing: "0.12em",
                         textTransform: "uppercase",
                         color: "var(--color-muted)",
-                        marginBottom: "0.25rem",
+                        marginBottom: "0.15rem",
                       }}
                     >
                       {item.label}
@@ -671,8 +805,8 @@ export default function ProductDetail() {
                     <p
                       style={{
                         fontFamily: "var(--font-sans)",
-                        fontSize: "0.85rem",
-                        color: "var(--color-primary)",
+                        fontSize: "0.78rem",
+                        color: "var(--color-text)",
                         fontWeight: 500,
                         textTransform: "capitalize",
                       }}
@@ -682,16 +816,13 @@ export default function ProductDetail() {
                   </div>
                 ))}
               </div>
-
-              {/* Fragrance Pyramid */}
-              <FragrancePyramid notes={product.notes} />
             </motion.div>
           </div>
 
           {/* Tabs */}
           <div
             style={{
-              marginTop: "3rem",
+              marginTop: "1.5rem",
               borderTop: "1px solid rgba(212,175,55,0.15)",
             }}
           >
@@ -726,62 +857,8 @@ export default function ProductDetail() {
                   {product.description}
                 </p>
               )}
-              {activeTab === "Fragrance Notes" && (
-                <div>
-                  {[
-                    {
-                      label: "Top Notes (first impression)",
-                      notes: product.notes.top,
-                    },
-                    {
-                      label: "Heart Notes (the soul)",
-                      notes: product.notes.middle,
-                    },
-                    {
-                      label: "Base Notes (the lasting impression)",
-                      notes: product.notes.base,
-                    },
-                  ].map((tier) => (
-                    <div key={tier.label} style={{ marginBottom: "1.5rem" }}>
-                      <p
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.65rem",
-                          letterSpacing: "0.12em",
-                          textTransform: "uppercase",
-                          color: "var(--color-gold)",
-                          marginBottom: "0.75rem",
-                        }}
-                      >
-                        {tier.label}
-                      </p>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexWrap: "wrap",
-                          gap: "0.5rem",
-                        }}
-                      >
-                        {tier.notes.map((note: string) => (
-                          <span
-                            key={note}
-                            style={{
-                              padding: "0.35rem 0.9rem",
-                              background: "rgba(212,175,55,0.08)",
-                              border: "1px solid rgba(212,175,55,0.15)",
-                              borderRadius: 3,
-                              fontFamily: "var(--font-sans)",
-                              fontSize: "0.85rem",
-                              color: "var(--color-text)",
-                            }}
-                          >
-                            {note}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              {activeTab === "Fragrance Pyramid" && (
+                <FragrancePyramid notes={product.notes} />
               )}
               {activeTab === "How to Wear" && (
                 <div
@@ -962,7 +1039,7 @@ export default function ProductDetail() {
 
           {/* Related Products */}
           {related.length > 0 && (
-            <div style={{ marginTop: "3rem" }}>
+            <div style={{ marginTop: "2rem" }}>
               <h2
                 style={{
                   fontFamily: "var(--font-serif)",
