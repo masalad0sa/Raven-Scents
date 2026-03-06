@@ -83,24 +83,15 @@ export default function About() {
           <div
             style={{
               position: "absolute",
-              left: "-100px",
-              bottom: "-200px",
-              opacity: 0.2,
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              opacity: 0.45,
               pointerEvents: "none",
+              zIndex: 0,
             }}
           >
-            <GradientBlob size={700} reactToMouse={false} />
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              right: "-50px",
-              top: "-150px",
-              opacity: 0.12,
-              pointerEvents: "none",
-            }}
-          >
-            <GradientBlob size={500} reactToMouse={false} />
+            <GradientBlob size={900} reactToMouse={true} />
           </div>
 
           {/* HUD circles */}
@@ -231,8 +222,34 @@ export default function About() {
         {/* ── Story Timeline ────────────────────────────  */}
         <section
           className="section"
-          style={{ background: "var(--color-ivory)" }}
+          style={{
+            background: "var(--color-ivory)",
+            position: "relative",
+            overflow: "hidden",
+          }}
         >
+          <div
+            style={{
+              position: "absolute",
+              right: "-180px",
+              top: "-120px",
+              opacity: 0.12,
+              pointerEvents: "none",
+            }}
+          >
+            <GradientBlob size={560} reactToMouse={false} />
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              left: "-150px",
+              bottom: "-100px",
+              opacity: 0.1,
+              pointerEvents: "none",
+            }}
+          >
+            <GradientBlob size={420} reactToMouse={false} />
+          </div>
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
@@ -359,8 +376,24 @@ export default function About() {
         {/* ── Values Grid ───────────────────────────────  */}
         <section
           className="section"
-          style={{ background: "var(--color-surface)" }}
+          style={{
+            background: "var(--color-surface)",
+            position: "relative",
+            overflow: "hidden",
+          }}
         >
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "-80px",
+              transform: "translateX(-50%)",
+              opacity: 0.1,
+              pointerEvents: "none",
+            }}
+          >
+            <GradientBlob size={700} reactToMouse={false} />
+          </div>
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
@@ -639,8 +672,37 @@ export default function About() {
         {/* ── CTA ───────────────────────────────────────  */}
         <section
           className="section"
-          style={{ background: "var(--color-ivory)", textAlign: "center" }}
+          style={{
+            background: "var(--color-ivory)",
+            textAlign: "center",
+            position: "relative",
+            overflow: "hidden",
+          }}
         >
+          <div
+            style={{
+              position: "absolute",
+              left: "-100px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              opacity: 0.13,
+              pointerEvents: "none",
+            }}
+          >
+            <GradientBlob size={480} reactToMouse={false} />
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              right: "-120px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              opacity: 0.1,
+              pointerEvents: "none",
+            }}
+          >
+            <GradientBlob size={400} reactToMouse={false} />
+          </div>
           <div className="container" style={{ maxWidth: 600 }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
