@@ -1,7 +1,7 @@
 {
-  "name": "luxescent-api",
+  "name": "raven-api",
   "version": "1.0.0",
-  "description": "LuxeScent Backend API — Node.js + Express + Supabase + Redis",
+  "description": "Raven Backend API — Node.js + Express + Supabase + Redis",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",

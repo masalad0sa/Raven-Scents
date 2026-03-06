@@ -46,8 +46,8 @@ export default function Cart() {
         <div className="container" style={{ padding: '3rem 2rem' }}>
           {items.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '5rem 0' }}>
-              <ShoppingBag size={64} strokeWidth={1} style={{ color: '#C5B89A', marginBottom: '1.5rem' }} />
-              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.75rem', color: 'var(--color-primary)', marginBottom: '0.75rem' }}>Your cart is empty</h2>
+              <ShoppingBag size={64} strokeWidth={1} style={{ color: 'rgba(212,175,55,0.5)', marginBottom: '1.5rem' }} />
+              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.75rem', color: 'var(--color-text)', marginBottom: '0.75rem' }}>Your cart is empty</h2>
               <p style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-muted)', marginBottom: '2rem' }}>Begin your fragrance journey.</p>
               <Link to="/shop" className="btn btn-primary">Explore Fragrances</Link>
             </div>
@@ -55,14 +55,14 @@ export default function Cart() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2.5rem', alignItems: 'start' }}>
               {/* Items */}
               <div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-muted)', padding: '0 0 1rem', borderBottom: '1px solid #EDE8DC', display: 'grid', gridTemplateColumns: '2.5fr 1fr 1fr 1fr auto', gap: '1rem' }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-muted)', padding: '0 0 1rem', borderBottom: '1px solid rgba(212,175,55,0.15)', display: 'grid', gridTemplateColumns: '2.5fr 1fr 1fr 1fr auto', gap: '1rem' }}>
                   <span>Product</span><span>Size</span><span>Price</span><span>Qty</span><span></span>
                 </div>
 
                 {items.map((item) => (
                   <motion.div key={`${item.product.id}-${item.variant.sku}`}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr 1fr 1fr auto', gap: '1rem', alignItems: 'center', padding: '1.5rem 0', borderBottom: '1px solid #EDE8DC' }}
+                    style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr 1fr 1fr auto', gap: '1rem', alignItems: 'center', padding: '1.5rem 0', borderBottom: '1px solid rgba(212,175,55,0.15)' }}
                   >
                     {/* Product */}
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -78,14 +78,14 @@ export default function Cart() {
                     </div>
                     <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: 'var(--color-muted)' }}>{item.variant.size}{item.variant.unit}</span>
                     <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--color-primary)' }}>₹{item.variant.price.toLocaleString('en-IN')}</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid #E0D5C5', borderRadius: 4, padding: '0.3rem 0.6rem', width: 'fit-content' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid #333', borderRadius: 4, padding: '0.3rem 0.6rem', width: 'fit-content' }}>
                       <button onClick={() => updateQuantity(item.product.id, item.variant.sku, item.quantity - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex' }}><Minus size={12} /></button>
                       <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, minWidth: 20, textAlign: 'center', color: 'var(--color-primary)', fontSize: '0.85rem' }}>{item.quantity}</span>
                       <button onClick={() => updateQuantity(item.product.id, item.variant.sku, item.quantity + 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex' }}><Plus size={12} /></button>
                     </div>
-                    <button onClick={() => removeItem(item.product.id, item.variant.sku)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#C5B89A', display: 'flex', transition: 'color 0.2s' }}
+                    <button onClick={() => removeItem(item.product.id, item.variant.sku)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(212,175,55,0.5)', display: 'flex', transition: 'color 0.2s' }}
                       onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = 'var(--color-error)'}
-                      onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#C5B89A'}
+                      onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(212,175,55,0.5)'}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -98,8 +98,8 @@ export default function Cart() {
               </div>
 
               {/* Summary */}
-              <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} style={{ background: '#fff', border: '1px solid #EDE8DC', borderRadius: 8, padding: '1.75rem', position: 'sticky', top: 92 }}>
-                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', fontWeight: 500, color: 'var(--color-primary)', marginBottom: '1.5rem' }}>Order Summary</h2>
+              <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.15)', borderRadius: 8, padding: '1.75rem', position: 'sticky', top: 92 }}>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', fontWeight: 500, color: 'var(--color-text)', marginBottom: '1.5rem' }}>Order Summary</h2>
 
                 {/* Coupon */}
                 <div style={{ marginBottom: '1.5rem' }}>
@@ -131,7 +131,7 @@ export default function Cart() {
                   </div>
                 ))}
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '1rem', borderTop: '1px solid #EDE8DC', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '1rem', borderTop: '1px solid rgba(212,175,55,0.15)', marginBottom: '1.5rem' }}>
                   <span style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--color-primary)' }}>Total</span>
                   <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-primary)' }}>₹{total.toLocaleString('en-IN')}</span>
                 </div>

@@ -53,3 +53,5 @@ pnpm-debug.log*
 # Misc helper scripts from dev
 read_docx.py
 docx_content.txt
+
+nul

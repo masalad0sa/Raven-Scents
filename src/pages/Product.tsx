@@ -27,21 +27,21 @@ function FragrancePyramid({
       label: "Top Notes",
       sublabel: "0–15 min",
       notes: notes.top,
-      colors: "from-[#d4af37] to-[#e8c94f]",
+      colors: "from-[#f9c0c0] to-[#f5d08a]",
       width: "60%",
     },
     {
       label: "Heart Notes",
       sublabel: "15–60 min",
       notes: notes.middle,
-      colors: "from-[#9a9590] to-[#8a7e6b]",
+      colors: "from-[#c9a0f5] to-[#a0c9f5]",
       width: "78%",
     },
     {
       label: "Base Notes",
       sublabel: "60+ min",
       notes: notes.base,
-      colors: "from-[#0d0d0d] to-[#1a1a1a]",
+      colors: "from-[#0A0A0A] to-[#1A1A1A]",
       width: "100%",
     },
   ];
@@ -76,9 +76,14 @@ function FragrancePyramid({
               style={{
                 borderRadius:
                   i === 2 ? "0 0 6px 6px" : i === 0 ? "6px 6px 0 0" : "0",
-                padding: "1rem 1.5rem",
-                background: `linear-gradient(135deg, ${i === 0 ? "#d4af37, #e8c94f" : i === 1 ? "#8a7e6b, #9a9590" : "#0d0d0d, #1a1a1a"})`,
-                color: i === 2 ? "var(--color-text)" : "#0d0d0d",
+                padding: "0.6rem 1rem",
+                background: `linear-gradient(135deg, ${i === 0 ? "#1c1c1c, #262015" : i === 1 ? "#181820, #201a22" : "#1c1408, #28200c"})`,
+                color: "var(--color-text)",
+                border: "1px solid rgba(212,175,55,0.12)",
+                minHeight: "72px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
               }}
             >
               <div
@@ -115,7 +120,9 @@ function FragrancePyramid({
                   <span
                     key={note}
                     style={{
-                      background: "rgba(255,255,255,0.25)",
+                      background: "rgba(212,175,55,0.12)",
+                      border: "1px solid rgba(212,175,55,0.2)",
+                      color: "var(--color-text)",
                       borderRadius: 3,
                       padding: "0.2rem 0.6rem",
                       fontFamily: "var(--font-sans)",
@@ -134,7 +141,7 @@ function FragrancePyramid({
   );
 }
 
-export default function ProductDetail() {
+export default function Product() {
   const { slug } = useParams();
   const { data: product, isLoading } = useProduct(slug || "");
   const { data: allData } = useProducts();
@@ -195,7 +202,7 @@ export default function ProductDetail() {
             style={{
               fontFamily: "var(--font-serif)",
               fontSize: "2rem",
-              color: "var(--color-primary)",
+              color: "var(--color-text)",
               marginBottom: "1rem",
             }}
           >
@@ -268,7 +275,7 @@ export default function ProductDetail() {
               <ChevronLeft size={12} /> Shop
             </Link>
             <span style={{ color: "var(--color-muted)" }}>/</span>
-            <span style={{ color: "var(--color-primary)", fontWeight: 600 }}>
+            <span style={{ color: "var(--color-text)", fontWeight: 600 }}>
               {product.name}
             </span>
           </div>
@@ -296,7 +303,7 @@ export default function ProductDetail() {
                   overflow: "hidden",
                   aspectRatio: "4/5",
                   marginBottom: "1rem",
-                  background: "#1a1a1a",
+                  background: "#1A1A1A",
                 }}
               >
                 <img
@@ -366,19 +373,13 @@ export default function ProductDetail() {
                 )}
                 <span
                   className="badge"
-                  style={{
-                    background: "rgba(212,175,55,0.1)",
-                    color: "var(--color-muted)",
-                  }}
+                  style={{ background: "#333", color: "var(--color-muted)" }}
                 >
                   {product.gender}
                 </span>
                 <span
                   className="badge"
-                  style={{
-                    background: "rgba(212,175,55,0.1)",
-                    color: "var(--color-muted)",
-                  }}
+                  style={{ background: "#333", color: "var(--color-muted)" }}
                 >
                   {product.concentration}
                 </span>
@@ -472,7 +473,7 @@ export default function ProductDetail() {
                     fontFamily: "var(--font-display)",
                     fontSize: "1.75rem",
                     fontWeight: 700,
-                    color: "var(--color-gold)",
+                    color: "var(--color-text)",
                   }}
                 >
                   ₹
@@ -523,13 +524,13 @@ export default function ProductDetail() {
                         border: `1.5px solid ${selectedVariant?.sku === v.sku ? "var(--color-gold)" : "#333"}`,
                         background:
                           selectedVariant?.sku === v.sku
-                            ? "rgba(212,175,55,0.08)"
-                            : "#1a1a1a",
+                            ? "rgba(212,175,55,0.15)"
+                            : "#1A1A1A",
                         cursor: "pointer",
                         fontFamily: "var(--font-display)",
                         fontSize: "0.75rem",
                         fontWeight: 600,
-                        color: "var(--color-primary)",
+                        color: "var(--color-text)",
                         transition: "all 0.2s",
                       }}
                     >
@@ -575,7 +576,7 @@ export default function ProductDetail() {
                       background: "none",
                       border: "none",
                       cursor: "pointer",
-                      color: "var(--color-primary)",
+                      color: "var(--color-text)",
                       display: "flex",
                     }}
                   >
@@ -588,7 +589,7 @@ export default function ProductDetail() {
                       fontSize: "0.9rem",
                       minWidth: 24,
                       textAlign: "center",
-                      color: "var(--color-primary)",
+                      color: "var(--color-text)",
                     }}
                   >
                     {quantity}
@@ -599,7 +600,7 @@ export default function ProductDetail() {
                       background: "none",
                       border: "none",
                       cursor: "pointer",
-                      color: "var(--color-primary)",
+                      color: "var(--color-text)",
                       display: "flex",
                     }}
                   >
@@ -623,7 +624,7 @@ export default function ProductDetail() {
                 <button
                   onClick={() => setWishlisted(!wishlisted)}
                   style={{
-                    background: wishlisted ? "rgba(231,76,60,0.1)" : "#1a1a1a",
+                    background: wishlisted ? "rgba(231,76,60,0.1)" : "#1A1A1A",
                     border: `1.5px solid ${wishlisted ? "#E74C3C" : "#333"}`,
                     borderRadius: 4,
                     padding: "0.5rem 0.85rem",
@@ -639,8 +640,8 @@ export default function ProductDetail() {
               {/* Quick props */}
               <div
                 style={{
-                  background: "#1a1a1a",
-                  border: "1px solid rgba(212,175,55,0.15)",
+                  background: "#1A1A1A",
+                  border: "1px solid #333",
                   borderRadius: 6,
                   padding: "1.25rem",
                   display: "grid",
@@ -672,7 +673,7 @@ export default function ProductDetail() {
                       style={{
                         fontFamily: "var(--font-sans)",
                         fontSize: "0.85rem",
-                        color: "var(--color-primary)",
+                        color: "var(--color-text)",
                         fontWeight: 500,
                         textTransform: "capitalize",
                       }}
@@ -689,16 +690,11 @@ export default function ProductDetail() {
           </div>
 
           {/* Tabs */}
-          <div
-            style={{
-              marginTop: "3rem",
-              borderTop: "1px solid rgba(212,175,55,0.15)",
-            }}
-          >
+          <div style={{ marginTop: "3rem", borderTop: "1px solid #333" }}>
             <div
               style={{
                 display: "flex",
-                borderBottom: "1px solid rgba(212,175,55,0.15)",
+                borderBottom: "1px solid #333",
                 overflowX: "auto",
               }}
               className="no-scrollbar"
@@ -767,8 +763,8 @@ export default function ProductDetail() {
                             key={note}
                             style={{
                               padding: "0.35rem 0.9rem",
-                              background: "rgba(212,175,55,0.08)",
-                              border: "1px solid rgba(212,175,55,0.15)",
+                              background: "var(--color-surface)",
+                              border: "1px solid #333",
                               borderRadius: 3,
                               fontFamily: "var(--font-sans)",
                               fontSize: "0.85rem",
@@ -817,9 +813,9 @@ export default function ProductDetail() {
                       gap: "2rem",
                       marginBottom: "2rem",
                       padding: "1.5rem",
-                      background: "#1a1a1a",
+                      background: "#1A1A1A",
                       borderRadius: 6,
-                      border: "1px solid rgba(212,175,55,0.15)",
+                      border: "1px solid #333",
                     }}
                   >
                     <div style={{ textAlign: "center" }}>
@@ -828,7 +824,7 @@ export default function ProductDetail() {
                           fontFamily: "var(--font-serif)",
                           fontSize: "3.5rem",
                           fontWeight: 300,
-                          color: "var(--color-gold)",
+                          color: "var(--color-text)",
                           lineHeight: 1,
                         }}
                       >
@@ -893,7 +889,7 @@ export default function ProductDetail() {
                       key={review.name}
                       style={{
                         padding: "1.5rem 0",
-                        borderBottom: "1px solid rgba(212,175,55,0.15)",
+                        borderBottom: "1px solid #333",
                       }}
                     >
                       <div
@@ -924,7 +920,7 @@ export default function ProductDetail() {
                                   color:
                                     s <= review.rating
                                       ? "var(--color-gold)"
-                                      : "#DDD",
+                                      : "#444",
                                   fontSize: "0.85rem",
                                 }}
                               >

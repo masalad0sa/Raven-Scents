@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 interface GradientBlobProps {
   className?: string;
@@ -6,11 +6,7 @@ interface GradientBlobProps {
   reactToMouse?: boolean;
 }
 
-export function GradientBlob({
-  className = "",
-  size = 700,
-  reactToMouse = true,
-}: GradientBlobProps) {
+export function GradientBlob({ className = '', size = 700, reactToMouse = true }: GradientBlobProps) {
   const blobRef = useRef<HTMLDivElement>(null);
   const mousePos = useRef({ x: 0, y: 0 });
   const currentPos = useRef({ x: 0, y: 0 });
@@ -28,22 +24,14 @@ export function GradientBlob({
       };
     };
 
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener('mousemove', onMove);
 
     let rafId: number;
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
     const animate = () => {
-      currentPos.current.x = lerp(
-        currentPos.current.x,
-        mousePos.current.x * 0.12,
-        0.035,
-      );
-      currentPos.current.y = lerp(
-        currentPos.current.y,
-        mousePos.current.y * 0.12,
-        0.035,
-      );
+      currentPos.current.x = lerp(currentPos.current.x, mousePos.current.x * 0.12, 0.035);
+      currentPos.current.y = lerp(currentPos.current.y, mousePos.current.y * 0.12, 0.035);
       if (blobRef.current) {
         blobRef.current.style.transform = `translate(${currentPos.current.x}px, ${currentPos.current.y}px)`;
       }
@@ -52,7 +40,7 @@ export function GradientBlob({
 
     animate();
     return () => {
-      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener('mousemove', onMove);
       cancelAnimationFrame(rafId);
     };
   }, [reactToMouse, size]);
@@ -64,18 +52,18 @@ export function GradientBlob({
       style={{
         width: size,
         height: size,
-        borderRadius: "50%",
+        borderRadius: '50%',
         background: `radial-gradient(ellipse at 45% 45%,
-          rgba(212, 175, 55, 0.8) 0%,
-          rgba(184, 150, 10, 0.6) 22%,
-          rgba(232, 201, 79, 0.4) 48%,
-          rgba(138, 126, 107, 0.3) 68%,
+          rgba(255, 100, 130, 1.0) 0%,
+          rgba(255, 190, 80, 0.95) 22%,
+          rgba(180, 100, 255, 0.9) 48%,
+          rgba(80, 180, 255, 0.85) 68%,
           transparent 100%)`,
-        filter: "blur(28px)",
+        filter: 'blur(28px)',
         opacity: 1,
-        willChange: "transform",
-        pointerEvents: "none",
-        userSelect: "none",
+        willChange: 'transform',
+        pointerEvents: 'none',
+        userSelect: 'none',
         flexShrink: 0,
       }}
       aria-hidden="true"

@@ -1,28 +1,25 @@
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 // ── Auth Token Storage ──────────────────────────────
 export function getAccessToken() {
-  return localStorage.getItem("raven_access_token");
+  return localStorage.getItem('raven_access_token');
 }
 export function setTokens(access: string, refresh: string) {
-  localStorage.setItem("raven_access_token", access);
-  localStorage.setItem("raven_refresh_token", refresh);
+  localStorage.setItem('raven_access_token', access);
+  localStorage.setItem('raven_refresh_token', refresh);
 }
 export function clearTokens() {
-  localStorage.removeItem("raven_access_token");
-  localStorage.removeItem("raven_refresh_token");
+  localStorage.removeItem('raven_access_token');
+  localStorage.removeItem('raven_refresh_token');
 }
 
 // ── Base Fetch ──────────────────────────────────────
-async function apiFetch<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<T> {
+async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getAccessToken();
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {}),
     },
@@ -30,7 +27,7 @@ async function apiFetch<T>(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(err.error || "API request failed");
+    throw new Error(err.error || 'API request failed');
   }
 
   return res.json();
@@ -64,15 +61,13 @@ function mapProduct(p: any) {
     notes: {
       top: p.notes_top || p.notes?.top || [],
       middle: p.notes_middle || p.notes?.middle || [],
-      base: p.notes_base || p.notes?.base || [],
+      base: p.notes_base || p.notes?.base || []
     },
-    variants: (p.product_variants || p.variants || [])
-      .map((v: any) => ({
-        ...v,
-        id: v.id,
-        productId: v.product_id || v.productId,
-      }))
-      .sort((a: any, b: any) => a.size - b.size),
+    variants: (p.product_variants || p.variants || []).map((v: any) => ({
+      ...v,
+      id: v.id,
+      productId: v.product_id || v.productId,
+    })).sort((a: any, b: any) => a.size - b.size),
   };
 }
 
@@ -80,11 +75,9 @@ export const productsApi = {
   getAll: async (filters: ProductFilters = {}) => {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([k, v]) => {
-      if (v !== undefined && v !== "") params.set(k, String(v));
+      if (v !== undefined && v !== '') params.set(k, String(v));
     });
-    const data = await apiFetch<{ products: any[]; total: number }>(
-      `/products?${params}`,
-    );
+    const data = await apiFetch<{ products: any[]; total: number }>(`/products?${params}`);
     return { ...data, products: data.products.map(mapProduct) };
   },
   getBySlug: async (slug: string) => {
@@ -92,11 +85,11 @@ export const productsApi = {
     return mapProduct(data);
   },
   getFeatured: async () => {
-    const data = await apiFetch<any[]>("/products/featured");
+    const data = await apiFetch<any[]>('/products/featured');
     return data.map(mapProduct);
   },
   getBestsellers: async () => {
-    const data = await apiFetch<any[]>("/products/bestsellers");
+    const data = await apiFetch<any[]>('/products/bestsellers');
     return data.map(mapProduct);
   },
 };
@@ -104,43 +97,42 @@ export const productsApi = {
 // ── Auth ────────────────────────────────────────────
 export const authApi = {
   register: async (email: string, password: string, full_name?: string) => {
-    const data = await apiFetch<any>("/auth/register", {
-      method: "POST",
+    const data = await apiFetch<any>('/auth/register', {
+      method: 'POST',
       body: JSON.stringify({ email, password, full_name }),
     });
     if (data.access_token) setTokens(data.access_token, data.refresh_token);
     return data;
   },
   login: async (email: string, password: string) => {
-    const data = await apiFetch<any>("/auth/login", {
-      method: "POST",
+    const data = await apiFetch<any>('/auth/login', {
+      method: 'POST',
       body: JSON.stringify({ email, password }),
     });
     if (data.access_token) setTokens(data.access_token, data.refresh_token);
     return data;
   },
   logout: async () => {
-    await apiFetch("/auth/logout", { method: "POST" }).catch(() => {});
+    await apiFetch('/auth/logout', { method: 'POST' }).catch(() => {});
     clearTokens();
   },
 };
 
 // ── Orders ──────────────────────────────────────────
 export const ordersApi = {
-  create: (payload: any) =>
-    apiFetch<any>("/orders", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
-  getAll: () => apiFetch<any[]>("/orders"),
+  create: (payload: any) => apiFetch<any>('/orders', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+  getAll: () => apiFetch<any[]>('/orders'),
   getById: (id: string) => apiFetch<any>(`/orders/${id}`),
 };
 
 // ── Coupons ─────────────────────────────────────────
 export const couponsApi = {
   validate: (code: string, cart_total: number) =>
-    apiFetch<any>("/coupons/validate", {
-      method: "POST",
+    apiFetch<any>('/coupons/validate', {
+      method: 'POST',
       body: JSON.stringify({ code, cart_total }),
     }),
 };

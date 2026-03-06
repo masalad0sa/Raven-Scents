@@ -1,13 +1,17 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { CartItem, Product, Variant } from '../types';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { CartItem, Product, Variant } from "../types";
 
 interface CartStore {
   items: CartItem[];
   isOpen: boolean;
   addItem: (product: Product, variant: Variant, quantity?: number) => void;
   removeItem: (productId: string, variantSku: string) => void;
-  updateQuantity: (productId: string, variantSku: string, quantity: number) => void;
+  updateQuantity: (
+    productId: string,
+    variantSku: string,
+    quantity: number,
+  ) => void;
   clearCart: () => void;
   toggleDrawer: () => void;
   closeDrawer: () => void;
@@ -25,14 +29,14 @@ export const useCartStore = create<CartStore>()(
       addItem: (product, variant, quantity = 1) => {
         set((state) => {
           const existing = state.items.find(
-            (i) => i.product.id === product.id && i.variant.sku === variant.sku
+            (i) => i.product.id === product.id && i.variant.sku === variant.sku,
           );
           if (existing) {
             return {
               items: state.items.map((i) =>
                 i.product.id === product.id && i.variant.sku === variant.sku
                   ? { ...i, quantity: i.quantity + quantity }
-                  : i
+                  : i,
               ),
               isOpen: true,
             };
@@ -47,7 +51,8 @@ export const useCartStore = create<CartStore>()(
       removeItem: (productId, variantSku) => {
         set((state) => ({
           items: state.items.filter(
-            (i) => !(i.product.id === productId && i.variant.sku === variantSku)
+            (i) =>
+              !(i.product.id === productId && i.variant.sku === variantSku),
           ),
         }));
       },
@@ -61,7 +66,7 @@ export const useCartStore = create<CartStore>()(
           items: state.items.map((i) =>
             i.product.id === productId && i.variant.sku === variantSku
               ? { ...i, quantity }
-              : i
+              : i,
           ),
         }));
       },
@@ -76,8 +81,8 @@ export const useCartStore = create<CartStore>()(
         get().items.reduce((sum, i) => sum + i.variant.price * i.quantity, 0),
     }),
     {
-      name: 'luxescent-cart',
+      name: "raven-cart",
       partialize: (state) => ({ items: state.items }),
-    }
-  )
+    },
+  ),
 );
