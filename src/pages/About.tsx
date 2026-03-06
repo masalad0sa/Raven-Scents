@@ -5,6 +5,7 @@ import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { GradientBlob } from "../components/effects/GradientBlob";
 import { useFeaturedProducts } from "../hooks/useProducts";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -67,6 +68,7 @@ const timeline = [
 
 export default function About() {
   const { data: featured } = useFeaturedProducts();
+  const isMobile = useIsMobile();
   const processImages = (featured ?? [])
     .slice(0, 3)
     .map((p: any) => p.images?.[0])
@@ -294,13 +296,13 @@ export default function About() {
               <div
                 style={{
                   position: "absolute",
-                  left: "50%",
+                  left: isMobile ? 8 : "50%",
                   top: 0,
                   bottom: 0,
                   width: 1,
                   background:
                     "linear-gradient(to bottom, transparent, var(--color-gold), transparent)",
-                  transform: "translateX(-50%)",
+                  transform: isMobile ? "none" : "translateX(-50%)",
                 }}
               />
 
@@ -314,12 +316,64 @@ export default function About() {
                   custom={i}
                   style={{
                     display: "flex",
-                    gap: "3rem",
+                    gap: isMobile ? "1.25rem" : "3rem",
                     alignItems: "flex-start",
                     marginBottom: "3rem",
-                    flexDirection: i % 2 === 0 ? "row" : "row-reverse",
+                    flexDirection: isMobile ? "row" : (i % 2 === 0 ? "row" : "row-reverse"),
                   }}
                 >
+                  {isMobile ? (
+                    <>
+                      {/* Dot on the left */}
+                      <div
+                        style={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: "50%",
+                          background: "var(--color-gold)",
+                          flexShrink: 0,
+                          marginTop: "0.25rem",
+                          boxShadow: "0 0 0 4px rgba(212,175,55,0.2)",
+                        }}
+                      />
+                      <div>
+                        <span
+                          style={{
+                            fontFamily: "var(--font-serif)",
+                            fontSize: "2rem",
+                            fontWeight: 300,
+                            color: "var(--color-gold)",
+                            display: "block",
+                            lineHeight: 1,
+                          }}
+                        >
+                          {item.year}
+                        </span>
+                        <h3
+                          style={{
+                            fontFamily: "var(--font-serif)",
+                            fontSize: "1.1rem",
+                            fontWeight: 500,
+                            color: "var(--color-text)",
+                            marginBottom: "0.5rem",
+                          }}
+                        >
+                          {item.title}
+                        </h3>
+                        <p
+                          style={{
+                            fontFamily: "var(--font-sans)",
+                            fontSize: "0.875rem",
+                            color: "var(--color-muted)",
+                            lineHeight: 1.8,
+                          }}
+                        >
+                          {item.desc}
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
                   <div
                     style={{
                       flex: 1,
@@ -373,6 +427,8 @@ export default function About() {
                     }}
                   />
                   <div style={{ flex: 1 }} />
+                    </>
+                  )}
                 </motion.div>
               ))}
             </div>
@@ -537,8 +593,8 @@ export default function About() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "5rem",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                gap: isMobile ? "2rem" : "5rem",
                 alignItems: "center",
               }}
             >

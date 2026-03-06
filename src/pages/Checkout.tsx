@@ -6,6 +6,7 @@ import { Footer } from "../components/layout/Footer";
 import { useCartStore } from "../store/cartStore";
 import { ordersApi } from "../lib/api";
 import { Check } from "lucide-react";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 type Step = "shipping" | "payment" | "review";
 const STEPS: Step[] = ["shipping", "payment", "review"];
@@ -52,6 +53,7 @@ const STATES = [
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, getSubtotal, clearCart } = useCartStore();
+  const isMobile = useIsMobile();
   const [step, setStep] = useState<Step>("shipping");
   const [shipping, setShipping] = useState<ShippingData>({
     firstName: "",
@@ -287,12 +289,12 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="container" style={{ padding: "3rem 2rem" }}>
+        <div className="container" style={{ padding: isMobile ? '1.5rem 1rem' : '3rem 2rem' }}>
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 360px",
-              gap: "2.5rem",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 360px",
+              gap: isMobile ? "1.5rem" : "2.5rem",
               alignItems: "start",
             }}
           >

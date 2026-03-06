@@ -8,12 +8,14 @@ import { useProducts } from "../hooks/useProducts";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 export default function Wishlist() {
   const navigate = useNavigate();
   const { ids, toggle } = useWishlistStore();
   const { user } = useAuthStore();
   const { addItem } = useCartStore();
+  const isMobile = useIsMobile();
 
   // Fetch all products and filter by wishlisted IDs
   const { data, isLoading } = useProducts();
@@ -145,7 +147,7 @@ export default function Wishlist() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(280px,1fr))",
+                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px,1fr))",
                 gap: "1.5rem",
               }}
             >
@@ -168,7 +170,7 @@ export default function Wishlist() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(280px,1fr))",
+                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px,1fr))",
                 gap: "1.5rem",
               }}
             >

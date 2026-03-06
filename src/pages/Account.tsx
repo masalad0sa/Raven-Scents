@@ -16,6 +16,7 @@ import { useAuthStore } from "../store/authStore";
 import { supabase } from "../lib/supabase";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 interface Address {
   id: string;
@@ -41,6 +42,7 @@ export default function Account() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const [tab, setTab] = useState<Tab>("profile");
+  const isMobile = useIsMobile();
 
   // Profile state
   const [profile, setProfile] = useState<Profile>({
@@ -260,7 +262,8 @@ export default function Account() {
               borderRadius: 8,
               padding: "0.25rem",
               border: "1px solid rgba(212,175,55,0.1)",
-              width: "fit-content",
+              width: isMobile ? "100%" : "fit-content",
+              overflowX: isMobile ? "auto" : undefined,
             }}
           >
             {(
@@ -382,7 +385,7 @@ export default function Account() {
                 <dl
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                     gap: "1.5rem 2rem",
                   }}
                 >
@@ -464,7 +467,7 @@ export default function Account() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
+                      gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                       gap: "1rem 1.25rem",
                       maxWidth: 600,
                     }}
@@ -592,7 +595,7 @@ export default function Account() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(280px,1fr))",
+                    gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px,1fr))",
                     gap: "1rem",
                   }}
                 >

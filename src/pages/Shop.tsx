@@ -1,15 +1,17 @@
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { ProductCard } from "../components/product/ProductCard";
 import { useProducts } from "../hooks/useProducts";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 type SortOption = "featured" | "price-asc" | "price-desc" | "newest" | "rating";
 
 export default function Shop() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const isMobile = useIsMobile();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortOption>("featured");
 
@@ -191,7 +193,7 @@ export default function Shop() {
           </div>
         </div>
 
-        <div className="container" style={{ padding: "2rem 2rem" }}>
+        <div className="container" style={{ padding: isMobile ? "1rem" : "2rem 2rem" }}>
           {/* Controls bar */}
           <div
             style={{
@@ -278,25 +280,59 @@ export default function Shop() {
           <div
             style={{ display: "flex", gap: "2rem", alignItems: "flex-start" }}
           >
-            {/* Sidebar */}
+            {/* Sidebar — overlay on mobile, inline on desktop */}
+            <AnimatePresence>
             {sidebarOpen && (
-              <motion.aside
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                style={{
-                  width: 240,
-                  flexShrink: 0,
-                  background: "#1a1a1a",
-                  borderRadius: 6,
-                  padding: "1.5rem",
-                  border: "1px solid rgba(212,175,55,0.15)",
-                  position: "sticky",
-                  top: 92,
-                  maxHeight: "calc(100vh - 110px)",
-                  overflowY: "auto",
-                }}
-                className="no-scrollbar"
-              >
+              <>
+                {/* Mobile overlay backdrop */}
+                {isMobile && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setSidebarOpen(false)}
+                    style={{
+                      position: "fixed",
+                      inset: 0,
+                      background: "rgba(0,0,0,0.6)",
+                      zIndex: 998,
+                    }}
+                  />
+                )}
+                <motion.aside
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  style={{
+                    width: isMobile ? "85vw" : 240,
+                    maxWidth: isMobile ? 320 : 240,
+                    flexShrink: 0,
+                    background: "#1a1a1a",
+                    borderRadius: isMobile ? 0 : 6,
+                    padding: "1.5rem",
+                    border: isMobile ? "none" : "1px solid rgba(212,175,55,0.15)",
+                    ...(isMobile
+                      ? { position: "fixed" as const, top: 0, left: 0, bottom: 0, zIndex: 999, overflowY: "auto" as const }
+                      : { position: "sticky" as const, top: 92, maxHeight: "calc(100vh - 110px)", overflowY: "auto" as const }),
+                  }}
+                  className="no-scrollbar"
+                >
+                  {isMobile && (
+                    <button
+                      onClick={() => setSidebarOpen(false)}
+                      style={{
+                        position: "absolute",
+                        top: 16,
+                        right: 16,
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        color: "var(--color-muted)",
+                      }}
+                    >
+                      <X size={20} />
+                    </button>
+                  )}
                 <div
                   style={{
                     display: "flex",
@@ -450,7 +486,9 @@ export default function Shop() {
                   ))}
                 </div>
               </motion.aside>
+              </>
             )}
+            </AnimatePresence>
 
             {/* Product Grid */}
             <div style={{ flex: 1 }}>
@@ -459,15 +497,15 @@ export default function Shop() {
                   style={{
                     display: "grid",
                     gridTemplateColumns:
-                      "repeat(auto-fill, minmax(250px, 1fr))",
-                    gap: "1.25rem",
+                      isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(250px, 1fr))",
+                    gap: isMobile ? "0.75rem" : "1.25rem",
                   }}
                 >
                   {Array.from({ length: 8 }).map((_, i) => (
                     <div
                       key={i}
                       style={{
-                        height: 380,
+                        height: isMobile ? 240 : 380,
                         borderRadius: 6,
                         background: "rgba(212,175,55,0.06)",
                         animation: "pulse 1.5s ease-in-out infinite",
@@ -497,8 +535,8 @@ export default function Shop() {
                   style={{
                     display: "grid",
                     gridTemplateColumns:
-                      "repeat(auto-fill, minmax(250px, 1fr))",
-                    gap: "1.25rem",
+                      isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(250px, 1fr))",
+                    gap: isMobile ? "0.75rem" : "1.25rem",
                   }}
                 >
                   {filtered.map((product) => (

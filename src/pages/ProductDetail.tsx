@@ -16,6 +16,7 @@ import { useCartStore } from "../store/cartStore";
 import { useWishlistStore } from "../store/wishlistStore";
 import { useAuthStore } from "../store/authStore";
 import { useProduct, useProducts } from "../hooks/useProducts";
+import { useIsMobile } from "../hooks/useIsMobile";
 import { Variant } from "../types";
 
 const TABS = [
@@ -300,40 +301,42 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        <div className="container" style={{ padding: "0.75rem 1.5rem" }}>
+        <div className="container" style={{ padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem" }}>
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "52% 1fr",
-              gap: "3rem",
+              gridTemplateColumns: isMobile ? "1fr" : "52% 1fr",
+              gap: isMobile ? "1.25rem" : "3rem",
               alignItems: "start",
             }}
           >
-            {/* Left — Images: vertical thumbnails + main image */}
+            {/* Left — Images */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
-              style={{ display: "flex", gap: "0.6rem" }}
+              style={{ display: "flex", flexDirection: isMobile ? "column-reverse" : "row", gap: "0.6rem" }}
             >
-              {/* Vertical thumbnail strip */}
+              {/* Thumbnail strip */}
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: isMobile ? "row" : "column",
                   gap: "0.5rem",
                   flexShrink: 0,
+                  ...(isMobile ? { overflowX: "auto", paddingBottom: 4 } : {}),
                 }}
+                className="no-scrollbar"
               >
                 {product.images.map((img: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => goTo(i, i > mainImage ? 1 : -1)}
                     style={{
-                      width: 72,
-                      height: 80,
+                      width: isMobile ? 56 : 72,
+                      height: isMobile ? 64 : 80,
                       borderRadius: 6,
                       overflow: "hidden",
                       border:
@@ -366,8 +369,8 @@ export default function ProductDetail() {
                   flex: 1,
                   borderRadius: 8,
                   overflow: "hidden",
-                  height: "calc(100vh - 200px)",
-                  maxHeight: 560,
+                  height: isMobile ? "55vw" : "calc(100vh - 200px)",
+                  maxHeight: isMobile ? 400 : 560,
                   background: "#1a1a1a",
                   position: "relative",
                 }}
@@ -857,7 +860,7 @@ export default function ProductDetail() {
                 </button>
               ))}
             </div>
-            <div style={{ padding: "2rem 0", maxWidth: 700 }}>
+            <div style={{ padding: isMobile ? "1.25rem 0" : "2rem 0", maxWidth: isMobile ? "100%" : 700 }}>
               {activeTab === "Description" && (
                 <p
                   style={{
@@ -1052,14 +1055,14 @@ export default function ProductDetail() {
 
           {/* Related Products */}
           {related.length > 0 && (
-            <div style={{ marginTop: "2rem" }}>
+            <div style={{ marginTop: isMobile ? "1.5rem" : "2rem" }}>
               <h2
                 style={{
                   fontFamily: "var(--font-serif)",
-                  fontSize: "2rem",
+                  fontSize: isMobile ? "1.5rem" : "2rem",
                   fontWeight: 300,
                   color: "var(--color-text)",
-                  marginBottom: "2rem",
+                  marginBottom: isMobile ? "1rem" : "2rem",
                 }}
               >
                 You May Also Like
@@ -1067,8 +1070,8 @@ export default function ProductDetail() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-                  gap: "1.25rem",
+                  gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(240px, 1fr))",
+                  gap: isMobile ? "0.75rem" : "1.25rem",
                 }}
               >
                 {related.map((p) => (

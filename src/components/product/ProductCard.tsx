@@ -6,6 +6,7 @@ import { Product } from "../../types";
 import { useCartStore } from "../../store/cartStore";
 import { useAuthStore } from "../../store/authStore";
 import { useWishlistStore } from "../../store/wishlistStore";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +19,7 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
   const { user } = useAuthStore();
   const { toggle, isWishlisted } = useWishlistStore();
   const wishlisted = isWishlisted(product.id);
+  const isMobile = useIsMobile();
 
   const defaultVariant = product.variants[0];
   const isOutOfStock =
@@ -221,7 +223,7 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
                 padding: "1rem",
                 background:
                   "linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%)",
-                transform: "translateY(100%)",
+                transform: isMobile ? "translateY(0)" : "translateY(100%)",
                 transition: "transform 0.35s ease",
               }}
               className="add-to-cart-overlay"

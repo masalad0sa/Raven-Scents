@@ -6,6 +6,7 @@ import { Footer } from "../components/layout/Footer";
 import { GradientBlob } from "../components/effects/GradientBlob";
 import { ProductCard } from "../components/product/ProductCard";
 import { useFeaturedProducts, useBestsellers } from "../hooks/useProducts";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -121,6 +122,7 @@ function CollectionCard({
 export default function Home() {
   const { data: featuredProducts = [] } = useFeaturedProducts();
   const { data: bestsellers = [] } = useBestsellers();
+  const isMobile = useIsMobile();
 
   return (
     <>
@@ -182,7 +184,7 @@ export default function Home() {
             style={{
               position: "relative",
               zIndex: 4,
-              padding: "8rem 2rem 6rem",
+              padding: isMobile ? "6rem 1rem 4rem" : "8rem 2rem 6rem",
             }}
           >
             <motion.p
@@ -453,7 +455,7 @@ export default function Home() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px, 1fr))",
                 gap: "1.5rem",
               }}
             >
@@ -491,8 +493,8 @@ export default function Home() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "5rem",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                gap: isMobile ? "2rem" : "5rem",
                 alignItems: "center",
               }}
             >
@@ -580,7 +582,6 @@ export default function Home() {
               </motion.div>
             </div>
           </div>
-          <style>{`@media(max-width:900px){.brand-story-section > .container > div{grid-template-columns:1fr!important}}`}</style>
         </section>
 
         {/* ── Bestsellers ──────────────────────────────── */}
@@ -622,7 +623,7 @@ export default function Home() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(260px, 1fr))",
                 gap: "1.5rem",
               }}
             >

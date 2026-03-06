@@ -5,6 +5,7 @@ import { Trash2, Minus, Plus, Tag, ShoppingBag } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { useCartStore } from '../store/cartStore';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const COUPONS: Record<string, number> = {
   LUXE10: 10,
@@ -14,6 +15,7 @@ const COUPONS: Record<string, number> = {
 
 export default function Cart() {
   const { items, removeItem, updateQuantity, getSubtotal } = useCartStore();
+  const isMobile = useIsMobile();
   const [coupon, setCoupon] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; pct: number } | null>(null);
   const [couponError, setCouponError] = useState('');
@@ -43,7 +45,7 @@ export default function Cart() {
           </div>
         </div>
 
-        <div className="container" style={{ padding: '3rem 2rem' }}>
+        <div className="container" style={{ padding: isMobile ? '1.5rem 1rem' : '3rem 2rem' }}>
           {items.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '5rem 0' }}>
               <ShoppingBag size={64} strokeWidth={1} style={{ color: 'rgba(212,175,55,0.5)', marginBottom: '1.5rem' }} />
@@ -52,43 +54,74 @@ export default function Cart() {
               <Link to="/shop" className="btn btn-primary">Explore Fragrances</Link>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2.5rem', alignItems: 'start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 380px', gap: isMobile ? '1.5rem' : '2.5rem', alignItems: 'start' }}>
               {/* Items */}
               <div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-muted)', padding: '0 0 1rem', borderBottom: '1px solid rgba(212,175,55,0.15)', display: 'grid', gridTemplateColumns: '2.5fr 1fr 1fr 1fr auto', gap: '1rem' }}>
-                  <span>Product</span><span>Size</span><span>Price</span><span>Qty</span><span></span>
-                </div>
+                {!isMobile && (
+                  <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-muted)', padding: '0 0 1rem', borderBottom: '1px solid rgba(212,175,55,0.15)', display: 'grid', gridTemplateColumns: '2.5fr 1fr 1fr 1fr auto', gap: '1rem' }}>
+                    <span>Product</span><span>Size</span><span>Price</span><span>Qty</span><span></span>
+                  </div>
+                )}
 
                 {items.map((item) => (
                   <motion.div key={`${item.product.id}-${item.variant.sku}`}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr 1fr 1fr auto', gap: '1rem', alignItems: 'center', padding: '1.5rem 0', borderBottom: '1px solid rgba(212,175,55,0.15)' }}
+                    style={isMobile ? {
+                      display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1rem 0',
+                      borderBottom: '1px solid rgba(212,175,55,0.15)',
+                    } : {
+                      display: 'grid', gridTemplateColumns: '2.5fr 1fr 1fr 1fr auto', gap: '1rem',
+                      alignItems: 'center', padding: '1.5rem 0', borderBottom: '1px solid rgba(212,175,55,0.15)',
+                    }}
                   >
                     {/* Product */}
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                       <Link to={`/product/${item.product.slug}`}>
-                        <img src={item.product.images[0]} alt={item.product.name} style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 4 }} />
+                        <img src={item.product.images[0]} alt={item.product.name} style={{ width: isMobile ? 64 : 72, height: isMobile ? 64 : 72, objectFit: 'cover', borderRadius: 4 }} />
                       </Link>
-                      <div>
+                      <div style={{ flex: 1 }}>
                         <p style={{ fontFamily: 'var(--font-display)', fontSize: '0.58rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-muted)', marginBottom: '0.2rem' }}>{item.product.brand}</p>
                         <Link to={`/product/${item.product.slug}`}>
-                          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1rem', fontWeight: 500, color: 'var(--color-primary)' }}>{item.product.name}</h3>
+                          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: isMobile ? '0.9rem' : '1rem', fontWeight: 500, color: 'var(--color-primary)' }}>{item.product.name}</h3>
                         </Link>
+                        {isMobile && (
+                          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: 'var(--color-muted)', marginTop: '0.15rem' }}>
+                            {item.variant.size}{item.variant.unit} · ₹{item.variant.price.toLocaleString('en-IN')}
+                          </p>
+                        )}
                       </div>
+                      {isMobile && (
+                        <button onClick={() => removeItem(item.product.id, item.variant.sku)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(212,175,55,0.5)', display: 'flex', flexShrink: 0 }}>
+                          <Trash2 size={16} />
+                        </button>
+                      )}
                     </div>
-                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: 'var(--color-muted)' }}>{item.variant.size}{item.variant.unit}</span>
-                    <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--color-primary)' }}>₹{item.variant.price.toLocaleString('en-IN')}</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid #333', borderRadius: 4, padding: '0.3rem 0.6rem', width: 'fit-content' }}>
-                      <button onClick={() => updateQuantity(item.product.id, item.variant.sku, item.quantity - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex' }}><Minus size={12} /></button>
-                      <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, minWidth: 20, textAlign: 'center', color: 'var(--color-primary)', fontSize: '0.85rem' }}>{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.product.id, item.variant.sku, item.quantity + 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex' }}><Plus size={12} /></button>
-                    </div>
-                    <button onClick={() => removeItem(item.product.id, item.variant.sku)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(212,175,55,0.5)', display: 'flex', transition: 'color 0.2s' }}
-                      onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = 'var(--color-error)'}
-                      onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(212,175,55,0.5)'}
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    {!isMobile && <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: 'var(--color-muted)' }}>{item.variant.size}{item.variant.unit}</span>}
+                    {!isMobile && <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--color-primary)' }}>₹{item.variant.price.toLocaleString('en-IN')}</span>}
+                    {isMobile ? (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid #333', borderRadius: 4, padding: '0.3rem 0.6rem', width: 'fit-content' }}>
+                          <button onClick={() => updateQuantity(item.product.id, item.variant.sku, item.quantity - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex' }}><Minus size={12} /></button>
+                          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, minWidth: 20, textAlign: 'center', color: 'var(--color-primary)', fontSize: '0.85rem' }}>{item.quantity}</span>
+                          <button onClick={() => updateQuantity(item.product.id, item.variant.sku, item.quantity + 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex' }}><Plus size={12} /></button>
+                        </div>
+                        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--color-gold)' }}>₹{(item.variant.price * item.quantity).toLocaleString('en-IN')}</span>
+                      </div>
+                    ) : (
+                      <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid #333', borderRadius: 4, padding: '0.3rem 0.6rem', width: 'fit-content' }}>
+                          <button onClick={() => updateQuantity(item.product.id, item.variant.sku, item.quantity - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex' }}><Minus size={12} /></button>
+                          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, minWidth: 20, textAlign: 'center', color: 'var(--color-primary)', fontSize: '0.85rem' }}>{item.quantity}</span>
+                          <button onClick={() => updateQuantity(item.product.id, item.variant.sku, item.quantity + 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex' }}><Plus size={12} /></button>
+                        </div>
+                        <button onClick={() => removeItem(item.product.id, item.variant.sku)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(212,175,55,0.5)', display: 'flex', transition: 'color 0.2s' }}
+                          onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = 'var(--color-error)'}
+                          onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(212,175,55,0.5)'}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </>
+                    )}
                   </motion.div>
                 ))}
 
@@ -150,15 +183,6 @@ export default function Cart() {
         </div>
       </main>
       <Footer />
-
-      <style>{`
-        @media (max-width: 900px) {
-          .cart-layout { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 600px) {
-          .cart-table { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </>
   );
 }

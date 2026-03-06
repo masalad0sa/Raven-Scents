@@ -4,6 +4,7 @@ import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { ProductCard } from "../components/product/ProductCard";
 import { useProducts } from "../hooks/useProducts";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 const CATEGORY_META: Record<
   string,
@@ -32,6 +33,7 @@ const CATEGORY_ORDER = ["parfum", "eau-de-parfum", "eau-de-toilette"];
 export default function Collections() {
   const { data, isLoading } = useProducts();
   const products = data?.products || [];
+  const isMobile = useIsMobile();
 
   const grouped = useMemo(() => {
     const map: Record<string, typeof products> = {};
@@ -252,7 +254,7 @@ export default function Collections() {
                   style={{
                     display: "grid",
                     gridTemplateColumns:
-                      "repeat(auto-fill, minmax(260px, 1fr))",
+                      isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(260px, 1fr))",
                     gap: "2rem",
                   }}
                 >
