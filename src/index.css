@@ -41,6 +41,10 @@ body {
   cursor: none;
 }
 
+@media (pointer: coarse) {
+  body { cursor: auto; }
+}
+
 /* ─── Custom Scrollbar ──────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
@@ -67,37 +71,8 @@ body {
 .font-display { font-family: var(--font-display); }
 .font-sans { font-family: var(--font-sans); }
 
-/* ─── Custom Cursor ─────────────────────────────── */
-.cursor-outer {
-  position: fixed;
-  top: 0; left: 0;
-  width: 40px; height: 40px;
-  border: 1.5px solid var(--color-primary);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.08s, width 0.25s, height 0.25s, border-color 0.25s, background 0.25s;
-  mix-blend-mode: multiply;
-}
-
-.cursor-inner {
-  position: fixed;
-  top: 0; left: 0;
-  width: 8px; height: 8px;
-  background: var(--color-primary);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-}
-
-.cursor-outer.hovered {
-  width: 60px;
-  height: 60px;
-  background: rgba(212, 175, 55, 0.1);
-  border-color: var(--color-gold);
-}
+/* ─── Custom Cursor (mix-blend-mode:difference ball) ── */
+/* Styles injected by CustomCursor.tsx component */
 
 /* ─── Gradient Blob Texture ─────────────────────── */
 .grain-overlay {
@@ -363,12 +338,7 @@ body {
 
 /* ─── Mobile nav ─────────────────────────────────── */
 @media (max-width: 768px) {
-  body {
-    cursor: auto;
-  }
-  .cursor-outer, .cursor-inner {
-    display: none;
-  }
+  body { cursor: auto; }
 }
 
 /* ─── Checkout Steps ────────────────────────────── */

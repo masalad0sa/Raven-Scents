@@ -30,8 +30,8 @@ export function GradientBlob({ className = '', size = 700, reactToMouse = true }
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
     const animate = () => {
-      currentPos.current.x = lerp(currentPos.current.x, mousePos.current.x * 0.15, 0.04);
-      currentPos.current.y = lerp(currentPos.current.y, mousePos.current.y * 0.15, 0.04);
+      currentPos.current.x = lerp(currentPos.current.x, mousePos.current.x * 0.12, 0.035);
+      currentPos.current.y = lerp(currentPos.current.y, mousePos.current.y * 0.12, 0.035);
       if (blobRef.current) {
         blobRef.current.style.transform = `translate(${currentPos.current.x}px, ${currentPos.current.y}px)`;
       }
@@ -48,21 +48,23 @@ export function GradientBlob({ className = '', size = 700, reactToMouse = true }
   return (
     <div
       ref={blobRef}
-      className={`pointer-events-none select-none ${className}`}
+      className={className}
       style={{
         width: size,
         height: size,
         borderRadius: '50%',
-        background: `radial-gradient(ellipse at 30% 40%, 
-          #f9c0c0 0%, 
-          #f5d08a 25%, 
-          #c9a0f5 50%, 
-          #a0c9f5 75%, 
+        background: `radial-gradient(ellipse at 45% 45%,
+          rgba(255, 100, 130, 1.0) 0%,
+          rgba(255, 190, 80, 0.95) 22%,
+          rgba(180, 100, 255, 0.9) 48%,
+          rgba(80, 180, 255, 0.85) 68%,
           transparent 100%)`,
-        filter: 'blur(60px)',
-        opacity: 0.65,
-        transition: 'transform 0.05s linear',
+        filter: 'blur(28px)',
+        opacity: 1,
         willChange: 'transform',
+        pointerEvents: 'none',
+        userSelect: 'none',
+        flexShrink: 0,
       }}
       aria-hidden="true"
     />

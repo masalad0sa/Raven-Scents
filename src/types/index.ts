@@ -29,6 +29,7 @@ export interface Product {
 }
 
 export interface Variant {
+  id?: string;
   size: number;
   unit: string;
   price: number;

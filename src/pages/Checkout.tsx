@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { useCartStore } from '../store/cartStore';
+import { ordersApi } from '../lib/api';
 import { Check } from 'lucide-react';
 
 type Step = 'shipping' | 'payment' | 'review';
@@ -80,9 +81,34 @@ export default function Checkout() {
 
   const handlePlaceOrder = async () => {
     setPlacing(true);
-    await new Promise(r => setTimeout(r, 2000));
-    clearCart();
-    navigate('/order-confirmation');
+    try {
+      const payload = {
+        items: items.map(item => ({
+          product_id: item.product.id,
+          variant_id: item.variant.id,
+          quantity: item.quantity,
+          unit_price: item.variant.price
+        })),
+        shipping_address: {
+          full_name: `${shipping.firstName} ${shipping.lastName}`.trim(),
+          address_line1: shipping.address,
+          city: shipping.city,
+          state: shipping.state,
+          pincode: shipping.pincode,
+          phone: shipping.phone
+        },
+        discount: 0 // Will implement coupon later
+      };
+
+      await ordersApi.create(payload);
+      clearCart();
+      navigate('/order-confirmation');
+    } catch (err: any) {
+      console.error('Failed to place order:', err);
+      alert(err.message || 'Failed to place order. Please try again or log in.');
+    } finally {
+      setPlacing(false);
+    }
   };
 
   const inputGroup = (label: string, field: string, value: string, onChange: (v: string) => void, opts?: { type?: string; placeholder?: string; half?: boolean }) => (

@@ -5,8 +5,8 @@ import { ShoppingBag, Heart, Minus, Plus, ChevronLeft } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { ProductCard } from '../components/product/ProductCard';
-import { products } from '../data/products';
 import { useCartStore } from '../store/cartStore';
+import { useProduct, useProducts } from '../hooks/useProducts';
 import { Variant } from '../types';
 
 const TABS = ['Description', 'Fragrance Notes', 'How to Wear', 'Reviews'] as const;
@@ -59,7 +59,9 @@ function FragrancePyramid({ notes }: { notes: { top: string[]; middle: string[];
 
 export default function ProductDetail() {
   const { slug } = useParams();
-  const product = products.find(p => p.slug === slug);
+  const { data: product, isLoading } = useProduct(slug || '');
+  const { data: allData } = useProducts();
+  const allProducts = allData?.products || [];
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(product?.variants[1] ?? product?.variants[0] ?? null);
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState(0);
@@ -67,6 +69,18 @@ export default function ProductDetail() {
   const [wishlisted, setWishlisted] = useState(false);
   const [added, setAdded] = useState(false);
   const { addItem } = useCartStore();
+
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <div style={{ paddingTop: 100, minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-muted)' }}>Loading fragrance...</p>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   if (!product) {
     return (
@@ -81,7 +95,7 @@ export default function ProductDetail() {
     );
   }
 
-  const related = products.filter(p => p.id !== product.id && (p.brand === product.brand || p.scentFamily === product.scentFamily)).slice(0, 4);
+  const related = allProducts.filter((p: any) => p.id !== product.id && (p.brand === product.brand || p.scentFamily === product.scentFamily)).slice(0, 4);
 
   const handleAddToCart = () => {
     if (!selectedVariant) return;
@@ -119,7 +133,7 @@ export default function ProductDetail() {
               </div>
               {/* Thumbnails */}
               <div style={{ display: 'flex', gap: '0.75rem' }}>
-                {product.images.map((img, i) => (
+                {product.images.map((img: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => setMainImage(i)}
@@ -190,7 +204,7 @@ export default function ProductDetail() {
                   Size — {selectedVariant?.size}{selectedVariant?.unit}
                 </label>
                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  {product.variants.map(v => (
+                  {product.variants.map((v: Variant) => (
                     <button
                       key={v.sku}
                       onClick={() => setSelectedVariant(v)}
@@ -276,7 +290,7 @@ export default function ProductDetail() {
                     <div key={tier.label} style={{ marginBottom: '1.5rem' }}>
                       <p style={{ fontFamily: 'var(--font-display)', fontSize: '0.65rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-gold)', marginBottom: '0.75rem' }}>{tier.label}</p>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                        {tier.notes.map(note => (
+                        {tier.notes.map((note: string) => (
                           <span key={note} style={{ padding: '0.35rem 0.9rem', background: 'var(--color-surface)', border: '1px solid #EDE8DC', borderRadius: 3, fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: 'var(--color-primary)' }}>{note}</span>
                         ))}
                       </div>
