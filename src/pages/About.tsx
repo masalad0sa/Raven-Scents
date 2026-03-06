@@ -154,7 +154,7 @@ export default function About() {
                   fontFamily: "var(--font-serif)",
                   fontSize: "clamp(2.5rem, 7vw, 5.5rem)",
                   fontWeight: 300,
-                  color: "var(--color-ivory)",
+                  color: "var(--color-text)",
                   lineHeight: 1.0,
                   marginBottom: "1.75rem",
                 }}
@@ -308,7 +308,7 @@ export default function About() {
                         fontFamily: "var(--font-serif)",
                         fontSize: "2.5rem",
                         fontWeight: 300,
-                        color: "rgba(212,175,55,0.15)",
+                        color: "var(--color-gold)",
                         display: "block",
                         lineHeight: 1,
                       }}

@@ -1,3 +1,5 @@
+import { supabase } from "./supabase";
+
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
 // ── Auth Token Storage ──────────────────────────────
@@ -13,7 +15,7 @@ export function clearTokens() {
   localStorage.removeItem("raven_refresh_token");
 }
 
-// ── Base Fetch ──────────────────────────────────────
+// ── Base Fetch (for auth/orders/coupons routes) ─────
 async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
@@ -78,26 +80,72 @@ function mapProduct(p: any) {
 
 export const productsApi = {
   getAll: async (filters: ProductFilters = {}) => {
-    const params = new URLSearchParams();
-    Object.entries(filters).forEach(([k, v]) => {
-      if (v !== undefined && v !== "") params.set(k, String(v));
-    });
-    const data = await apiFetch<{ products: any[]; total: number }>(
-      `/products?${params}`,
-    );
-    return { ...data, products: data.products.map(mapProduct) };
+    let query = supabase
+      .from("products")
+      .select("*, product_variants(*)")
+      .order("is_featured", { ascending: false });
+
+    if (filters.search) query = query.ilike("name", `%${filters.search}%`);
+    if (filters.gender) query = query.eq("gender", filters.gender);
+    if (filters.scent_family)
+      query = query.eq("scent_family", filters.scent_family);
+    if (filters.max_price) query = query.lte("price", filters.max_price);
+    if (filters.is_new) query = query.eq("is_new", true);
+    if (filters.is_bestseller) query = query.eq("is_bestseller", true);
+
+    switch (filters.sort) {
+      case "price_asc":
+        query = query.order("price", { ascending: true });
+        break;
+      case "price_desc":
+        query = query.order("price", { ascending: false });
+        break;
+      case "newest":
+        query = query.order("created_at", { ascending: false });
+        break;
+      case "rating":
+        query = query.order("rating", { ascending: false });
+        break;
+    }
+
+    const page = Math.max(1, filters.page || 1);
+    const limit = Math.min(50, filters.limit || 50);
+    query = query.range((page - 1) * limit, page * limit - 1);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    const products = (data || []).map(mapProduct);
+    return { products, total: products.length };
   },
+
   getBySlug: async (slug: string) => {
-    const data = await apiFetch<any>(`/products/${slug}`);
+    const { data, error } = await supabase
+      .from("products")
+      .select("*, product_variants(*), reviews(*)")
+      .eq("slug", slug)
+      .single();
+    if (error) throw error;
     return mapProduct(data);
   },
+
   getFeatured: async () => {
-    const data = await apiFetch<any[]>("/products/featured");
-    return data.map(mapProduct);
+    const { data, error } = await supabase
+      .from("products")
+      .select("*, product_variants(*)")
+      .eq("is_featured", true)
+      .limit(6);
+    if (error) throw error;
+    return (data || []).map(mapProduct);
   },
+
   getBestsellers: async () => {
-    const data = await apiFetch<any[]>("/products/bestsellers");
-    return data.map(mapProduct);
+    const { data, error } = await supabase
+      .from("products")
+      .select("*, product_variants(*)")
+      .eq("is_bestseller", true)
+      .limit(8);
+    if (error) throw error;
+    return (data || []).map(mapProduct);
   },
 };
 

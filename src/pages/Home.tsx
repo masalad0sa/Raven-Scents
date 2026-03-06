@@ -5,7 +5,6 @@ import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { GradientBlob } from "../components/effects/GradientBlob";
 import { ProductCard } from "../components/product/ProductCard";
-import { products } from "../data/products";
 import { useFeaturedProducts, useBestsellers } from "../hooks/useProducts";
 
 const fadeUp = {

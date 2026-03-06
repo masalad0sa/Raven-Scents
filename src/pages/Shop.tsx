@@ -4,7 +4,6 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { ProductCard } from "../components/product/ProductCard";
-import { scentFamilies } from "../data/products";
 import { useProducts } from "../hooks/useProducts";
 
 type SortOption = "featured" | "price-asc" | "price-desc" | "newest" | "rating";
@@ -16,6 +15,14 @@ export default function Shop() {
 
   const { data, isLoading } = useProducts();
   const products = data?.products || [];
+
+  const scentFamilies = useMemo(
+    () =>
+      [
+        ...new Set(products.map((p: any) => p.scentFamily).filter(Boolean)),
+      ].sort() as string[],
+    [products],
+  );
 
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
   const [selectedScentFamilies, setSelectedScentFamilies] = useState<string[]>(
@@ -65,6 +72,7 @@ export default function Shop() {
     }
     return result;
   }, [
+    products,
     search,
     selectedGender,
     selectedScentFamilies,
@@ -446,7 +454,29 @@ export default function Shop() {
 
             {/* Product Grid */}
             <div style={{ flex: 1 }}>
-              {filtered.length === 0 ? (
+              {isLoading ? (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fill, minmax(250px, 1fr))",
+                    gap: "1.25rem",
+                  }}
+                >
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        height: 380,
+                        borderRadius: 6,
+                        background: "rgba(212,175,55,0.06)",
+                        animation: "pulse 1.5s ease-in-out infinite",
+                      }}
+                    />
+                  ))}
+                  <style>{`@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.9}}`}</style>
+                </div>
+              ) : filtered.length === 0 ? (
                 <div style={{ textAlign: "center", padding: "5rem 0" }}>
                   <p
                     style={{
