@@ -192,3 +192,116 @@ export const couponsApi = {
       body: JSON.stringify({ code, cart_total }),
     }),
 };
+
+// ── Admin Types ───────────────────────────────────────────────
+export interface AdminProductPayload {
+  name: string;
+  brand: string;
+  slug: string;
+  short_desc: string;
+  description: string;
+  price: number;
+  compare_price?: number | null;
+  images: string[];
+  category: string;
+  gender: string;
+  scent_family: string;
+  concentration: string;
+  sillage: string;
+  longevity: string;
+  tags: string[];
+  notes_top: string[];
+  notes_middle: string[];
+  notes_base: string[];
+  is_featured: boolean;
+  is_bestseller: boolean;
+  is_new: boolean;
+}
+
+export interface AdminVariantPayload {
+  size: number;
+  unit: string;
+  price: number;
+  stock: number;
+  sku: string;
+}
+
+// ── Admin API (direct Supabase — requires is_admin = true in profiles) ──
+export const adminApi = {
+  isAdmin: async (): Promise<boolean> => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return false;
+    const { data } = await supabase
+      .from("profiles")
+      .select("is_admin")
+      .eq("id", user.id)
+      .single();
+    return data?.is_admin === true;
+  },
+
+  getAllProducts: async () => {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*, product_variants(*)")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data || []).map(mapProduct);
+  },
+
+  createProduct: async (
+    product: AdminProductPayload,
+    variants: AdminVariantPayload[],
+  ) => {
+    const { data, error } = await supabase
+      .from("products")
+      .insert(product)
+      .select()
+      .single();
+    if (error) throw error;
+    if (variants.length > 0) {
+      const { error: ve } = await supabase
+        .from("product_variants")
+        .insert(variants.map((v) => ({ ...v, product_id: data.id })));
+      if (ve) throw ve;
+    }
+    return data;
+  },
+
+  updateProduct: async (
+    id: string,
+    product: AdminProductPayload,
+    variants: AdminVariantPayload[],
+  ) => {
+    const { error } = await supabase
+      .from("products")
+      .update({ ...product, updated_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) throw error;
+    // Replace all variants atomically
+    await supabase.from("product_variants").delete().eq("product_id", id);
+    if (variants.length > 0) {
+      const { error: ve } = await supabase
+        .from("product_variants")
+        .insert(variants.map((v) => ({ ...v, product_id: id })));
+      if (ve) throw ve;
+    }
+  },
+
+  deleteProduct: async (id: string) => {
+    const { error } = await supabase.from("products").delete().eq("id", id);
+    if (error) throw error;
+  },
+
+  uploadImage: async (file: File, folder: string): Promise<string> => {
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await supabase.storage
+      .from("product-images")
+      .upload(path, file, { contentType: file.type });
+    if (error) throw error;
+    const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+    return data.publicUrl;
+  },
+};

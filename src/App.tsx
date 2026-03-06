@@ -17,6 +17,7 @@ import Signup from "./pages/Signup";
 import Account from "./pages/Account";
 import Wishlist from "./pages/Wishlist";
 import NotFound from "./pages/NotFound";
+import AdminProducts from "./pages/admin/AdminProducts";
 
 function App() {
   const { initialize, user } = useAuthStore();
@@ -51,6 +52,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/account" element={<Account />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/admin" element={<AdminProducts />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
