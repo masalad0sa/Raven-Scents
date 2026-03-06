@@ -4,6 +4,8 @@ import { ShoppingBag, Heart, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { Product } from "../../types";
 import { useCartStore } from "../../store/cartStore";
+import { useAuthStore } from "../../store/authStore";
+import { useWishlistStore } from "../../store/wishlistStore";
 
 interface ProductCardProps {
   product: Product;
@@ -11,9 +13,11 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onQuickView }: ProductCardProps) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [added, setAdded] = useState(false);
   const { addItem } = useCartStore();
+  const { user } = useAuthStore();
+  const { toggle, isWishlisted } = useWishlistStore();
+  const wishlisted = isWishlisted(product.id);
 
   const defaultVariant = product.variants[0];
 
@@ -28,7 +32,7 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsWishlisted(!isWishlisted);
+    toggle(product.id, user?.id ?? null);
   };
 
   const handleQuickView = (e: React.MouseEvent) => {
@@ -144,11 +148,11 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  color: isWishlisted ? "#E74C3C" : "var(--color-muted)",
+                  color: wishlisted ? "#E74C3C" : "var(--color-muted)",
                   transition: "all 0.25s",
                 }}
               >
-                <Heart size={13} fill={isWishlisted ? "#E74C3C" : "none"} />
+                <Heart size={13} fill={wishlisted ? "#E74C3C" : "none"} />
               </button>
               {onQuickView && (
                 <button
