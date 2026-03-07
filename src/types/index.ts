@@ -8,8 +8,13 @@ export interface Product {
   price: number;
   compareAtPrice?: number;
   images: string[];
-  category: 'eau-de-parfum' | 'eau-de-toilette' | 'parfum' | 'cologne' | 'body-mist';
-  gender: 'masculine' | 'feminine' | 'unisex';
+  category:
+    | "eau-de-parfum"
+    | "eau-de-toilette"
+    | "parfum"
+    | "cologne"
+    | "body-mist";
+  gender: "masculine" | "feminine" | "unisex";
   scentFamily: string;
   tags: string[];
   notes: {
@@ -18,7 +23,7 @@ export interface Product {
     base: string[];
   };
   concentration: string;
-  sillage: 'light' | 'moderate' | 'heavy';
+  sillage: "light" | "moderate" | "heavy";
   longevity: string;
   variants: Variant[];
   rating: number;
@@ -53,7 +58,12 @@ export interface Filters {
   search: string;
 }
 
-export type SortOption = 'featured' | 'price-asc' | 'price-desc' | 'newest' | 'rating';
+export type SortOption =
+  | "featured"
+  | "price-asc"
+  | "price-desc"
+  | "newest"
+  | "rating";
 
 export interface Review {
   id: string;

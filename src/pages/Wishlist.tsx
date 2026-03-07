@@ -35,7 +35,10 @@ export default function Wishlist() {
 
   return (
     <>
-      <SEO title="My Wishlist" description="Your saved fragrances at Raven Scents." />
+      <SEO
+        title="My Wishlist"
+        description="Your saved fragrances at Raven Scents."
+      />
       <Header />
       <main
         style={{

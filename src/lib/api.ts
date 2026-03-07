@@ -204,8 +204,15 @@ export const reviewsApi = {
     if (error) throw error;
     return data || [];
   },
-  submit: async (productId: string, rating: number, title: string, body: string) => {
-    const { data: { user } } = await supabase.auth.getUser();
+  submit: async (
+    productId: string,
+    rating: number,
+    title: string,
+    body: string,
+  ) => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) throw new Error("You must be logged in to submit a review");
     const { data, error } = await supabase
       .from("reviews")
@@ -213,7 +220,8 @@ export const reviewsApi = {
       .select("*, profiles(full_name)")
       .single();
     if (error) {
-      if (error.code === "23505") throw new Error("You have already reviewed this product");
+      if (error.code === "23505")
+        throw new Error("You have already reviewed this product");
       throw error;
     }
     return data;
