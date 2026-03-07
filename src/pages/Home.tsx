@@ -660,7 +660,7 @@ export default function Home() {
               width: "max-content",
             }}
           >
-            {[...Array(3)].flatMap(() =>
+            {[...Array(3)].flatMap((_, rep) =>
               [
                 "Floral",
                 "Woody",
@@ -673,7 +673,7 @@ export default function Home() {
                 "Chypre",
               ].map((s, i) => (
                 <span
-                  key={`${s}${i}`}
+                  key={`${rep}-${s}${i}`}
                   style={{
                     fontFamily: "var(--font-serif)",
                     fontSize: "clamp(2rem, 4vw, 3rem)",

@@ -1,7 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 const SIZE = 20;
 const SIZE_GROW = 44;
+
+function isTouchDevice() {
+  return (
+    typeof window !== "undefined" &&
+    ("ontouchstart" in window || navigator.maxTouchPoints > 0)
+  );
+}
 
 export function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -14,7 +21,7 @@ export function CustomCursor() {
       pos.current = { x: e.clientX, y: e.clientY };
     };
 
-    window.addEventListener('mousemove', onMove);
+    window.addEventListener("mousemove", onMove);
 
     let rafId: number;
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -52,10 +59,14 @@ export function CustomCursor() {
     };
 
     const attachListeners = () => {
-      document.querySelectorAll('a, button, input, select, label, textarea, [data-cursor]').forEach(el => {
-        el.addEventListener('mouseenter', grow);
-        el.addEventListener('mouseleave', shrink);
-      });
+      document
+        .querySelectorAll(
+          "a, button, input, select, label, textarea, [data-cursor]",
+        )
+        .forEach((el) => {
+          el.addEventListener("mouseenter", grow);
+          el.addEventListener("mouseleave", shrink);
+        });
     };
 
     const observer = new MutationObserver(attachListeners);
@@ -63,28 +74,30 @@ export function CustomCursor() {
     attachListeners();
 
     return () => {
-      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(rafId);
       observer.disconnect();
     };
   }, []);
 
+  if (isTouchDevice()) return null;
+
   return (
     <div
       ref={cursorRef}
       style={{
-        position: 'fixed',
+        position: "fixed",
         top: 0,
         left: 0,
         width: SIZE,
         height: SIZE,
-        borderRadius: '50%',
-        background: '#fff',
-        pointerEvents: 'none',
+        borderRadius: "50%",
+        background: "#fff",
+        pointerEvents: "none",
         zIndex: 99999,
-        mixBlendMode: 'difference',
-        willChange: 'transform, width, height',
-        transition: 'width 0.18s ease, height 0.18s ease',
+        mixBlendMode: "difference",
+        willChange: "transform, width, height",
+        transition: "width 0.18s ease, height 0.18s ease",
       }}
     />
   );
