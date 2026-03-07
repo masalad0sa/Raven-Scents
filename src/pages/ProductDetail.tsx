@@ -138,6 +138,7 @@ function FragrancePyramid({
 
 export default function ProductDetail() {
   const { slug } = useParams();
+  const isMobile = useIsMobile();
   const { data: product, isLoading } = useProduct(slug || "");
   const { data: allData } = useProducts();
   const allProducts = allData?.products || [];
