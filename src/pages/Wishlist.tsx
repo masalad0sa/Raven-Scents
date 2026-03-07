@@ -9,6 +9,7 @@ import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "../hooks/useIsMobile";
+import { SEO } from "../components/seo/SEO";
 
 export default function Wishlist() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ export default function Wishlist() {
 
   return (
     <>
+      <SEO title="My Wishlist" description="Your saved fragrances at Raven Scents." />
       <Header />
       <main
         style={{

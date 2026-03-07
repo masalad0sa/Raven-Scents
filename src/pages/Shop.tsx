@@ -6,6 +6,7 @@ import { Footer } from "../components/layout/Footer";
 import { ProductCard } from "../components/product/ProductCard";
 import { useProducts } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
+import { SEO } from "../components/seo/SEO";
 
 type SortOption = "featured" | "price-asc" | "price-desc" | "newest" | "rating";
 
@@ -146,6 +147,7 @@ export default function Shop() {
 
   return (
     <>
+      <SEO title="Shop Fragrances" description="Browse our curated collection of luxury perfumes. Filter by scent family, gender, and price to find your signature fragrance." />
       <Header />
       <main
         style={{

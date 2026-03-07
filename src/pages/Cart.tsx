@@ -6,12 +6,8 @@ import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { useCartStore } from "../store/cartStore";
 import { useIsMobile } from "../hooks/useIsMobile";
-
-const COUPONS: Record<string, number> = {
-  LUXE10: 10,
-  WELCOME15: 15,
-  SCENT20: 20,
-};
+import { couponsApi } from "../lib/api";
+import { SEO } from "../components/seo/SEO";
 
 export default function Cart() {
   const { items, removeItem, updateQuantity, getSubtotal } = useCartStore();
@@ -22,6 +18,7 @@ export default function Cart() {
     pct: number;
   } | null>(null);
   const [couponError, setCouponError] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
 
   const subtotal = getSubtotal();
   const shippingFee = subtotal >= 5000 ? 0 : 299;
@@ -30,18 +27,25 @@ export default function Cart() {
     : 0;
   const total = subtotal + shippingFee - discount;
 
-  const applyCoupon = () => {
+  const applyCoupon = async () => {
     const code = coupon.trim().toUpperCase();
-    if (COUPONS[code]) {
-      setAppliedCoupon({ code, pct: COUPONS[code] });
-      setCouponError("");
-    } else {
-      setCouponError("Invalid coupon code. Try LUXE10, WELCOME15, or SCENT20.");
+    if (!code) return;
+    setCouponLoading(true);
+    setCouponError("");
+    try {
+      const res = await couponsApi.validate(code, subtotal);
+      setAppliedCoupon({ code, pct: res.discount_pct });
+      sessionStorage.setItem("raven_coupon", JSON.stringify({ code, pct: res.discount_pct }));
+    } catch (err: any) {
+      setCouponError(err.message || "Invalid coupon code");
+    } finally {
+      setCouponLoading(false);
     }
   };
 
   return (
     <>
+      <SEO title="Your Cart" description="Review your cart and proceed to checkout at Raven Scents." />
       <Header />
       <main
         style={{
@@ -516,6 +520,7 @@ export default function Cart() {
                         onClick={() => {
                           setAppliedCoupon(null);
                           setCoupon("");
+                          sessionStorage.removeItem("raven_coupon");
                         }}
                         style={{
                           background: "none",
@@ -541,6 +546,7 @@ export default function Cart() {
                       />
                       <button
                         onClick={applyCoupon}
+                        disabled={couponLoading}
                         className="btn btn-outline"
                         style={{
                           padding: "0.75rem 1rem",

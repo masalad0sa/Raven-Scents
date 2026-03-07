@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://raven-scents.vercel.app/sitemap.xml

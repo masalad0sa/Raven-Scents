@@ -14,9 +14,11 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
 import { supabase } from "../lib/supabase";
+import { ordersApi } from "../lib/api";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { useIsMobile } from "../hooks/useIsMobile";
+import { SEO } from "../components/seo/SEO";
 
 interface Address {
   id: string;
@@ -68,6 +70,16 @@ export default function Account() {
   const [addrSaving, setAddrSaving] = useState(false);
   const [editingAddrId, setEditingAddrId] = useState<string | null>(null);
 
+  // Orders state
+  const [orders, setOrders] = useState<any[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+
+  // Password state
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [passwordMsg, setPasswordMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
   useEffect(() => {
     if (!user) {
       navigate("/login", { replace: true });
@@ -75,6 +87,7 @@ export default function Account() {
     }
     loadProfile();
     loadAddresses();
+    loadOrders();
   }, [user]);
 
   const loadProfile = async () => {
@@ -102,6 +115,18 @@ export default function Account() {
     setAddrLoading(false);
   };
 
+  const loadOrders = async () => {
+    if (!user) return;
+    setOrdersLoading(true);
+    try {
+      const data = await ordersApi.getAll();
+      setOrders(data ?? []);
+    } catch {
+      setOrders([]);
+    }
+    setOrdersLoading(false);
+  };
+
   const saveProfile = async () => {
     if (!user) return;
     setProfileSaving(true);
@@ -113,6 +138,28 @@ export default function Account() {
     setProfile(profileDraft);
     setProfileEditing(false);
     setProfileSaving(false);
+  };
+
+  const changePassword = async () => {
+    setPasswordMsg(null);
+    if (newPassword.length < 6) {
+      setPasswordMsg({ type: "error", text: "Password must be at least 6 characters" });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordMsg({ type: "error", text: "Passwords do not match" });
+      return;
+    }
+    setPasswordSaving(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) {
+      setPasswordMsg({ type: "error", text: error.message });
+    } else {
+      setPasswordMsg({ type: "success", text: "Password updated successfully" });
+      setNewPassword("");
+      setConfirmPassword("");
+    }
+    setPasswordSaving(false);
   };
 
   const emptyAddrForm = (): Omit<Address, "id" | "is_default"> => ({
@@ -172,6 +219,7 @@ export default function Account() {
 
   return (
     <>
+      <SEO title="My Account" description="Manage your profile, addresses, and orders at Raven Scents." />
       <Header />
       <main
         style={{
@@ -305,6 +353,7 @@ export default function Account() {
 
           {/* Tab: Profile */}
           {tab === "profile" && (
+            <>
             <div
               style={{
                 background: "#111",
@@ -420,6 +469,53 @@ export default function Account() {
                 </dl>
               )}
             </div>
+
+            {/* Password Change */}
+            <div
+              style={{
+                background: "#111",
+                border: "1px solid rgba(212,175,55,0.1)",
+                borderRadius: 10,
+                padding: isMobile ? "1.5rem" : "2rem",
+                marginTop: "1.5rem",
+              }}
+            >
+              <h3 style={sectionHeading}>Change Password</h3>
+              <div style={{ display: "grid", gap: "1rem", marginTop: "1.25rem", maxWidth: 400 }}>
+                <FormField
+                  label="New Password"
+                  type="password"
+                  value={newPassword}
+                  onChange={setNewPassword}
+                  placeholder="Min 6 characters"
+                />
+                <FormField
+                  label="Confirm Password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={setConfirmPassword}
+                  placeholder="Re-enter password"
+                />
+                {passwordMsg && (
+                  <p style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.8rem",
+                    color: passwordMsg.type === "success" ? "var(--color-success)" : "var(--color-error)",
+                    margin: 0,
+                  }}>
+                    {passwordMsg.text}
+                  </p>
+                )}
+                <button
+                  onClick={changePassword}
+                  disabled={passwordSaving}
+                  style={primaryBtnStyle(passwordSaving)}
+                >
+                  {passwordSaving ? "Updating..." : "Update Password"}
+                </button>
+              </div>
+            </div>
+            </>
           )}
 
           {/* Tab: Addresses */}
@@ -723,58 +819,206 @@ export default function Account() {
 
           {/* Tab: Orders */}
           {tab === "orders" && (
-            <div
-              style={{
-                background: "#111",
-                border: "1px solid rgba(212,175,55,0.1)",
-                borderRadius: 10,
-                padding: "3rem",
-                textAlign: "center",
-              }}
-            >
-              <ShoppingBag
-                size={40}
-                color="rgba(212,175,55,0.3)"
-                style={{ margin: "0 auto 1rem" }}
-              />
-              <h3
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "1.3rem",
-                  color: "var(--color-text)",
-                  margin: "0 0 0.5rem",
-                }}
-              >
-                No Orders Yet
-              </h3>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  color: "var(--color-text-muted)",
-                  margin: "0 0 2rem",
-                }}
-              >
-                Your order history will appear here once you place your first
-                order.
-              </p>
-              <a
-                href="/shop"
-                style={{
-                  display: "inline-block",
-                  background: "var(--color-gold)",
-                  color: "#0d0d0d",
-                  textDecoration: "none",
-                  borderRadius: 6,
-                  padding: "0.75rem 2rem",
-                  fontFamily: "var(--font-display)",
-                  fontSize: "0.7rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                }}
-              >
-                Shop Now
-              </a>
+            <div>
+              {ordersLoading ? (
+                <div style={{ textAlign: "center", padding: "3rem" }}>
+                  <p style={{ fontFamily: "var(--font-body)", color: "var(--color-text-muted)" }}>
+                    Loading orders…
+                  </p>
+                </div>
+              ) : orders.length === 0 ? (
+                <div
+                  style={{
+                    background: "#111",
+                    border: "1px solid rgba(212,175,55,0.1)",
+                    borderRadius: 10,
+                    padding: "3rem",
+                    textAlign: "center",
+                  }}
+                >
+                  <ShoppingBag
+                    size={40}
+                    color="rgba(212,175,55,0.3)"
+                    style={{ margin: "0 auto 1rem" }}
+                  />
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-serif)",
+                      fontSize: "1.3rem",
+                      color: "var(--color-text)",
+                      margin: "0 0 0.5rem",
+                    }}
+                  >
+                    No Orders Yet
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      color: "var(--color-text-muted)",
+                      margin: "0 0 2rem",
+                    }}
+                  >
+                    Your order history will appear here once you place your first
+                    order.
+                  </p>
+                  <a
+                    href="/shop"
+                    style={{
+                      display: "inline-block",
+                      background: "var(--color-gold)",
+                      color: "#0d0d0d",
+                      textDecoration: "none",
+                      borderRadius: 6,
+                      padding: "0.75rem 2rem",
+                      fontFamily: "var(--font-display)",
+                      fontSize: "0.7rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Shop Now
+                  </a>
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                  {orders.map((order: any) => (
+                    <div
+                      key={order.id}
+                      style={{
+                        background: "#111",
+                        border: "1px solid rgba(212,175,55,0.1)",
+                        borderRadius: 10,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {/* Order header */}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          flexWrap: "wrap",
+                          gap: "0.75rem",
+                          padding: "1rem 1.25rem",
+                          borderBottom: "1px solid rgba(212,175,55,0.08)",
+                          background: "rgba(212,175,55,0.03)",
+                        }}
+                      >
+                        <div style={{ display: "flex", gap: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
+                          <div>
+                            <span style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem", color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                              Order
+                            </span>
+                            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-text)", margin: "0.15rem 0 0" }}>
+                              #{order.id.slice(0, 8).toUpperCase()}
+                            </p>
+                          </div>
+                          <div>
+                            <span style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem", color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                              Date
+                            </span>
+                            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-text)", margin: "0.15rem 0 0" }}>
+                              {new Date(order.created_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                            </p>
+                          </div>
+                          <div>
+                            <span style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem", color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                              Total
+                            </span>
+                            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-gold)", margin: "0.15rem 0 0", fontWeight: 600 }}>
+                              ${(order.total / 100).toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                        <span
+                          style={{
+                            display: "inline-block",
+                            padding: "0.3rem 0.75rem",
+                            borderRadius: 20,
+                            fontSize: "0.6rem",
+                            fontFamily: "var(--font-display)",
+                            fontWeight: 700,
+                            letterSpacing: "0.1em",
+                            textTransform: "uppercase",
+                            background:
+                              order.status === "delivered"
+                                ? "rgba(74,222,128,0.12)"
+                                : order.status === "shipped"
+                                ? "rgba(96,165,250,0.12)"
+                                : order.status === "cancelled"
+                                ? "rgba(248,113,113,0.12)"
+                                : "rgba(212,175,55,0.12)",
+                            color:
+                              order.status === "delivered"
+                                ? "#4ade80"
+                                : order.status === "shipped"
+                                ? "#60a5fa"
+                                : order.status === "cancelled"
+                                ? "#f87171"
+                                : "var(--color-gold)",
+                          }}
+                        >
+                          {order.status}
+                        </span>
+                      </div>
+
+                      {/* Order items */}
+                      <div style={{ padding: "1rem 1.25rem" }}>
+                        {order.order_items?.map((item: any, idx: number) => (
+                          <div
+                            key={idx}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "1rem",
+                              padding: "0.6rem 0",
+                              borderBottom: idx < order.order_items.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
+                            }}
+                          >
+                            {item.products?.images?.[0] && (
+                              <img
+                                src={item.products.images[0]}
+                                alt={item.products.name}
+                                style={{
+                                  width: 48,
+                                  height: 48,
+                                  objectFit: "cover",
+                                  borderRadius: 6,
+                                  border: "1px solid rgba(212,175,55,0.1)",
+                                }}
+                              />
+                            )}
+                            <div style={{ flex: 1 }}>
+                              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-text)", margin: 0 }}>
+                                {item.products?.name ?? "Product"}
+                              </p>
+                              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", color: "var(--color-text-muted)", margin: "0.15rem 0 0" }}>
+                                Qty: {item.quantity} × ${(item.unit_price / 100).toFixed(2)}
+                              </p>
+                            </div>
+                            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-text)", margin: 0 }}>
+                              ${((item.quantity * item.unit_price) / 100).toFixed(2)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Coupon / discount row */}
+                      {order.coupon_code && (
+                        <div style={{ padding: "0 1.25rem 0.75rem", display: "flex", justifyContent: "flex-end", gap: "0.5rem", alignItems: "center" }}>
+                          <span style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", color: "var(--color-text-muted)" }}>
+                            Coupon: {order.coupon_code}
+                          </span>
+                          <span style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", color: "#4ade80" }}>
+                            −${(order.discount / 100).toFixed(2)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

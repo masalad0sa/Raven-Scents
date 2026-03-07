@@ -54,3 +54,15 @@ export interface Filters {
 }
 
 export type SortOption = 'featured' | 'price-asc' | 'price-desc' | 'newest' | 'rating';
+
+export interface Review {
+  id: string;
+  product_id: string;
+  user_id: string;
+  rating: number;
+  title: string | null;
+  body: string | null;
+  verified: boolean;
+  created_at: string;
+  profiles?: { full_name: string | null };
+}

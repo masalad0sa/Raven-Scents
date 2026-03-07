@@ -7,6 +7,7 @@ import { useCartStore } from "../store/cartStore";
 import { ordersApi } from "../lib/api";
 import { Check } from "lucide-react";
 import { useIsMobile } from "../hooks/useIsMobile";
+import { SEO } from "../components/seo/SEO";
 
 type Step = "shipping" | "payment" | "review";
 const STEPS: Step[] = ["shipping", "payment", "review"];
@@ -74,9 +75,17 @@ export default function Checkout() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [placing, setPlacing] = useState(false);
 
+  const savedCoupon = (() => {
+    try {
+      const raw = sessionStorage.getItem("raven_coupon");
+      return raw ? JSON.parse(raw) as { code: string; pct: number } : null;
+    } catch { return null; }
+  })();
+
   const subtotal = getSubtotal();
   const shippingFee = subtotal >= 5000 ? 0 : 299;
-  const total = subtotal + shippingFee;
+  const discount = savedCoupon ? Math.round((subtotal * savedCoupon.pct) / 100) : 0;
+  const total = subtotal + shippingFee - discount;
 
   const validateShipping = () => {
     const e: Record<string, string> = {};
@@ -142,10 +151,12 @@ export default function Checkout() {
           pincode: shipping.pincode,
           phone: shipping.phone,
         },
-        discount: 0, // Will implement coupon later
+        discount,
+        coupon_code: savedCoupon?.code || null,
       };
 
       await ordersApi.create(payload);
+      sessionStorage.removeItem("raven_coupon");
       clearCart();
       navigate("/order-confirmation");
     } catch (err: any) {
@@ -213,6 +224,7 @@ export default function Checkout() {
 
   return (
     <>
+      <SEO title="Checkout" description="Complete your purchase at Raven Scents." />
       <Header />
       <main
         style={{
@@ -989,6 +1001,14 @@ export default function Checkout() {
                     label: "Shipping",
                     val: shippingFee === 0 ? "Free" : `₹${shippingFee}`,
                   },
+                  ...(savedCoupon
+                    ? [
+                        {
+                          label: `Discount (${savedCoupon.code} ${savedCoupon.pct}%)`,
+                          val: `-₹${discount.toLocaleString("en-IN")}`,
+                        },
+                      ]
+                    : []),
                 ].map((row) => (
                   <div
                     key={row.label}

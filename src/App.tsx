@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { HelmetProvider } from "react-helmet-async";
 import { CustomCursor } from "./components/effects/CustomCursor";
 import { GrainOverlay } from "./components/effects/GrainOverlay";
 import { CartDrawer } from "./components/layout/CartDrawer";
@@ -47,6 +48,7 @@ function App() {
   }, [user]);
 
   return (
+    <HelmetProvider>
     <BrowserRouter>
       <CustomCursor />
       <GrainOverlay />
@@ -95,6 +97,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

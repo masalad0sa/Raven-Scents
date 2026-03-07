@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
+import { SEO } from "../components/seo/SEO";
 import { GradientBlob } from "../components/effects/GradientBlob";
 import { ProductCard } from "../components/product/ProductCard";
 import { useFeaturedProducts, useBestsellers } from "../hooks/useProducts";
@@ -126,6 +127,7 @@ export default function Home() {
 
   return (
     <>
+      <SEO title="Luxury Perfumes & Niche Fragrances" description="Discover premium and niche fragrances at Raven Scents. Explore our curated collection of luxury perfumes for every occasion." />
       <Header />
       <main>
         {/* ── Hero ────────────────────────────────────── */}

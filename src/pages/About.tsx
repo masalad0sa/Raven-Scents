@@ -6,6 +6,7 @@ import { Footer } from "../components/layout/Footer";
 import { GradientBlob } from "../components/effects/GradientBlob";
 import { useFeaturedProducts } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
+import { SEO } from "../components/seo/SEO";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -75,6 +76,7 @@ export default function About() {
     .filter(Boolean);
   return (
     <>
+      <SEO title="About Raven Scents" description="Learn about Raven Scents — our story, philosophy, and commitment to crafting exceptional fragrances." />
       <Header />
       <main style={{ paddingTop: 72, background: "var(--color-ivory)" }}>
         {/* ── Hero ──────────────────────────────────────  */}
