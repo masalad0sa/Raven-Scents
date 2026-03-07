@@ -23,7 +23,10 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection isMobile={isMobile} />
-        <FeaturedSection featuredProducts={featuredProducts} isMobile={isMobile} />
+        <FeaturedSection
+          featuredProducts={featuredProducts}
+          isMobile={isMobile}
+        />
         <BrandStory isMobile={isMobile} />
         <BestsellersSection bestsellers={bestsellers} isMobile={isMobile} />
         <ScentMarquee />

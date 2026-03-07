@@ -33,7 +33,10 @@ export function AddressesTab({
   const isMobile = useIsMobile();
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [addrLoading, setAddrLoading] = useState(false);
-  const [addrForm, setAddrForm] = useState<Omit<Address, "id" | "is_default"> | null>(null);
+  const [addrForm, setAddrForm] = useState<Omit<
+    Address,
+    "id" | "is_default"
+  > | null>(null);
   const [addrSaving, setAddrSaving] = useState(false);
   const [editingAddrId, setEditingAddrId] = useState<string | null>(null);
 
@@ -87,17 +90,36 @@ export function AddressesTab({
   };
 
   const setDefaultAddress = async (id: string) => {
-    await supabase.from("user_addresses").update({ is_default: false }).eq("user_id", user.id);
-    await supabase.from("user_addresses").update({ is_default: true }).eq("id", id);
+    await supabase
+      .from("user_addresses")
+      .update({ is_default: false })
+      .eq("user_id", user.id);
+    await supabase
+      .from("user_addresses")
+      .update({ is_default: true })
+      .eq("id", id);
     loadAddresses();
   };
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "1.5rem",
+        }}
+      >
         <h2 style={sectionHeading}>Saved Addresses</h2>
         {!addrForm && (
-          <button onClick={() => { setAddrForm(emptyAddrForm()); setEditingAddrId(null); }} style={primaryBtnStyle(false)}>
+          <button
+            onClick={() => {
+              setAddrForm(emptyAddrForm());
+              setEditingAddrId(null);
+            }}
+            style={primaryBtnStyle(false)}
+          >
             <Plus size={13} />
             Add Address
           </button>
@@ -106,27 +128,85 @@ export function AddressesTab({
 
       {/* Add/Edit form */}
       {addrForm && (
-        <div style={{ background: "#111", border: "1px solid rgba(212,175,55,0.2)", borderRadius: 10, padding: "1.75rem", marginBottom: "1.5rem" }}>
+        <div
+          style={{
+            background: "#111",
+            border: "1px solid rgba(212,175,55,0.2)",
+            borderRadius: 10,
+            padding: "1.75rem",
+            marginBottom: "1.5rem",
+          }}
+        >
           <h3 style={{ ...sectionHeading, marginBottom: "1.5rem" }}>
             {editingAddrId ? "Edit Address" : "New Address"}
           </h3>
-          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "1rem 1.25rem", maxWidth: 600 }}>
-            <FormField label="Full Name" value={addrForm.full_name} onChange={(v) => setAddrForm((f) => f && { ...f, full_name: v })} />
-            <FormField label="Phone" value={addrForm.phone} onChange={(v) => setAddrForm((f) => f && { ...f, phone: v })} type="tel" placeholder="+91 98765 43210" />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              gap: "1rem 1.25rem",
+              maxWidth: 600,
+            }}
+          >
+            <FormField
+              label="Full Name"
+              value={addrForm.full_name}
+              onChange={(v) => setAddrForm((f) => f && { ...f, full_name: v })}
+            />
+            <FormField
+              label="Phone"
+              value={addrForm.phone}
+              onChange={(v) => setAddrForm((f) => f && { ...f, phone: v })}
+              type="tel"
+              placeholder="+91 98765 43210"
+            />
             <div style={{ gridColumn: "1 / -1" }}>
-              <FormField label="Street Address" value={addrForm.street} onChange={(v) => setAddrForm((f) => f && { ...f, street: v })} placeholder="123 Main St, Apt 4" />
+              <FormField
+                label="Street Address"
+                value={addrForm.street}
+                onChange={(v) => setAddrForm((f) => f && { ...f, street: v })}
+                placeholder="123 Main St, Apt 4"
+              />
             </div>
-            <FormField label="City" value={addrForm.city} onChange={(v) => setAddrForm((f) => f && { ...f, city: v })} />
-            <FormField label="State" value={addrForm.state} onChange={(v) => setAddrForm((f) => f && { ...f, state: v })} />
-            <FormField label="Postal Code" value={addrForm.postal_code} onChange={(v) => setAddrForm((f) => f && { ...f, postal_code: v })} />
-            <FormField label="Country" value={addrForm.country} onChange={(v) => setAddrForm((f) => f && { ...f, country: v })} />
+            <FormField
+              label="City"
+              value={addrForm.city}
+              onChange={(v) => setAddrForm((f) => f && { ...f, city: v })}
+            />
+            <FormField
+              label="State"
+              value={addrForm.state}
+              onChange={(v) => setAddrForm((f) => f && { ...f, state: v })}
+            />
+            <FormField
+              label="Postal Code"
+              value={addrForm.postal_code}
+              onChange={(v) =>
+                setAddrForm((f) => f && { ...f, postal_code: v })
+              }
+            />
+            <FormField
+              label="Country"
+              value={addrForm.country}
+              onChange={(v) => setAddrForm((f) => f && { ...f, country: v })}
+            />
           </div>
           <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.5rem" }}>
-            <button onClick={saveAddress} disabled={addrSaving} style={primaryBtnStyle(addrSaving)}>
+            <button
+              onClick={saveAddress}
+              disabled={addrSaving}
+              style={primaryBtnStyle(addrSaving)}
+            >
               <Check size={13} />
               {addrSaving ? "Saving…" : "Save Address"}
             </button>
-            <button onClick={() => { setAddrForm(null); setEditingAddrId(null); }} style={ghostBtnStyle}>
+            <button
+              onClick={() => {
+                setAddrForm(null);
+                setEditingAddrId(null);
+              }}
+              style={ghostBtnStyle}
+            >
               <X size={13} />
               Cancel
             </button>
@@ -136,11 +216,36 @@ export function AddressesTab({
 
       {/* Address cards */}
       {addrLoading ? (
-        <p style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-body)" }}>Loading…</p>
+        <p
+          style={{
+            color: "var(--color-text-muted)",
+            fontFamily: "var(--font-body)",
+          }}
+        >
+          Loading…
+        </p>
       ) : addresses.length === 0 ? (
-        <div style={{ background: "#111", border: "1px solid rgba(212,175,55,0.1)", borderRadius: 10, padding: "3rem", textAlign: "center" }}>
-          <MapPin size={32} color="rgba(212,175,55,0.3)" style={{ margin: "0 auto 1rem" }} />
-          <p style={{ fontFamily: "var(--font-body)", color: "var(--color-text-muted)", margin: 0 }}>
+        <div
+          style={{
+            background: "#111",
+            border: "1px solid rgba(212,175,55,0.1)",
+            borderRadius: 10,
+            padding: "3rem",
+            textAlign: "center",
+          }}
+        >
+          <MapPin
+            size={32}
+            color="rgba(212,175,55,0.3)"
+            style={{ margin: "0 auto 1rem" }}
+          />
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              color: "var(--color-text-muted)",
+              margin: 0,
+            }}
+          >
             No saved addresses yet.
           </p>
         </div>
@@ -148,7 +253,9 @@ export function AddressesTab({
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px,1fr))",
+            gridTemplateColumns: isMobile
+              ? "repeat(2, 1fr)"
+              : "repeat(auto-fill, minmax(280px,1fr))",
             gap: "1rem",
           }}
         >
@@ -183,22 +290,56 @@ export function AddressesTab({
                   Default
                 </span>
               )}
-              <p style={{ fontFamily: "var(--font-body)", fontWeight: 600, color: "var(--color-text)", margin: "0 0 0.25rem" }}>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 600,
+                  color: "var(--color-text)",
+                  margin: "0 0 0.25rem",
+                }}
+              >
                 {addr.full_name}
               </p>
               {addr.phone && (
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "var(--color-text-muted)", margin: "0 0 0.75rem" }}>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.85rem",
+                    color: "var(--color-text-muted)",
+                    margin: "0 0 0.75rem",
+                  }}
+                >
                   {addr.phone}
                 </p>
               )}
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "var(--color-text-muted)", margin: 0, lineHeight: 1.6 }}>
-                {addr.street}<br />
-                {addr.city}, {addr.state} {addr.postal_code}<br />
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.85rem",
+                  color: "var(--color-text-muted)",
+                  margin: 0,
+                  lineHeight: 1.6,
+                }}
+              >
+                {addr.street}
+                <br />
+                {addr.city}, {addr.state} {addr.postal_code}
+                <br />
                 {addr.country}
               </p>
-              <div style={{ display: "flex", gap: "0.5rem", marginTop: "1.25rem", flexWrap: "wrap" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  marginTop: "1.25rem",
+                  flexWrap: "wrap",
+                }}
+              >
                 {!addr.is_default && (
-                  <button onClick={() => setDefaultAddress(addr.id)} style={{ ...ghostBtnStyle, fontSize: "0.6rem" }}>
+                  <button
+                    onClick={() => setDefaultAddress(addr.id)}
+                    style={{ ...ghostBtnStyle, fontSize: "0.6rem" }}
+                  >
                     Set Default
                   </button>
                 )}
@@ -222,7 +363,12 @@ export function AddressesTab({
                 </button>
                 <button
                   onClick={() => deleteAddress(addr.id)}
-                  style={{ ...ghostBtnStyle, fontSize: "0.6rem", color: "#f87171", borderColor: "rgba(248,113,113,0.2)" }}
+                  style={{
+                    ...ghostBtnStyle,
+                    fontSize: "0.6rem",
+                    color: "#f87171",
+                    borderColor: "rgba(248,113,113,0.2)",
+                  }}
                 >
                   <Trash2 size={11} />
                   Delete

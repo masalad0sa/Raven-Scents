@@ -12,7 +12,15 @@ export function BrandStory({ isMobile }: { isMobile: boolean }) {
         overflow: "hidden",
       }}
     >
-      <div style={{ position: "absolute", right: "-200px", top: "-200px", opacity: 0.15, pointerEvents: "none" }}>
+      <div
+        style={{
+          position: "absolute",
+          right: "-200px",
+          top: "-200px",
+          opacity: 0.15,
+          pointerEvents: "none",
+        }}
+      >
         <GradientBlob size={600} reactToMouse={false} />
       </div>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
@@ -78,7 +86,11 @@ export function BrandStory({ isMobile }: { isMobile: boolean }) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1rem",
+            }}
           >
             {[
               "https://images.unsplash.com/photo-1619994403073-2cec844b8e63?w=400&q=80",
@@ -89,7 +101,13 @@ export function BrandStory({ isMobile }: { isMobile: boolean }) {
                 key={i}
                 src={url}
                 alt=""
-                style={{ width: "100%", aspectRatio: "1", objectFit: "cover", borderRadius: 6, marginTop: i % 2 === 1 ? "2rem" : 0 }}
+                style={{
+                  width: "100%",
+                  aspectRatio: "1",
+                  objectFit: "cover",
+                  borderRadius: 6,
+                  marginTop: i % 2 === 1 ? "2rem" : 0,
+                }}
                 loading="lazy"
               />
             ))}

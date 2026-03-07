@@ -3,7 +3,13 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { ProductCard } from "../product/ProductCard";
 
-export function BestsellersSection({ bestsellers, isMobile }: { bestsellers: any[]; isMobile: boolean }) {
+export function BestsellersSection({
+  bestsellers,
+  isMobile,
+}: {
+  bestsellers: any[];
+  isMobile: boolean;
+}) {
   return (
     <section className="section" style={{ background: "var(--color-ivory)" }}>
       <div className="container">

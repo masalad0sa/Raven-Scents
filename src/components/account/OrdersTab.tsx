@@ -17,7 +17,12 @@ export function OrdersTab() {
   if (ordersLoading) {
     return (
       <div style={{ textAlign: "center", padding: "3rem" }}>
-        <p style={{ fontFamily: "var(--font-body)", color: "var(--color-text-muted)" }}>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            color: "var(--color-text-muted)",
+          }}
+        >
           Loading orders…
         </p>
       </div>
@@ -35,7 +40,11 @@ export function OrdersTab() {
           textAlign: "center",
         }}
       >
-        <ShoppingBag size={40} color="rgba(212,175,55,0.3)" style={{ margin: "0 auto 1rem" }} />
+        <ShoppingBag
+          size={40}
+          color="rgba(212,175,55,0.3)"
+          style={{ margin: "0 auto 1rem" }}
+        />
         <h3
           style={{
             fontFamily: "var(--font-serif)",
@@ -46,7 +55,13 @@ export function OrdersTab() {
         >
           No Orders Yet
         </h3>
-        <p style={{ fontFamily: "var(--font-body)", color: "var(--color-text-muted)", margin: "0 0 2rem" }}>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            color: "var(--color-text-muted)",
+            margin: "0 0 2rem",
+          }}
+        >
           Your order history will appear here once you place your first order.
         </p>
         <a
@@ -96,28 +111,85 @@ export function OrdersTab() {
               background: "rgba(212,175,55,0.03)",
             }}
           >
-            <div style={{ display: "flex", gap: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "1.5rem",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
               <div>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem", color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.65rem",
+                    color: "var(--color-text-muted)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                  }}
+                >
                   Order
                 </span>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-text)", margin: "0.15rem 0 0" }}>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.8rem",
+                    color: "var(--color-text)",
+                    margin: "0.15rem 0 0",
+                  }}
+                >
                   #{order.id.slice(0, 8).toUpperCase()}
                 </p>
               </div>
               <div>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem", color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.65rem",
+                    color: "var(--color-text-muted)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                  }}
+                >
                   Date
                 </span>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-text)", margin: "0.15rem 0 0" }}>
-                  {new Date(order.created_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.8rem",
+                    color: "var(--color-text)",
+                    margin: "0.15rem 0 0",
+                  }}
+                >
+                  {new Date(order.created_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </p>
               </div>
               <div>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem", color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.65rem",
+                    color: "var(--color-text-muted)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                  }}
+                >
                   Total
                 </span>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-gold)", margin: "0.15rem 0 0", fontWeight: 600 }}>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.8rem",
+                    color: "var(--color-gold)",
+                    margin: "0.15rem 0 0",
+                    fontWeight: 600,
+                  }}
+                >
                   ${(order.total / 100).toFixed(2)}
                 </p>
               </div>
@@ -164,25 +236,55 @@ export function OrdersTab() {
                   alignItems: "center",
                   gap: "1rem",
                   padding: "0.6rem 0",
-                  borderBottom: idx < order.order_items.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
+                  borderBottom:
+                    idx < order.order_items.length - 1
+                      ? "1px solid rgba(255,255,255,0.04)"
+                      : "none",
                 }}
               >
                 {item.products?.images?.[0] && (
                   <img
                     src={item.products.images[0]}
                     alt={item.products.name}
-                    style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 6, border: "1px solid rgba(212,175,55,0.1)" }}
+                    style={{
+                      width: 48,
+                      height: 48,
+                      objectFit: "cover",
+                      borderRadius: 6,
+                      border: "1px solid rgba(212,175,55,0.1)",
+                    }}
                   />
                 )}
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-text)", margin: 0 }}>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.8rem",
+                      color: "var(--color-text)",
+                      margin: 0,
+                    }}
+                  >
                     {item.products?.name ?? "Product"}
                   </p>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", color: "var(--color-text-muted)", margin: "0.15rem 0 0" }}>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.7rem",
+                      color: "var(--color-text-muted)",
+                      margin: "0.15rem 0 0",
+                    }}
+                  >
                     Qty: {item.quantity} × ${(item.unit_price / 100).toFixed(2)}
                   </p>
                 </div>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-text)", margin: 0 }}>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.8rem",
+                    color: "var(--color-text)",
+                    margin: 0,
+                  }}
+                >
                   ${((item.quantity * item.unit_price) / 100).toFixed(2)}
                 </p>
               </div>
@@ -191,11 +293,31 @@ export function OrdersTab() {
 
           {/* Coupon / discount row */}
           {order.coupon_code && (
-            <div style={{ padding: "0 1.25rem 0.75rem", display: "flex", justifyContent: "flex-end", gap: "0.5rem", alignItems: "center" }}>
-              <span style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", color: "var(--color-text-muted)" }}>
+            <div
+              style={{
+                padding: "0 1.25rem 0.75rem",
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "0.5rem",
+                alignItems: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.7rem",
+                  color: "var(--color-text-muted)",
+                }}
+              >
                 Coupon: {order.coupon_code}
               </span>
-              <span style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", color: "#4ade80" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.7rem",
+                  color: "#4ade80",
+                }}
+              >
                 −${(order.discount / 100).toFixed(2)}
               </span>
             </div>

@@ -1,7 +1,23 @@
 export function ScentMarquee() {
-  const scents = ["Floral", "Woody", "Oriental", "Aquatic", "Gourmand", "Citrus", "Leather", "Aromatic", "Chypre"];
+  const scents = [
+    "Floral",
+    "Woody",
+    "Oriental",
+    "Aquatic",
+    "Gourmand",
+    "Citrus",
+    "Leather",
+    "Aromatic",
+    "Chypre",
+  ];
   return (
-    <section style={{ background: "var(--color-surface)", padding: "3rem 0", overflow: "hidden" }}>
+    <section
+      style={{
+        background: "var(--color-surface)",
+        padding: "3rem 0",
+        overflow: "hidden",
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -19,7 +35,8 @@ export function ScentMarquee() {
                 fontFamily: "var(--font-serif)",
                 fontSize: "clamp(2rem, 4vw, 3rem)",
                 fontWeight: 300,
-                color: i % 2 === 0 ? "var(--color-text)" : "rgba(212,175,55,0.2)",
+                color:
+                  i % 2 === 0 ? "var(--color-text)" : "rgba(212,175,55,0.2)",
                 fontStyle: "italic",
               }}
             >

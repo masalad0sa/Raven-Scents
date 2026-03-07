@@ -59,7 +59,10 @@ export function ProductGallery({ images, name, isMobile }: Props) {
               height: isMobile ? 64 : 80,
               borderRadius: 6,
               overflow: "hidden",
-              border: i === mainImage ? "2px solid var(--color-gold)" : "2px solid rgba(255,255,255,0.08)",
+              border:
+                i === mainImage
+                  ? "2px solid var(--color-gold)"
+                  : "2px solid rgba(255,255,255,0.08)",
               cursor: "pointer",
               background: "#1a1a1a",
               padding: 0,
@@ -67,7 +70,11 @@ export function ProductGallery({ images, name, isMobile }: Props) {
               flexShrink: 0,
             }}
           >
-            <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img
+              src={img}
+              alt=""
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           </button>
         ))}
       </div>
@@ -91,15 +98,27 @@ export function ProductGallery({ images, name, isMobile }: Props) {
             alt={name}
             custom={direction}
             variants={{
-              enter: (d: number) => ({ x: d > 0 ? "100%" : "-100%", opacity: 0 }),
+              enter: (d: number) => ({
+                x: d > 0 ? "100%" : "-100%",
+                opacity: 0,
+              }),
               center: { x: 0, opacity: 1 },
-              exit: (d: number) => ({ x: d > 0 ? "-100%" : "100%", opacity: 0 }),
+              exit: (d: number) => ({
+                x: d > 0 ? "-100%" : "100%",
+                opacity: 0,
+              }),
             }}
             initial="enter"
             animate="center"
             exit="exit"
             transition={{ duration: 0.38, ease: "easeInOut" }}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+            }}
           />
         </AnimatePresence>
         {images.length > 1 && (
@@ -122,7 +141,10 @@ export function ProductGallery({ images, name, isMobile }: Props) {
                   width: i === mainImage ? 20 : 7,
                   height: 7,
                   borderRadius: 4,
-                  background: i === mainImage ? "var(--color-gold)" : "rgba(255,255,255,0.35)",
+                  background:
+                    i === mainImage
+                      ? "var(--color-gold)"
+                      : "rgba(255,255,255,0.35)",
                   border: "none",
                   cursor: "pointer",
                   padding: 0,

@@ -18,15 +18,26 @@ interface Profile {
 
 export function ProfileTab({ user }: { user: { id: string; email: string } }) {
   const isMobile = useIsMobile();
-  const [profile, setProfile] = useState<Profile>({ full_name: null, phone: null, avatar_url: null });
+  const [profile, setProfile] = useState<Profile>({
+    full_name: null,
+    phone: null,
+    avatar_url: null,
+  });
   const [profileEditing, setProfileEditing] = useState(false);
   const [profileSaving, setProfileSaving] = useState(false);
-  const [profileDraft, setProfileDraft] = useState<Profile>({ full_name: null, phone: null, avatar_url: null });
+  const [profileDraft, setProfileDraft] = useState<Profile>({
+    full_name: null,
+    phone: null,
+    avatar_url: null,
+  });
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordSaving, setPasswordSaving] = useState(false);
-  const [passwordMsg, setPasswordMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [passwordMsg, setPasswordMsg] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     loadProfile();
@@ -59,7 +70,10 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
   const changePassword = async () => {
     setPasswordMsg(null);
     if (newPassword.length < 6) {
-      setPasswordMsg({ type: "error", text: "Password must be at least 6 characters" });
+      setPasswordMsg({
+        type: "error",
+        text: "Password must be at least 6 characters",
+      });
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -71,7 +85,10 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
     if (error) {
       setPasswordMsg({ type: "error", text: error.message });
     } else {
-      setPasswordMsg({ type: "success", text: "Password updated successfully" });
+      setPasswordMsg({
+        type: "success",
+        text: "Password updated successfully",
+      });
       setNewPassword("");
       setConfirmPassword("");
     }
@@ -112,7 +129,14 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
         </div>
 
         {profileEditing ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", maxWidth: 480 }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.25rem",
+              maxWidth: 480,
+            }}
+          >
             <FormField
               label="Full Name"
               value={profileDraft.full_name ?? ""}
@@ -126,11 +150,18 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
               placeholder="+91 98765 43210"
             />
             <div style={{ display: "flex", gap: "0.75rem" }}>
-              <button onClick={saveProfile} disabled={profileSaving} style={primaryBtnStyle(profileSaving)}>
+              <button
+                onClick={saveProfile}
+                disabled={profileSaving}
+                style={primaryBtnStyle(profileSaving)}
+              >
                 <Check size={13} />
                 {profileSaving ? "Saving…" : "Save"}
               </button>
-              <button onClick={() => setProfileEditing(false)} style={ghostBtnStyle}>
+              <button
+                onClick={() => setProfileEditing(false)}
+                style={ghostBtnStyle}
+              >
                 <X size={13} />
                 Cancel
               </button>
@@ -189,22 +220,48 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
         }}
       >
         <h3 style={sectionHeading}>Change Password</h3>
-        <div style={{ display: "grid", gap: "1rem", marginTop: "1.25rem", maxWidth: 400 }}>
-          <FormField label="New Password" type="password" value={newPassword} onChange={setNewPassword} placeholder="Min 6 characters" />
-          <FormField label="Confirm Password" type="password" value={confirmPassword} onChange={setConfirmPassword} placeholder="Re-enter password" />
+        <div
+          style={{
+            display: "grid",
+            gap: "1rem",
+            marginTop: "1.25rem",
+            maxWidth: 400,
+          }}
+        >
+          <FormField
+            label="New Password"
+            type="password"
+            value={newPassword}
+            onChange={setNewPassword}
+            placeholder="Min 6 characters"
+          />
+          <FormField
+            label="Confirm Password"
+            type="password"
+            value={confirmPassword}
+            onChange={setConfirmPassword}
+            placeholder="Re-enter password"
+          />
           {passwordMsg && (
             <p
               style={{
                 fontFamily: "var(--font-sans)",
                 fontSize: "0.8rem",
-                color: passwordMsg.type === "success" ? "var(--color-success)" : "var(--color-error)",
+                color:
+                  passwordMsg.type === "success"
+                    ? "var(--color-success)"
+                    : "var(--color-error)",
                 margin: 0,
               }}
             >
               {passwordMsg.text}
             </p>
           )}
-          <button onClick={changePassword} disabled={passwordSaving} style={primaryBtnStyle(passwordSaving)}>
+          <button
+            onClick={changePassword}
+            disabled={passwordSaving}
+            style={primaryBtnStyle(passwordSaving)}
+          >
             {passwordSaving ? "Updating..." : "Update Password"}
           </button>
         </div>
