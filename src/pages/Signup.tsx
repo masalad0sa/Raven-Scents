@@ -157,11 +157,7 @@ export default function Signup() {
             {error && <p className={s.error}>{error}</p>}
 
             {/* Submit */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={s.submitBtn}
-            >
+            <button type="submit" disabled={isLoading} className={s.submitBtn}>
               <UserPlus size={14} />
               {isLoading ? "Creating Account…" : "Create Account"}
             </button>

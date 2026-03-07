@@ -87,9 +87,7 @@ export default function Collections() {
       </section>
 
       {/* Loading state */}
-      {isLoading && (
-        <div className={s.loadingState}>Loading collections…</div>
-      )}
+      {isLoading && <div className={s.loadingState}>Loading collections…</div>}
 
       {/* Category Sections */}
       {!isLoading &&
@@ -101,10 +99,7 @@ export default function Collections() {
           const isEven = idx % 2 === 0;
 
           return (
-            <section
-              key={cat}
-              className={isEven ? s.section : s.sectionAlt}
-            >
+            <section key={cat} className={isEven ? s.section : s.sectionAlt}>
               <div className="container">
                 {/* Section Header */}
                 <motion.div

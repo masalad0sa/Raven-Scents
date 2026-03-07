@@ -40,11 +40,7 @@ export default function Cart() {
         <div className={`${s.content} container`}>
           {items.length === 0 ? (
             <div className={s.emptyState}>
-              <ShoppingBag
-                size={64}
-                strokeWidth={1}
-                className={s.emptyIcon}
-              />
+              <ShoppingBag size={64} strokeWidth={1} className={s.emptyIcon} />
               <h2 className={s.emptyTitle}>Your cart is empty</h2>
               <p className={s.emptyText}>Begin your fragrance journey.</p>
               <Link to="/shop" className="btn btn-primary">

@@ -181,9 +181,7 @@ export default function Checkout() {
           borderColor: errors[field] ? "var(--color-error)" : undefined,
         }}
       />
-      {errors[field] && (
-        <p className={s.inputError}>{errors[field]}</p>
-      )}
+      {errors[field] && <p className={s.inputError}>{errors[field]}</p>}
     </div>
   );
 

@@ -166,14 +166,9 @@ export default function Shop() {
               style={{ gap: "0.5rem", padding: "0.75rem 1.25rem" }}
             >
               <SlidersHorizontal size={14} />
-              Filters{" "}
-              {hasFilters && (
-                <span className={s.filterBadge}>●</span>
-              )}
+              Filters {hasFilters && <span className={s.filterBadge}>●</span>}
             </button>
-            <span className={s.resultCount}>
-              {filtered.length} RESULTS
-            </span>
+            <span className={s.resultCount}>{filtered.length} RESULTS</span>
           </div>
 
           <div className={s.layout}>
@@ -250,7 +245,12 @@ export default function Shop() {
                             set: setShowBestseller,
                           },
                         ].map(({ label, val, set }) => (
-                          <label key={label} className={val ? s.checkLabelActive : s.checkLabelInactive}>
+                          <label
+                            key={label}
+                            className={
+                              val ? s.checkLabelActive : s.checkLabelInactive
+                            }
+                          >
                             <input
                               type="checkbox"
                               checked={val}
@@ -270,7 +270,11 @@ export default function Shop() {
                         {["masculine", "feminine", "unisex"].map((g) => (
                           <label
                             key={g}
-                            className={selectedGender.includes(g) ? s.checkLabelActive : s.checkLabelInactive}
+                            className={
+                              selectedGender.includes(g)
+                                ? s.checkLabelActive
+                                : s.checkLabelInactive
+                            }
                           >
                             <input
                               type="checkbox"
@@ -292,13 +296,15 @@ export default function Shop() {
 
                     {/* Scent Family */}
                     <div>
-                      <h4 className={s.filterSectionTitle}>
-                        Scent Family
-                      </h4>
+                      <h4 className={s.filterSectionTitle}>Scent Family</h4>
                       {scentFamilies.map((sf) => (
                         <label
                           key={sf}
-                          className={selectedScentFamilies.includes(sf) ? s.checkLabelActive : s.checkLabelInactive}
+                          className={
+                            selectedScentFamilies.includes(sf)
+                              ? s.checkLabelActive
+                              : s.checkLabelInactive
+                          }
                         >
                           <input
                             type="checkbox"

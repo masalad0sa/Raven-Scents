@@ -93,11 +93,7 @@ export default function Login() {
             {error && <p className={s.error}>{error}</p>}
 
             {/* Submit */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={s.submitBtn}
-            >
+            <button type="submit" disabled={isLoading} className={s.submitBtn}>
               <LogIn size={14} />
               {isLoading ? "Signing in…" : "Sign In"}
             </button>
