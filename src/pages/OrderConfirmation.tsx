@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check, Package, ArrowRight } from "lucide-react";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
+import { Header, Footer } from "../components/layout";
 
 export default function OrderConfirmation() {
   const orderId = "RVN" + Math.random().toString(36).substr(2, 9).toUpperCase();

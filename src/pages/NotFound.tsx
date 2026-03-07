@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
+import { Header, Footer } from "../components/layout";
 
 export default function NotFound() {
   return (

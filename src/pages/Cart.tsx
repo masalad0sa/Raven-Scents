@@ -1,13 +1,11 @@
 ﻿import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingBag } from "lucide-react";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
 import { useCartStore } from "../store/cartStore";
 import { useIsMobile } from "../hooks/useIsMobile";
-import { SEO } from "../components/seo/SEO";
-import { CartItemsList } from "../components/cart/CartItemsList";
-import { CartSummary } from "../components/cart/CartSummary";
+import { Header, Footer } from "../components/layout";
+import { SEO } from "../components/seo";
+import { CartItemsList, CartSummary } from "../components/cart";
 
 export default function Cart() {
   const { items, removeItem, updateQuantity, getSubtotal } = useCartStore();

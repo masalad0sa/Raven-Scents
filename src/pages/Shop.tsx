@@ -1,12 +1,11 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
-import { ProductCard } from "../components/product/ProductCard";
 import { useProducts } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
-import { SEO } from "../components/seo/SEO";
+import { Header, Footer } from "../components/layout";
+import { SEO } from "../components/seo";
+import { ProductCard } from "../components/product";
 
 type SortOption = "featured" | "price-asc" | "price-desc" | "newest" | "rating";
 

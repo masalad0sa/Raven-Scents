@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ProductCard } from "../product/ProductCard";
+import { ProductCard } from "../product";
 
 export function FeaturedSection({
   featuredProducts,

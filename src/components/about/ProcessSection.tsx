@@ -1,4 +1,4 @@
-import { GradientBlob } from "../effects/GradientBlob";
+import { GradientBlob } from "../effects";
 
 const steps = [
   {

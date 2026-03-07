@@ -1,17 +1,18 @@
 ﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
+import { Check } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
 import { ordersApi } from "../lib/api";
-import { Check } from "lucide-react";
 import { useIsMobile } from "../hooks/useIsMobile";
-import { SEO } from "../components/seo/SEO";
-import { ShippingStep } from "../components/checkout/ShippingStep";
-import { PaymentStep } from "../components/checkout/PaymentStep";
-import { ReviewStep } from "../components/checkout/ReviewStep";
-import { CheckoutSummary } from "../components/checkout/CheckoutSummary";
+import { Header, Footer } from "../components/layout";
+import { SEO } from "../components/seo";
+import {
+  ShippingStep,
+  PaymentStep,
+  ReviewStep,
+  CheckoutSummary,
+} from "../components/checkout";
 
 type Step = "shipping" | "payment" | "review";
 const STEPS: Step[] = ["shipping", "payment", "review"];

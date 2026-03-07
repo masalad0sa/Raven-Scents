@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Leaf, FlaskConical, Sparkles, Globe } from "lucide-react";
-import { GradientBlob } from "../effects/GradientBlob";
+import { GradientBlob } from "../effects";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },

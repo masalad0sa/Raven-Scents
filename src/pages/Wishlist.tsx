@@ -1,15 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Heart, ShoppingBag, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWishlistStore } from "../store/wishlistStore";
 import { useAuthStore } from "../store/authStore";
 import { useCartStore } from "../store/cartStore";
 import { useProducts } from "../hooks/useProducts";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
-import { Link } from "react-router-dom";
 import { useIsMobile } from "../hooks/useIsMobile";
-import { SEO } from "../components/seo/SEO";
+import { Header, Footer } from "../components/layout";
+import { SEO } from "../components/seo";
 
 export default function Wishlist() {
   const navigate = useNavigate();

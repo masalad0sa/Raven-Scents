@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GradientBlob } from "../effects/GradientBlob";
+import { GradientBlob } from "../effects";
 
 export function BrandStory({ isMobile }: { isMobile: boolean }) {
   return (

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { GradientBlob } from "../effects/GradientBlob";
+import { GradientBlob } from "../effects";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },

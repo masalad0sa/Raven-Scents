@@ -3,8 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
 import { useWishlistStore } from "../store/wishlistStore";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
+import { Header, Footer } from "../components/layout";
 
 export default function Login() {
   const navigate = useNavigate();

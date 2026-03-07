@@ -3,13 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { User, MapPin, ShoppingBag, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
 import { supabase } from "../lib/supabase";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
 import { useIsMobile } from "../hooks/useIsMobile";
-import { SEO } from "../components/seo/SEO";
-import { ProfileTab } from "../components/account/ProfileTab";
-import { AddressesTab } from "../components/account/AddressesTab";
-import { OrdersTab } from "../components/account/OrdersTab";
+import { Header, Footer } from "../components/layout";
+import { SEO } from "../components/seo";
+import { ProfileTab, AddressesTab, OrdersTab } from "../components/account";
 
 type Tab = "profile" | "addresses" | "orders";
 

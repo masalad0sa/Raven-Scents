@@ -1,13 +1,15 @@
-﻿import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
-import { useFeaturedProducts } from "../hooks/useProducts";
+﻿import { useFeaturedProducts } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
-import { SEO } from "../components/seo/SEO";
-import { AboutHero, ManifestoStrip } from "../components/about/AboutHero";
-import { StoryTimeline } from "../components/about/StoryTimeline";
-import { ValuesGrid } from "../components/about/ValuesGrid";
-import { ProcessSection } from "../components/about/ProcessSection";
-import { AboutCTA } from "../components/about/AboutCTA";
+import { Header, Footer } from "../components/layout";
+import { SEO } from "../components/seo";
+import {
+  AboutHero,
+  ManifestoStrip,
+  StoryTimeline,
+  ValuesGrid,
+  ProcessSection,
+  AboutCTA,
+} from "../components/about";
 
 export default function About() {
   const { data: featured } = useFeaturedProducts();

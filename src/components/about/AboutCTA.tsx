@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { GradientBlob } from "../effects/GradientBlob";
+import { GradientBlob } from "../effects";
 
 export function AboutCTA() {
   return (

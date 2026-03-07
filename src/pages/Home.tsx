@@ -1,13 +1,14 @@
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
-import { SEO } from "../components/seo/SEO";
-import { HeroSection } from "../components/home/HeroSection";
-import { FeaturedSection } from "../components/home/FeaturedSection";
-import { BrandStory } from "../components/home/BrandStory";
-import { BestsellersSection } from "../components/home/BestsellersSection";
-import { ScentMarquee } from "../components/home/ScentMarquee";
 import { useFeaturedProducts, useBestsellers } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
+import { Header, Footer } from "../components/layout";
+import { SEO } from "../components/seo";
+import {
+  HeroSection,
+  FeaturedSection,
+  BrandStory,
+  BestsellersSection,
+  ScentMarquee,
+} from "../components/home";
 
 export default function Home() {
   const { data: featuredProducts = [] } = useFeaturedProducts();

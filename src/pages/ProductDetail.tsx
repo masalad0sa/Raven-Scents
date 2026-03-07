@@ -1,14 +1,15 @@
 ﻿import { useParams, Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
-import { ProductCard } from "../components/product/ProductCard";
-import { ProductGallery } from "../components/product/ProductGallery";
-import { ProductInfo } from "../components/product/ProductInfo";
-import { ProductTabs } from "../components/product/ProductTabs";
 import { useProduct, useProducts } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
-import { SEO } from "../components/seo/SEO";
+import { Header, Footer } from "../components/layout";
+import { SEO } from "../components/seo";
+import {
+  ProductCard,
+  ProductGallery,
+  ProductInfo,
+  ProductTabs,
+} from "../components/product";
 
 export default function ProductDetail() {
   const { slug } = useParams();

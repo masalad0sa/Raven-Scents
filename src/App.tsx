@@ -1,13 +1,15 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { CustomCursor } from "./components/effects/CustomCursor";
-import { GrainOverlay } from "./components/effects/GrainOverlay";
-import { CartDrawer } from "./components/layout/CartDrawer";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+
 import { useAuthStore } from "./store/authStore";
 import { useWishlistStore } from "./store/wishlistStore";
 import { useCartStore } from "./store/cartStore";
+
+import { CustomCursor, GrainOverlay } from "./components/effects";
+import { CartDrawer } from "./components/layout";
+import { ProtectedRoute } from "./components/auth";
+
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";

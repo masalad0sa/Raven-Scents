@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Header } from "../components/layout/Header";
-import { Footer } from "../components/layout/Footer";
-import { ProductCard } from "../components/product/ProductCard";
 import { useProducts } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
+import { Header, Footer } from "../components/layout";
+import { ProductCard } from "../components/product";
 
 const CATEGORY_META: Record<
   string,
