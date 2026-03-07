@@ -10,6 +10,7 @@ import {
   ProcessSection,
   AboutCTA,
 } from "../components/about";
+import s from "./styles/About.module.css";
 
 export default function About() {
   const { data: featured } = useFeaturedProducts();
@@ -26,7 +27,7 @@ export default function About() {
         description="Learn about Raven Scents — our story, philosophy, and commitment to crafting exceptional fragrances."
       />
       <Header />
-      <main style={{ paddingTop: 72, background: "var(--color-ivory)" }}>
+      <main className={s.main}>
         <AboutHero />
         <ManifestoStrip />
         <StoryTimeline isMobile={isMobile} />

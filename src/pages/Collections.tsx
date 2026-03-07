@@ -4,6 +4,7 @@ import { useProducts } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
 import { Header, Footer } from "../components/layout";
 import { ProductCard } from "../components/product";
+import s from "./styles/Collections.module.css";
 
 const CATEGORY_META: Record<
   string,
@@ -54,38 +55,14 @@ export default function Collections() {
       <Header />
 
       {/* Hero Title */}
-      <section
-        style={{
-          paddingTop: "calc(72px + 5rem)",
-          paddingBottom: "3rem",
-          textAlign: "center",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
+      <section className={s.hero}>
         {/* Decorative top line */}
-        <div
-          style={{
-            width: 1,
-            height: 60,
-            background:
-              "linear-gradient(to bottom, transparent, var(--color-gold))",
-            margin: "0 auto 2rem",
-          }}
-        />
+        <div className={s.topLine} />
         <motion.p
           initial={{ opacity: 0, letterSpacing: "0.5em" }}
           animate={{ opacity: 1, letterSpacing: "0.25em" }}
           transition={{ duration: 0.9 }}
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "0.65rem",
-            fontWeight: 600,
-            letterSpacing: "0.25em",
-            textTransform: "uppercase",
-            color: "var(--color-gold)",
-            marginBottom: "1rem",
-          }}
+          className={s.heroEyebrow}
         >
           House of Raven
         </motion.p>
@@ -93,15 +70,7 @@ export default function Collections() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.1 }}
-          style={{
-            fontFamily: "var(--font-serif)",
-            fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-            fontWeight: 400,
-            color: "var(--color-text)",
-            lineHeight: 1.1,
-            letterSpacing: "0.04em",
-            marginBottom: "1.25rem",
-          }}
+          className={s.heroTitle}
         >
           Our Collections
         </motion.h1>
@@ -109,46 +78,17 @@ export default function Collections() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.9, delay: 0.25 }}
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.95rem",
-            color: "var(--color-muted)",
-            maxWidth: 480,
-            margin: "0 auto",
-            lineHeight: 1.7,
-          }}
+          className={s.heroSubtitle}
         >
           Curated by concentration. Each tier is a distinct olfactory world—
           discover yours.
         </motion.p>
-        <div
-          style={{
-            width: 48,
-            height: 1,
-            background: "var(--color-gold)",
-            margin: "2rem auto 0",
-            opacity: 0.6,
-          }}
-        />
+        <div className={s.heroDivider} />
       </section>
 
       {/* Loading state */}
       {isLoading && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: "40vh",
-            color: "var(--color-muted)",
-            fontFamily: "var(--font-display)",
-            fontSize: "0.7rem",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-          }}
-        >
-          Loading collections…
-        </div>
+        <div className={s.loadingState}>Loading collections…</div>
       )}
 
       {/* Category Sections */}
@@ -163,11 +103,7 @@ export default function Collections() {
           return (
             <section
               key={cat}
-              style={{
-                padding: "5rem 0",
-                borderTop: "1px solid rgba(212, 175, 55, 0.12)",
-                background: isEven ? "transparent" : "rgba(255,255,255,0.015)",
-              }}
+              className={isEven ? s.section : s.sectionAlt}
             >
               <div className="container">
                 {/* Section Header */}
@@ -176,88 +112,23 @@ export default function Collections() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-80px" }}
                   transition={{ duration: 0.7 }}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "2rem",
-                    marginBottom: "3.5rem",
-                  }}
+                  className={s.sectionHeader}
                 >
                   {/* Roman numeral */}
-                  <span
-                    style={{
-                      fontFamily: "var(--font-serif)",
-                      fontSize: "clamp(3rem, 6vw, 5rem)",
-                      fontWeight: 300,
-                      color: "rgba(212, 175, 55, 0.18)",
-                      lineHeight: 1,
-                      userSelect: "none",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {meta.romanNumeral}
-                  </span>
+                  <span className={s.romanNumeral}>{meta.romanNumeral}</span>
 
                   <div>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.6rem",
-                        fontWeight: 600,
-                        letterSpacing: "0.2em",
-                        textTransform: "uppercase",
-                        color: "var(--color-gold)",
-                        marginBottom: "0.4rem",
-                      }}
-                    >
+                    <p className={s.catLabel}>
                       {cat.replace(/-/g, " ").toUpperCase()}
                     </p>
-                    <h2
-                      style={{
-                        fontFamily: "var(--font-serif)",
-                        fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-                        fontWeight: 400,
-                        color: "var(--color-text)",
-                        lineHeight: 1.2,
-                        marginBottom: "0.6rem",
-                        letterSpacing: "0.02em",
-                      }}
-                    >
-                      {meta.label}
-                    </h2>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.85rem",
-                        color: "var(--color-muted)",
-                        maxWidth: 520,
-                        lineHeight: 1.65,
-                      }}
-                    >
-                      {meta.tagline}
-                    </p>
-                    <div
-                      style={{
-                        width: 40,
-                        height: 1,
-                        background: "var(--color-gold)",
-                        marginTop: "1rem",
-                        opacity: 0.55,
-                      }}
-                    />
+                    <h2 className={s.catTitle}>{meta.label}</h2>
+                    <p className={s.catTagline}>{meta.tagline}</p>
+                    <div className={s.catDivider} />
                   </div>
                 </motion.div>
 
                 {/* Product Grid */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: isMobile
-                      ? "repeat(2, 1fr)"
-                      : "repeat(auto-fill, minmax(260px, 1fr))",
-                    gap: "2rem",
-                  }}
-                >
+                <div className={s.productGrid}>
                   {catProducts.map((product, pIdx) => (
                     <motion.div
                       key={product.id}
@@ -277,15 +148,7 @@ export default function Collections() {
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.3 }}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.6rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "rgba(212, 175, 55, 0.45)",
-                    marginTop: "2.5rem",
-                    textAlign: "right",
-                  }}
+                  className={s.productCount}
                 >
                   {catProducts.length}{" "}
                   {catProducts.length === 1 ? "fragrance" : "fragrances"} in
@@ -298,43 +161,10 @@ export default function Collections() {
 
       {/* Closing divider */}
       {!isLoading && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            padding: "4rem 0",
-            gap: "1rem",
-          }}
-        >
-          <div
-            style={{
-              width: 48,
-              height: 1,
-              background: "var(--color-gold)",
-              opacity: 0.4,
-            }}
-          />
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.6rem",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "var(--color-muted)",
-            }}
-          >
-            House of Raven · Est. 2024
-          </p>
-          <div
-            style={{
-              width: 1,
-              height: 40,
-              background:
-                "linear-gradient(to bottom, var(--color-gold), transparent)",
-              opacity: 0.4,
-            }}
-          />
+        <div className={s.closingSection}>
+          <div className={s.closingDivider} />
+          <p className={s.closingText}>House of Raven · Est. 2024</p>
+          <div className={s.closingLine} />
         </div>
       )}
 

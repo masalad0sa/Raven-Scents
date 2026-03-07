@@ -1,0 +1,49 @@
+.main {
+  padding-top: 72px;
+  background: var(--color-ivory);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.wrapper {
+  padding: 4rem 2rem;
+}
+
+.bigCode {
+  font-family: var(--font-serif);
+  font-size: clamp(6rem, 20vw, 12rem);
+  font-weight: 300;
+  color: var(--color-gold);
+  line-height: 1;
+  opacity: 0.3;
+  margin-bottom: -1rem;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 300;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}

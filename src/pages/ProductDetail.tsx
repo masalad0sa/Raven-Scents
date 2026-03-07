@@ -10,6 +10,7 @@ import {
   ProductInfo,
   ProductTabs,
 } from "../components/product";
+import s from "./styles/ProductDetail.module.css";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -22,24 +23,8 @@ export default function ProductDetail() {
     return (
       <>
         <Header />
-        <div
-          style={{
-            paddingTop: 100,
-            minHeight: "60vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--font-sans)",
-              color: "var(--color-muted)",
-            }}
-          >
-            Loading fragrance...
-          </p>
+        <div className={s.loadingState}>
+          <p className={s.loadingText}>Loading fragrance...</p>
         </div>
         <Footer />
       </>
@@ -50,26 +35,8 @@ export default function ProductDetail() {
     return (
       <>
         <Header />
-        <div
-          style={{
-            paddingTop: 100,
-            minHeight: "60vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <h1
-            style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "2rem",
-              color: "var(--color-primary)",
-              marginBottom: "1rem",
-            }}
-          >
-            Product not found
-          </h1>
+        <div className={s.loadingState}>
+          <h1 className={s.notFoundTitle}>Product not found</h1>
           <Link to="/shop" className="btn btn-primary">
             Back to Shop
           </Link>
@@ -126,64 +93,20 @@ export default function ProductDetail() {
         }}
       />
       <Header />
-      <main
-        style={{
-          paddingTop: 72,
-          background: "var(--color-ivory)",
-          minHeight: "100vh",
-        }}
-      >
+      <main className={s.main}>
         {/* Breadcrumb */}
-        <div
-          style={{
-            background: "var(--color-surface)",
-            padding: "0.45rem 0",
-            borderBottom: "1px solid rgba(212,175,55,0.15)",
-          }}
-        >
-          <div
-            className="container"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              fontFamily: "var(--font-display)",
-              fontSize: "0.65rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-            }}
-          >
-            <Link
-              to="/shop"
-              style={{
-                color: "var(--color-muted)",
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.3rem",
-              }}
-            >
+        <div className={s.breadcrumb}>
+          <div className={`${s.breadcrumbInner} container`}>
+            <Link to="/shop" className={s.breadcrumbLink}>
               <ChevronLeft size={12} /> Shop
             </Link>
-            <span style={{ color: "var(--color-muted)" }}>/</span>
-            <span style={{ color: "var(--color-text)", fontWeight: 600 }}>
-              {product.name}
-            </span>
+            <span className={s.breadcrumbSep}>/</span>
+            <span className={s.breadcrumbCurrent}>{product.name}</span>
           </div>
         </div>
 
-        <div
-          className="container"
-          style={{ padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem" }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "52% 1fr",
-              gap: isMobile ? "1.25rem" : "3rem",
-              alignItems: "start",
-            }}
-          >
+        <div className={`${s.content} container`}>
+          <div className={s.grid}>
             <ProductGallery
               images={product.images}
               name={product.name}
@@ -197,27 +120,9 @@ export default function ProductDetail() {
 
           {/* Related Products */}
           {related.length > 0 && (
-            <div style={{ marginTop: isMobile ? "1.5rem" : "2rem" }}>
-              <h2
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: isMobile ? "1.5rem" : "2rem",
-                  fontWeight: 300,
-                  color: "var(--color-text)",
-                  marginBottom: isMobile ? "1rem" : "2rem",
-                }}
-              >
-                You May Also Like
-              </h2>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: isMobile
-                    ? "repeat(2, 1fr)"
-                    : "repeat(auto-fill, minmax(240px, 1fr))",
-                  gap: isMobile ? "0.75rem" : "1.25rem",
-                }}
-              >
+            <div className={s.relatedSection}>
+              <h2 className={s.relatedTitle}>You May Also Like</h2>
+              <div className={s.relatedGrid}>
                 {related.map((p: any) => (
                   <ProductCard key={p.id} product={p} />
                 ))}

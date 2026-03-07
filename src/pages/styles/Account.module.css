@@ -1,0 +1,101 @@
+.main {
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding-top: 5rem;
+  padding-bottom: 4rem;
+}
+
+.narrow {
+  max-width: 900px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin: 0 0 0.25rem;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.logoutBtn:hover {
+  border-color: #f87171;
+  color: #f87171;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 2rem;
+  background: #111;
+  border-radius: 8px;
+  padding: 0.25rem;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  width: fit-content;
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  color: var(--color-text-muted);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.1rem;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tabBtnActive {
+  composes: tabBtn;
+  background: var(--color-gold);
+  color: #0d0d0d;
+}

@@ -2,15 +2,14 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useProducts } from "../hooks/useProducts";
-import { useIsMobile } from "../hooks/useIsMobile";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
 import { ProductCard } from "../components/product";
+import s from "./styles/Shop.module.css";
 
 type SortOption = "featured" | "price-asc" | "price-desc" | "newest" | "rating";
 
 export default function Shop() {
-  const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortOption>("featured");
@@ -107,39 +106,9 @@ export default function Shop() {
     showBestseller ||
     search.trim().length > 0;
 
-  const checkStyle = (active: boolean): React.CSSProperties => ({
-    display: "flex",
-    alignItems: "center",
-    gap: "0.6rem",
-    padding: "0.35rem 0",
-    cursor: "pointer",
-    fontFamily: "var(--font-sans)",
-    fontSize: "0.85rem",
-    color: active ? "var(--color-text)" : "var(--color-muted)",
-    fontWeight: active ? 600 : 400,
-    transition: "color 0.2s",
-  });
-
   const filterSection = (title: string, children: React.ReactNode) => (
-    <div
-      style={{
-        marginBottom: "1.5rem",
-        paddingBottom: "1.5rem",
-        borderBottom: "1px solid rgba(212,175,55,0.15)",
-      }}
-    >
-      <h4
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "0.62rem",
-          letterSpacing: "0.12em",
-          textTransform: "uppercase",
-          color: "var(--color-muted)",
-          marginBottom: "0.75rem",
-        }}
-      >
-        {title}
-      </h4>
+    <div className={s.filterSection}>
+      <h4 className={s.filterSectionTitle}>{title}</h4>
       {children}
     </div>
   );
@@ -151,79 +120,25 @@ export default function Shop() {
         description="Browse our curated collection of luxury perfumes. Filter by scent family, gender, and price to find your signature fragrance."
       />
       <Header />
-      <main
-        style={{
-          paddingTop: 72,
-          background: "var(--color-ivory)",
-          minHeight: "100vh",
-        }}
-      >
-        <div
-          style={{
-            borderBottom: "1px solid rgba(212,175,55,0.2)",
-            background: "var(--color-surface)",
-            padding: "2rem 0",
-          }}
-        >
+      <main className={s.main}>
+        <div className={s.banner}>
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <p
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "0.6rem",
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  color: "var(--color-gold)",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                Discover
-              </p>
-              <h1
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "clamp(2rem, 5vw, 3rem)",
-                  fontWeight: 300,
-                  color: "var(--color-text)",
-                }}
-              >
-                All Fragrances
-              </h1>
+              <p className={s.bannerEyebrow}>Discover</p>
+              <h1 className={s.bannerTitle}>All Fragrances</h1>
             </motion.div>
           </div>
         </div>
 
-        <div
-          className="container"
-          style={{ padding: isMobile ? "1rem" : "2rem 2rem" }}
-        >
+        <div className={`${s.content} container`}>
           {/* Controls bar */}
-          <div
-            style={{
-              display: "flex",
-              gap: "1rem",
-              alignItems: "center",
-              marginBottom: "1.5rem",
-              flexWrap: "wrap",
-            }}
-          >
-            <div
-              style={{ position: "relative", flex: "1 1 260px", maxWidth: 360 }}
-            >
-              <Search
-                size={14}
-                style={{
-                  position: "absolute",
-                  left: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "var(--color-muted)",
-                }}
-              />
+          <div className={s.controls}>
+            <div className={s.searchWrap}>
+              <Search size={14} className={s.searchIcon} />
               <input
                 type="text"
                 placeholder="Search fragrances..."
@@ -253,140 +168,43 @@ export default function Shop() {
               <SlidersHorizontal size={14} />
               Filters{" "}
               {hasFilters && (
-                <span
-                  style={{
-                    background: "var(--color-gold)",
-                    color: "var(--color-primary)",
-                    borderRadius: "50%",
-                    width: 18,
-                    height: 18,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "0.6rem",
-                    fontWeight: 700,
-                  }}
-                >
-                  ●
-                </span>
+                <span className={s.filterBadge}>●</span>
               )}
             </button>
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.7rem",
-                letterSpacing: "0.08em",
-                color: "var(--color-muted)",
-                marginLeft: "auto",
-              }}
-            >
+            <span className={s.resultCount}>
               {filtered.length} RESULTS
             </span>
           </div>
 
-          <div
-            style={{ display: "flex", gap: "2rem", alignItems: "flex-start" }}
-          >
+          <div className={s.layout}>
             {/* Sidebar — overlay on mobile, inline on desktop */}
             <AnimatePresence>
               {sidebarOpen && (
                 <>
                   {/* Mobile overlay backdrop */}
-                  {isMobile && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      onClick={() => setSidebarOpen(false)}
-                      style={{
-                        position: "fixed",
-                        inset: 0,
-                        background: "rgba(0,0,0,0.6)",
-                        zIndex: 998,
-                      }}
-                    />
-                  )}
+                  <motion.div
+                    className={s.overlay}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setSidebarOpen(false)}
+                  />
                   <motion.aside
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    style={{
-                      width: isMobile ? "85vw" : 240,
-                      maxWidth: isMobile ? 320 : 240,
-                      flexShrink: 0,
-                      background: "#1a1a1a",
-                      borderRadius: isMobile ? 0 : 6,
-                      padding: "1.5rem",
-                      border: isMobile
-                        ? "none"
-                        : "1px solid rgba(212,175,55,0.15)",
-                      ...(isMobile
-                        ? {
-                            position: "fixed" as const,
-                            top: 0,
-                            left: 0,
-                            bottom: 0,
-                            zIndex: 999,
-                            overflowY: "auto" as const,
-                          }
-                        : {
-                            position: "sticky" as const,
-                            top: 92,
-                            maxHeight: "calc(100vh - 110px)",
-                            overflowY: "auto" as const,
-                          }),
-                    }}
-                    className="no-scrollbar"
+                    className={`${s.sidebar} no-scrollbar`}
                   >
-                    {isMobile && (
-                      <button
-                        onClick={() => setSidebarOpen(false)}
-                        style={{
-                          position: "absolute",
-                          top: 16,
-                          right: 16,
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          color: "var(--color-muted)",
-                        }}
-                      >
-                        <X size={20} />
-                      </button>
-                    )}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginBottom: "1.5rem",
-                      }}
+                    <button
+                      onClick={() => setSidebarOpen(false)}
+                      className={s.sidebarClose}
                     >
-                      <h3
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.7rem",
-                          letterSpacing: "0.15em",
-                          textTransform: "uppercase",
-                          color: "var(--color-text)",
-                        }}
-                      >
-                        Filters
-                      </h3>
+                      <X size={20} />
+                    </button>
+                    <div className={s.sidebarHeader}>
+                      <h3 className={s.sidebarTitle}>Filters</h3>
                       {hasFilters && (
-                        <button
-                          onClick={clearAll}
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "var(--color-gold)",
-                            fontFamily: "var(--font-display)",
-                            fontSize: "0.6rem",
-                            letterSpacing: "0.1em",
-                            textTransform: "uppercase",
-                          }}
-                        >
+                        <button onClick={clearAll} className={s.clearBtn}>
                           Clear All
                         </button>
                       )}
@@ -410,14 +228,7 @@ export default function Shop() {
                             marginBottom: "0.5rem",
                           }}
                         />
-                        <span
-                          style={{
-                            fontFamily: "var(--font-display)",
-                            fontSize: "0.75rem",
-                            fontWeight: 700,
-                            color: "var(--color-gold)",
-                          }}
-                        >
+                        <span className={s.priceValue}>
                           Up to ₹{priceMax.toLocaleString("en-IN")}
                         </span>
                       </>,
@@ -439,7 +250,7 @@ export default function Shop() {
                             set: setShowBestseller,
                           },
                         ].map(({ label, val, set }) => (
-                          <label key={label} style={checkStyle(val)}>
+                          <label key={label} className={val ? s.checkLabelActive : s.checkLabelInactive}>
                             <input
                               type="checkbox"
                               checked={val}
@@ -459,7 +270,7 @@ export default function Shop() {
                         {["masculine", "feminine", "unisex"].map((g) => (
                           <label
                             key={g}
-                            style={checkStyle(selectedGender.includes(g))}
+                            className={selectedGender.includes(g) ? s.checkLabelActive : s.checkLabelInactive}
                           >
                             <input
                               type="checkbox"
@@ -481,22 +292,13 @@ export default function Shop() {
 
                     {/* Scent Family */}
                     <div>
-                      <h4
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.62rem",
-                          letterSpacing: "0.12em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted)",
-                          marginBottom: "0.75rem",
-                        }}
-                      >
+                      <h4 className={s.filterSectionTitle}>
                         Scent Family
                       </h4>
                       {scentFamilies.map((sf) => (
                         <label
                           key={sf}
-                          style={checkStyle(selectedScentFamilies.includes(sf))}
+                          className={selectedScentFamilies.includes(sf) ? s.checkLabelActive : s.checkLabelInactive}
                         >
                           <input
                             type="checkbox"
@@ -520,40 +322,16 @@ export default function Shop() {
             </AnimatePresence>
 
             {/* Product Grid */}
-            <div style={{ flex: 1 }}>
+            <div className={s.productGridArea}>
               {isLoading ? (
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: isMobile
-                      ? "repeat(2, 1fr)"
-                      : "repeat(auto-fill, minmax(250px, 1fr))",
-                    gap: isMobile ? "0.75rem" : "1.25rem",
-                  }}
-                >
+                <div className={s.loadingGrid}>
                   {Array.from({ length: 8 }).map((_, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        height: isMobile ? 240 : 380,
-                        borderRadius: 6,
-                        background: "rgba(212,175,55,0.06)",
-                        animation: "pulse 1.5s ease-in-out infinite",
-                      }}
-                    />
+                    <div key={i} className={s.shimmerCard} />
                   ))}
-                  <style>{`@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.9}}`}</style>
                 </div>
               ) : filtered.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "5rem 0" }}>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-serif)",
-                      fontSize: "1.5rem",
-                      color: "var(--color-muted)",
-                      marginBottom: "1rem",
-                    }}
-                  >
+                <div className={s.emptyState}>
+                  <p className={s.emptyTitle}>
                     No fragrances match your filters
                   </p>
                   <button onClick={clearAll} className="btn btn-primary">
@@ -561,15 +339,7 @@ export default function Shop() {
                   </button>
                 </div>
               ) : (
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: isMobile
-                      ? "repeat(2, 1fr)"
-                      : "repeat(auto-fill, minmax(250px, 1fr))",
-                    gap: isMobile ? "0.75rem" : "1.25rem",
-                  }}
-                >
+                <div className={s.productGrid}>
                   {filtered.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}

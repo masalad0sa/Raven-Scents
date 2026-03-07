@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
 import { ordersApi } from "../lib/api";
-import { useIsMobile } from "../hooks/useIsMobile";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
 import {
@@ -13,6 +12,7 @@ import {
   ReviewStep,
   CheckoutSummary,
 } from "../components/checkout";
+import s from "./styles/Checkout.module.css";
 
 type Step = "shipping" | "payment" | "review";
 const STEPS: Step[] = ["shipping", "payment", "review"];
@@ -44,7 +44,6 @@ interface PaymentData {
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, getSubtotal, clearCart } = useCartStore();
-  const isMobile = useIsMobile();
   const [step, setStep] = useState<Step>("shipping");
   const [shipping, setShipping] = useState<ShippingData>({
     firstName: "",
@@ -170,25 +169,8 @@ export default function Checkout() {
     onChange: (v: string) => void,
     opts?: { type?: string; placeholder?: string; half?: boolean },
   ) => (
-    <div
-      style={{
-        flex: opts?.half ? "1 1 calc(50% - 0.5rem)" : "1 1 100%",
-        minWidth: opts?.half ? 120 : undefined,
-      }}
-    >
-      <label
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "0.62rem",
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: "var(--color-muted)",
-          display: "block",
-          marginBottom: "0.4rem",
-        }}
-      >
-        {label}
-      </label>
+    <div className={opts?.half ? s.inputGroupHalf : s.inputGroupFull}>
+      <label className={s.inputLabel}>{label}</label>
       <input
         type={opts?.type ?? "text"}
         value={value}
@@ -200,16 +182,7 @@ export default function Checkout() {
         }}
       />
       {errors[field] && (
-        <p
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.72rem",
-            color: "var(--color-error)",
-            marginTop: "0.25rem",
-          }}
-        >
-          {errors[field]}
-        </p>
+        <p className={s.inputError}>{errors[field]}</p>
       )}
     </div>
   );
@@ -223,54 +196,23 @@ export default function Checkout() {
         description="Complete your purchase at Raven Scents."
       />
       <Header />
-      <main
-        style={{
-          paddingTop: 72,
-          background: "var(--color-ivory)",
-          minHeight: "100vh",
-        }}
-      >
-        <div
-          style={{
-            background: "var(--color-surface)",
-            padding: "2rem 0",
-            borderBottom: "1px solid rgba(212,175,55,0.2)",
-          }}
-        >
+      <main className={s.main}>
+        <div className={s.banner}>
           <div className="container">
-            <h1
-              style={{
-                fontFamily: "var(--font-serif)",
-                fontSize: "clamp(2rem, 4vw, 2.5rem)",
-                fontWeight: 300,
-                color: "var(--color-text)",
-                marginBottom: "1.5rem",
-              }}
-            >
-              Checkout
-            </h1>
+            <h1 className={s.bannerTitle}>Checkout</h1>
             {/* Step Indicator */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0" }}>
-              {STEPS.map((s, i) => (
-                <div key={s} style={{ display: "flex", alignItems: "center" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.6rem",
-                    }}
-                  >
+            <div className={s.stepRow}>
+              {STEPS.map((st, i) => (
+                <div key={st} className={s.stepItem}>
+                  <div className={s.stepInner}>
                     <div
                       className={`step-dot ${i < currentStepIndex ? "done" : i === currentStepIndex ? "active" : "inactive"}`}
                     >
                       {i < currentStepIndex ? <Check size={12} /> : i + 1}
                     </div>
                     <span
+                      className={s.stepLabel}
                       style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.65rem",
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
                         color:
                           i <= currentStepIndex
                             ? "var(--color-text)"
@@ -278,17 +220,15 @@ export default function Checkout() {
                         fontWeight: i === currentStepIndex ? 700 : 400,
                       }}
                     >
-                      {stepLabel[s]}
+                      {stepLabel[st]}
                     </span>
                   </div>
                   {i < STEPS.length - 1 && (
                     <div
+                      className={s.stepDivider}
                       style={{
-                        width: 40,
-                        height: 1,
                         background:
                           i < currentStepIndex ? "var(--color-gold)" : "#333",
-                        margin: "0 0.75rem",
                       }}
                     />
                   )}
@@ -298,18 +238,8 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div
-          className="container"
-          style={{ padding: isMobile ? "1.5rem 1rem" : "3rem 2rem" }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "1fr 360px",
-              gap: isMobile ? "1.5rem" : "2.5rem",
-              alignItems: "start",
-            }}
-          >
+        <div className={`${s.content} container`}>
+          <div className={s.grid}>
             {/* Form */}
             <motion.div
               key={step}
