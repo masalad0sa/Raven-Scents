@@ -2,12 +2,13 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { ProductCard } from "../product";
+import type { Product } from "../../types";
 import s from "./BestsellersSection.module.css";
 
 export function BestsellersSection({
   bestsellers,
 }: {
-  bestsellers: any[];
+  bestsellers: Product[];
   isMobile?: boolean;
 }) {
   return (
@@ -23,7 +24,7 @@ export function BestsellersSection({
           <h2 className={s.heading}>Bestsellers</h2>
         </motion.div>
         <div className={s.grid}>
-          {bestsellers.map((product: any) => (
+          {bestsellers.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

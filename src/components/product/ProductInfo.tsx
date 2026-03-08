@@ -4,11 +4,11 @@ import { ShoppingBag, Heart, Minus, Plus } from "lucide-react";
 import { useCartStore } from "../../store/cartStore";
 import { useWishlistStore } from "../../store/wishlistStore";
 import { useAuthStore } from "../../store/authStore";
-import { Variant } from "../../types";
+import { Variant, Product } from "../../types";
 import s from "./ProductInfo.module.css";
 
 interface Props {
-  product: any;
+  product: Product;
   isMobile: boolean;
 }
 

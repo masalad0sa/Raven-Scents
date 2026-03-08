@@ -8,6 +8,7 @@ import {
   AdminVariantPayload,
 } from "../../lib/api";
 import { useAuthStore } from "../../store/authStore";
+import type { Product, Variant } from "../../types";
 import s from "./AdminProducts.module.css";
 
 // ── Types ─────────────────────────────────────────────────────
@@ -155,8 +156,8 @@ export default function AdminProducts() {
     try {
       const list = await adminApi.getAllProducts();
       setProducts(list);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to load products");
     } finally {
       setLoading(false);
     }
@@ -197,7 +198,7 @@ export default function AdminProducts() {
     setView("form");
   };
 
-  const openEdit = (product: any) => {
+  const openEdit = (product: Product) => {
     setEditingId(product.id);
     setForm({
       name: product.name || "",
@@ -223,7 +224,7 @@ export default function AdminProducts() {
       is_featured: product.isFeatured || false,
       is_bestseller: product.isBestseller || false,
       is_new: product.isNew || false,
-      variants: (product.variants || []).map((v: any) => ({
+      variants: (product.variants || []).map((v: Variant) => ({
         size: String(v.size || ""),
         unit: v.unit || "ml",
         price: String(v.price || ""),
@@ -325,8 +326,8 @@ export default function AdminProducts() {
       setPendingPreviews([]);
       await loadProducts();
       setView("list");
-    } catch (e: any) {
-      setError(e.message || "Failed to save product.");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to save product.");
     } finally {
       setSaving(false);
       setUploadingImages(false);
@@ -339,8 +340,10 @@ export default function AdminProducts() {
     try {
       await adminApi.deleteProduct(id);
       setProducts((prev) => prev.filter((p) => p.id !== id));
-    } catch (e: any) {
-      alert("Delete failed: " + e.message);
+    } catch (e: unknown) {
+      alert(
+        "Delete failed: " + (e instanceof Error ? e.message : "Unknown error"),
+      );
     } finally {
       setDeletingId(null);
     }
@@ -372,7 +375,7 @@ export default function AdminProducts() {
   // ── Derived ────────────────────────────────────────────────
   const featuredCount = products.filter((p) => p.isFeatured).length;
   const outOfStockCount = products.filter((p) =>
-    (p.variants || []).every((v: any) => v.stock <= 0),
+    (p.variants || []).every((v: Variant) => v.stock <= 0),
   ).length;
 
   // ── Render ─────────────────────────────────────────────────
@@ -448,7 +451,7 @@ export default function AdminProducts() {
                   <tbody>
                     {products.map((product) => {
                       const oos = (product.variants || []).every(
-                        (v: any) => v.stock <= 0,
+                        (v: Variant) => v.stock <= 0,
                       );
                       return (
                         <tr key={product.id} className={s.tr}>

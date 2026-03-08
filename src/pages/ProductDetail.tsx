@@ -10,6 +10,7 @@ import {
   ProductInfo,
   ProductTabs,
 } from "../components/product";
+import type { Product } from "../types";
 import s from "./styles/ProductDetail.module.css";
 
 export default function ProductDetail() {
@@ -48,7 +49,7 @@ export default function ProductDetail() {
 
   const related = allProducts
     .filter(
-      (p: any) =>
+      (p: Product) =>
         p.id !== product.id &&
         (p.brand === product.brand || p.scentFamily === product.scentFamily),
     )
@@ -123,7 +124,7 @@ export default function ProductDetail() {
             <div className={s.relatedSection}>
               <h2 className={s.relatedTitle}>You May Also Like</h2>
               <div className={s.relatedGrid}>
-                {related.map((p: any) => (
+                {related.map((p: Product) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { reviewsApi } from "../../lib/api";
 import { useAuthStore } from "../../store/authStore";
-import { Review } from "../../types";
+import { Review, Product } from "../../types";
 import s from "./ProductTabs.module.css";
 
 const TABS = [
@@ -78,7 +78,7 @@ function FragrancePyramid({
 }
 
 interface Props {
-  product: any;
+  product: Product;
   isMobile: boolean;
 }
 
@@ -124,8 +124,10 @@ export function ProductTabs({ product, isMobile }: Props) {
       setReviewRating(5);
       setReviewSuccess(true);
       setTimeout(() => setReviewSuccess(false), 3000);
-    } catch (err: any) {
-      setReviewError(err.message || "Failed to submit review");
+    } catch (err: unknown) {
+      setReviewError(
+        err instanceof Error ? err.message : "Failed to submit review",
+      );
     } finally {
       setReviewSubmitting(false);
     }

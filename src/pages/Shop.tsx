@@ -5,6 +5,7 @@ import { useProducts } from "../hooks/useProducts";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
 import { ProductCard } from "../components/product";
+import type { Product } from "../types";
 import s from "./styles/Shop.module.css";
 
 type SortOption = "featured" | "price-asc" | "price-desc" | "newest" | "rating";
@@ -20,7 +21,7 @@ export default function Shop() {
   const scentFamilies = useMemo(
     () =>
       [
-        ...new Set(products.map((p: any) => p.scentFamily).filter(Boolean)),
+        ...new Set(products.map((p: Product) => p.scentFamily).filter(Boolean)),
       ].sort() as string[],
     [products],
   );

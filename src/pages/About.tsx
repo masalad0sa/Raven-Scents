@@ -10,6 +10,7 @@ import {
   ProcessSection,
   AboutCTA,
 } from "../components/about";
+import type { Product } from "../types";
 import s from "./styles/About.module.css";
 
 export default function About() {
@@ -17,7 +18,7 @@ export default function About() {
   const isMobile = useIsMobile();
   const processImages = (featured ?? [])
     .slice(0, 3)
-    .map((p: any) => p.images?.[0])
+    .map((p: Product) => p.images?.[0])
     .filter(Boolean);
 
   return (

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { ShoppingBag } from "lucide-react";
 import { ordersApi } from "../../lib/api";
+import type { Order, OrderItem } from "../../types";
 import s from "./OrdersTab.module.css";
 
 export function OrdersTab() {
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
 
   useEffect(() => {
@@ -57,7 +58,7 @@ export function OrdersTab() {
 
   return (
     <div className={s.orderList}>
-      {orders.map((order: any) => (
+      {orders.map((order: Order) => (
         <div key={order.id} className={s.orderCard}>
           <div className={s.orderHeader}>
             <div className={s.orderMeta}>
@@ -90,7 +91,7 @@ export function OrdersTab() {
           </div>
 
           <div className={s.orderItems}>
-            {order.order_items?.map((item: any, idx: number) => (
+            {order.order_items?.map((item: OrderItem, idx: number) => (
               <div
                 key={idx}
                 className={`${s.orderItem}${idx < order.order_items.length - 1 ? ` ${s.orderItemBorder}` : ""}`}

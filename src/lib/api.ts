@@ -1,4 +1,12 @@
 import { supabase } from "./supabase";
+import type {
+  Product,
+  Variant,
+  AuthResponse,
+  Order,
+  OrderPayload,
+  CouponResponse,
+} from "../types";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
@@ -52,30 +60,41 @@ export interface ProductFilters {
 }
 
 // Map snake_case from Supabase to frontend camelCase expectations
-function mapProduct(p: any) {
-  if (!p) return p;
+function mapProduct(p: Record<string, unknown>): Product {
+  if (!p) return p as unknown as Product;
   return {
     ...p,
-    shortDescription: p.short_desc || p.shortDescription,
-    compareAtPrice: p.compare_price || p.compareAtPrice,
-    scentFamily: p.scent_family || p.scentFamily,
-    reviewCount: p.review_count || p.reviewCount || 0,
-    isFeatured: p.is_featured || p.isFeatured || false,
-    isBestseller: p.is_bestseller || p.isBestseller || false,
-    isNew: p.is_new || p.isNew || false,
+    shortDescription: (p.short_desc || p.shortDescription) as string,
+    compareAtPrice: (p.compare_price || p.compareAtPrice) as number | undefined,
+    scentFamily: (p.scent_family || p.scentFamily) as string,
+    reviewCount: (p.review_count || p.reviewCount || 0) as number,
+    isFeatured: (p.is_featured || p.isFeatured || false) as boolean,
+    isBestseller: (p.is_bestseller || p.isBestseller || false) as boolean,
+    isNew: (p.is_new || p.isNew || false) as boolean,
     notes: {
-      top: p.notes_top || p.notes?.top || [],
-      middle: p.notes_middle || p.notes?.middle || [],
-      base: p.notes_base || p.notes?.base || [],
+      top: (p.notes_top ||
+        (p.notes as Record<string, unknown>)?.top ||
+        []) as string[],
+      middle: (p.notes_middle ||
+        (p.notes as Record<string, unknown>)?.middle ||
+        []) as string[],
+      base: (p.notes_base ||
+        (p.notes as Record<string, unknown>)?.base ||
+        []) as string[],
     },
-    variants: (p.product_variants || p.variants || [])
-      .map((v: any) => ({
-        ...v,
-        id: v.id,
-        productId: v.product_id || v.productId,
-      }))
-      .sort((a: any, b: any) => a.size - b.size),
-  };
+    variants: (
+      (p.product_variants || p.variants || []) as Record<string, unknown>[]
+    )
+      .map(
+        (v) =>
+          ({
+            ...v,
+            id: v.id,
+            productId: v.product_id || v.productId,
+          }) as unknown as Variant,
+      )
+      .sort((a, b) => a.size - b.size),
+  } as Product;
 }
 
 export const productsApi = {
@@ -152,7 +171,7 @@ export const productsApi = {
 // ── Auth ────────────────────────────────────────────
 export const authApi = {
   register: async (email: string, password: string, full_name?: string) => {
-    const data = await apiFetch<any>("/auth/register", {
+    const data = await apiFetch<AuthResponse>("/auth/register", {
       method: "POST",
       body: JSON.stringify({ email, password, full_name }),
     });
@@ -160,7 +179,7 @@ export const authApi = {
     return data;
   },
   login: async (email: string, password: string) => {
-    const data = await apiFetch<any>("/auth/login", {
+    const data = await apiFetch<AuthResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
@@ -175,19 +194,19 @@ export const authApi = {
 
 // ── Orders ──────────────────────────────────────────
 export const ordersApi = {
-  create: (payload: any) =>
-    apiFetch<any>("/orders", {
+  create: (payload: OrderPayload) =>
+    apiFetch<Order>("/orders", {
       method: "POST",
       body: JSON.stringify(payload),
     }),
-  getAll: () => apiFetch<any[]>("/orders"),
-  getById: (id: string) => apiFetch<any>(`/orders/${id}`),
+  getAll: () => apiFetch<Order[]>("/orders"),
+  getById: (id: string) => apiFetch<Order>(`/orders/${id}`),
 };
 
 // ── Coupons ─────────────────────────────────────────
 export const couponsApi = {
   validate: (code: string, cart_total: number) =>
-    apiFetch<any>("/coupons/validate", {
+    apiFetch<CouponResponse>("/coupons/validate", {
       method: "POST",
       body: JSON.stringify({ code, cart_total }),
     }),

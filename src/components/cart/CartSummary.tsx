@@ -38,8 +38,10 @@ export function CartSummary({
         "raven_coupon",
         JSON.stringify({ code, pct: res.discount_pct }),
       );
-    } catch (err: any) {
-      setCouponError(err.message || "Invalid coupon code");
+    } catch (err: unknown) {
+      setCouponError(
+        err instanceof Error ? err.message : "Invalid coupon code",
+      );
     } finally {
       setCouponLoading(false);
     }

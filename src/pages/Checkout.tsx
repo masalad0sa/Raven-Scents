@@ -152,10 +152,11 @@ export default function Checkout() {
       sessionStorage.removeItem("raven_coupon");
       clearCart();
       navigate("/order-confirmation");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to place order:", err);
       alert(
-        err.message || "Failed to place order. Please try again or log in.",
+        (err instanceof Error ? err.message : null) ||
+          "Failed to place order. Please try again or log in.",
       );
     } finally {
       setPlacing(false);

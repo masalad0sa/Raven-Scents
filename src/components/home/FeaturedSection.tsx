@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ProductCard } from "../product";
+import type { Product } from "../../types";
 import s from "./FeaturedSection.module.css";
 
 export function FeaturedSection({
   featuredProducts,
 }: {
-  featuredProducts: any[];
+  featuredProducts: Product[];
   isMobile?: boolean;
 }) {
   return (
@@ -33,7 +34,7 @@ export function FeaturedSection({
         </motion.div>
 
         <div className={s.grid}>
-          {featuredProducts.map((product: any) => (
+          {featuredProducts.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

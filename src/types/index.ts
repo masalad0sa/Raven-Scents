@@ -76,3 +76,55 @@ export interface Review {
   created_at: string;
   profiles?: { full_name: string | null };
 }
+
+export interface OrderItem {
+  product_id: string;
+  variant_sku: string;
+  quantity: number;
+  unit_price: number;
+  products?: Pick<Product, "name" | "images">;
+}
+
+export interface Order {
+  id: string;
+  user_id: string;
+  status: string;
+  total: number;
+  discount: number;
+  coupon_code: string | null;
+  shipping_address: ShippingAddress;
+  created_at: string;
+  order_items?: OrderItem[];
+}
+
+export interface ShippingAddress {
+  full_name: string;
+  address_line1: string;
+  city: string;
+  state: string;
+  pincode: string;
+  phone: string;
+}
+
+export interface OrderPayload {
+  items: {
+    product_id: string;
+    variant_sku: string;
+    quantity: number;
+    unit_price: number;
+  }[];
+  shipping_address: ShippingAddress;
+  discount: number;
+  coupon_code: string | null;
+}
+
+export interface AuthResponse {
+  access_token: string;
+  refresh_token: string;
+  user: { id: string; email: string; full_name?: string };
+}
+
+export interface CouponResponse {
+  valid: boolean;
+  discount_pct: number;
+}
