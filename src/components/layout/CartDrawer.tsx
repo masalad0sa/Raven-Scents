@@ -62,9 +62,7 @@ export function CartDrawer() {
                   Add ₹
                   {(freeShippingThreshold - subtotal).toLocaleString("en-IN")}{" "}
                   more for{" "}
-                  <strong className={s.shippingHighlight}>
-                    FREE shipping
-                  </strong>
+                  <strong className={s.shippingHighlight}>FREE shipping</strong>
                 </p>
                 <div className={s.progressTrack}>
                   <div
@@ -144,9 +142,7 @@ export function CartDrawer() {
                             >
                               <Minus size={12} />
                             </button>
-                            <span className={s.qtyValue}>
-                              {item.quantity}
-                            </span>
+                            <span className={s.qtyValue}>{item.quantity}</span>
                             <button
                               onClick={() =>
                                 updateQuantity(
@@ -197,9 +193,7 @@ export function CartDrawer() {
                   <span className={s.summaryLabel}>Shipping</span>
                   <span
                     className={
-                      shippingFee === 0
-                        ? s.summaryValueFree
-                        : s.summaryValue
+                      shippingFee === 0 ? s.summaryValueFree : s.summaryValue
                     }
                   >
                     {shippingFee === 0 ? "Free" : `₹${shippingFee}`}

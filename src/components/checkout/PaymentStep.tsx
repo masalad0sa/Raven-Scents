@@ -36,16 +36,12 @@ export function PaymentStep({
 }: Props) {
   return (
     <div>
-      <h2 className={s.title}>
-        Payment Details
-      </h2>
+      <h2 className={s.title}>Payment Details</h2>
       {/* Card Preview */}
       <div className={s.cardPreview}>
         <div className={s.cardCircle1} />
         <div className={s.cardCircle2} />
-        <p className={s.cardLabel}>
-          Secured Card
-        </p>
+        <p className={s.cardLabel}>Secured Card</p>
         <p className={s.cardNumber}>
           {payment.cardNumber
             ? payment.cardNumber.padEnd(19, "•").replace(/\S(?=.{1,4}$)/g, "•")
@@ -71,9 +67,7 @@ export function PaymentStep({
           { placeholder: "As on card" },
         )}
         <div className={s.fieldFull}>
-          <label className={s.fieldLabel}>
-            Card Number
-          </label>
+          <label className={s.fieldLabel}>Card Number</label>
           <input
             type="text"
             value={payment.cardNumber}
@@ -91,15 +85,11 @@ export function PaymentStep({
             }}
           />
           {errors.cardNumber && (
-            <p className={s.fieldError}>
-              {errors.cardNumber}
-            </p>
+            <p className={s.fieldError}>{errors.cardNumber}</p>
           )}
         </div>
         <div className={s.fieldHalf}>
-          <label className={s.fieldLabel}>
-            Expiry
-          </label>
+          <label className={s.fieldLabel}>Expiry</label>
           <input
             type="text"
             value={payment.expiry}
@@ -116,16 +106,10 @@ export function PaymentStep({
               borderColor: errors.expiry ? "var(--color-error)" : undefined,
             }}
           />
-          {errors.expiry && (
-            <p className={s.fieldError}>
-              {errors.expiry}
-            </p>
-          )}
+          {errors.expiry && <p className={s.fieldError}>{errors.expiry}</p>}
         </div>
         <div className={s.fieldHalf}>
-          <label className={s.fieldLabel}>
-            CVV
-          </label>
+          <label className={s.fieldLabel}>CVV</label>
           <input
             type="password"
             value={payment.cvv}
@@ -142,11 +126,7 @@ export function PaymentStep({
               borderColor: errors.cvv ? "var(--color-error)" : undefined,
             }}
           />
-          {errors.cvv && (
-            <p className={s.fieldError}>
-              {errors.cvv}
-            </p>
-          )}
+          {errors.cvv && <p className={s.fieldError}>{errors.cvv}</p>}
         </div>
       </div>
       <div className={s.actions}>

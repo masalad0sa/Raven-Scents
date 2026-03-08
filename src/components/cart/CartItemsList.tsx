@@ -62,9 +62,7 @@ export function CartItemsList({
               />
             </Link>
             <div style={{ flex: 1 }}>
-              <p className={s.productBrand}>
-                {item.product.brand}
-              </p>
+              <p className={s.productBrand}>{item.product.brand}</p>
               <Link to={`/product/${item.product.slug}`}>
                 <h3
                   className={s.productName}
@@ -150,9 +148,7 @@ function QtyControl({
       >
         <Minus size={12} />
       </button>
-      <span className={s.qtyValue}>
-        {item.quantity}
-      </span>
+      <span className={s.qtyValue}>{item.quantity}</span>
       <button
         onClick={() =>
           updateQuantity(item.product.id, item.variant.sku, item.quantity + 1)

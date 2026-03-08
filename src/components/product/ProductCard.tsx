@@ -61,10 +61,7 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5 }}
     >
-      <Link
-        to={`/product/${product.slug}`}
-        className={s.cardLink}
-      >
+      <Link to={`/product/${product.slug}`} className={s.cardLink}>
         <div className={s.card}>
           {/* Image */}
           <div className={s.imgWrap}>
@@ -98,10 +95,7 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
                 <Heart size={13} fill={wishlisted ? "#E74C3C" : "none"} />
               </button>
               {onQuickView && (
-                <button
-                  onClick={handleQuickView}
-                  className={s.quickViewBtn}
-                >
+                <button onClick={handleQuickView} className={s.quickViewBtn}>
                   <Eye size={13} />
                 </button>
               )}
@@ -110,9 +104,7 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
             {/* Out of stock overlay */}
             {isOutOfStock && (
               <div className={s.outOfStockOverlay}>
-                <span className={s.outOfStockLabel}>
-                  Out of Stock
-                </span>
+                <span className={s.outOfStockLabel}>Out of Stock</span>
               </div>
             )}
 
@@ -146,12 +138,8 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
 
           {/* Info */}
           <div className={s.info}>
-            <p className={s.brand}>
-              {product.brand}
-            </p>
-            <h3 className={s.name}>
-              {product.name}
-            </h3>
+            <p className={s.brand}>{product.brand}</p>
+            <h3 className={s.name}>{product.name}</h3>
             <div className={s.priceRow}>
               <span className={s.price}>
                 ₹{product.price.toLocaleString("en-IN")}

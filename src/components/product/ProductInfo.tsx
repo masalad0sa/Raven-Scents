@@ -40,14 +40,10 @@ export function ProductInfo({ product, isMobile }: Props) {
       className={s.wrap}
     >
       {/* Brand */}
-      <p className={s.brand}>
-        {product.brand}
-      </p>
+      <p className={s.brand}>{product.brand}</p>
 
       {/* Name */}
-      <h1 className={s.name}>
-        {product.name}
-      </h1>
+      <h1 className={s.name}>{product.name}</h1>
 
       {/* Price */}
       <div className={s.priceRow}>
@@ -86,9 +82,7 @@ export function ProductInfo({ product, isMobile }: Props) {
       </div>
 
       {/* Description */}
-      <p className={s.description}>
-        {product.shortDescription}
-      </p>
+      <p className={s.description}>{product.shortDescription}</p>
 
       <div className={s.divider} />
 
@@ -130,9 +124,7 @@ export function ProductInfo({ product, isMobile }: Props) {
       <div className={s.actionsRow}>
         {/* Qty box */}
         <div className={s.qtyBox}>
-          <span className={s.qtyValue}>
-            {quantity}
-          </span>
+          <span className={s.qtyValue}>{quantity}</span>
           <div className={s.qtyBtns}>
             <button
               onClick={() => setQuantity(quantity + 1)}
@@ -187,12 +179,8 @@ export function ProductInfo({ product, isMobile }: Props) {
           { label: "Longevity", value: product.longevity },
         ].map((item) => (
           <div key={item.label} className={s.charItem}>
-            <p className={s.charLabel}>
-              {item.label}
-            </p>
-            <p className={s.charValue}>
-              {item.value}
-            </p>
+            <p className={s.charLabel}>{item.label}</p>
+            <p className={s.charValue}>{item.value}</p>
           </div>
         ))}
       </div>

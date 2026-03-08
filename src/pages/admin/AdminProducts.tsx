@@ -381,8 +381,7 @@ export default function AdminProducts() {
       {/* Admin Header */}
       <div className={s.adminBar}>
         <span className={s.adminLogo}>
-          RAVEN{" "}
-          <span className={s.adminBadge}>ADMIN</span>
+          RAVEN <span className={s.adminBadge}>ADMIN</span>
         </span>
         <span className={s.adminSep}>/</span>
         <span className={s.adminPageTitle}>Products</span>

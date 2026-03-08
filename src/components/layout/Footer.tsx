@@ -40,11 +40,7 @@ export function Footer() {
               { label: "Masculine", to: "/shop?gender=masculine" },
               { label: "Unisex", to: "/shop?gender=unisex" },
             ].map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                className={s.columnLink}
-              >
+              <Link key={item.label} to={item.to} className={s.columnLink}>
                 {item.label}
               </Link>
             ))}
@@ -59,11 +55,7 @@ export function Footer() {
               { label: "Sustainability", to: "/about" },
               { label: "Contact", to: "/about" },
             ].map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                className={s.columnLink}
-              >
+              <Link key={item.label} to={item.to} className={s.columnLink}>
                 {item.label}
               </Link>
             ))}
@@ -91,17 +83,11 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className={s.bottomBar}>
-          <p className={s.copyright}>
-            © 2025 Raven. All rights reserved.
-          </p>
+          <p className={s.copyright}>© 2025 Raven. All rights reserved.</p>
           <div className={s.legalLinks}>
             {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(
               (item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className={s.legalLink}
-                >
+                <a key={item} href="#" className={s.legalLink}>
                   {item}
                 </a>
               ),

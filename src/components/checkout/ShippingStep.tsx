@@ -49,9 +49,7 @@ export function ShippingStep({
 }: Props) {
   return (
     <div>
-      <h2 className={s.title}>
-        Shipping Information
-      </h2>
+      <h2 className={s.title}>Shipping Information</h2>
       <div className={s.formRow}>
         {inputGroup(
           "First Name",
@@ -92,9 +90,7 @@ export function ShippingStep({
           { half: true },
         )}
         <div className={s.stateGroup}>
-          <label className={s.fieldLabel}>
-            State
-          </label>
+          <label className={s.fieldLabel}>State</label>
           <select
             value={shipping.state}
             onChange={(e) =>
@@ -113,11 +109,7 @@ export function ShippingStep({
               </option>
             ))}
           </select>
-          {errors.state && (
-            <p className={s.fieldError}>
-              {errors.state}
-            </p>
-          )}
+          {errors.state && <p className={s.fieldError}>{errors.state}</p>}
         </div>
         {inputGroup(
           "Pincode",
@@ -127,10 +119,7 @@ export function ShippingStep({
           { half: true, placeholder: "6-digit pincode" },
         )}
       </div>
-      <button
-        onClick={onNext}
-        className={`btn btn-gold ${s.nextBtn}`}
-      >
+      <button onClick={onNext} className={`btn btn-gold ${s.nextBtn}`}>
         Continue to Payment →
       </button>
     </div>

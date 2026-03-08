@@ -51,15 +51,11 @@ export function CartSummary({
       animate={{ opacity: 1, y: 0 }}
       className={s.wrap}
     >
-      <h2 className={s.title}>
-        Order Summary
-      </h2>
+      <h2 className={s.title}>Order Summary</h2>
 
       {/* Coupon */}
       <div className={s.couponSection}>
-        <label className={s.couponLabel}>
-          Coupon Code
-        </label>
+        <label className={s.couponLabel}>Coupon Code</label>
         {appliedCoupon ? (
           <div className={s.couponApplied}>
             <Tag size={14} style={{ color: "var(--color-success)" }} />
@@ -98,11 +94,7 @@ export function CartSummary({
             </button>
           </div>
         )}
-        {couponError && (
-          <p className={s.couponError}>
-            {couponError}
-          </p>
-        )}
+        {couponError && <p className={s.couponError}>{couponError}</p>}
       </div>
 
       {/* Totals */}
@@ -129,9 +121,7 @@ export function CartSummary({
           : []),
       ].map((row) => (
         <div key={row.label} className={s.summaryRow}>
-          <span className={s.summaryLabel}>
-            {row.label}
-          </span>
+          <span className={s.summaryLabel}>{row.label}</span>
           <span className={s.summaryValue} style={{ color: row.color }}>
             {row.val}
           </span>
@@ -140,23 +130,16 @@ export function CartSummary({
 
       <div className={s.totalRow}>
         <span className={s.totalLabel}>Total</span>
-        <span className={s.totalValue}>
-          ₹{total.toLocaleString("en-IN")}
-        </span>
+        <span className={s.totalValue}>₹{total.toLocaleString("en-IN")}</span>
       </div>
 
-      <Link
-        to="/checkout"
-        className={`btn btn-gold ${s.checkoutLink}`}
-      >
+      <Link to="/checkout" className={`btn btn-gold ${s.checkoutLink}`}>
         Proceed to Checkout →
       </Link>
 
       <div className={s.secureRow}>
         <span style={{ fontSize: "0.85rem" }}>🔒</span>
-        <span className={s.secureText}>
-          Secure SSL encrypted checkout
-        </span>
+        <span className={s.secureText}>Secure SSL encrypted checkout</span>
       </div>
     </motion.div>
   );

@@ -88,9 +88,7 @@ export function Header() {
         <div className={`${s.headerInner} container`}>
           {/* Logo */}
           <Link to="/" className={s.logo}>
-            <span className={s.logoText}>
-              RAVEN
-            </span>
+            <span className={s.logoText}>RAVEN</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -129,9 +127,7 @@ export function Header() {
                 fill={wishlistCount > 0 ? "currentColor" : "none"}
               />
               {wishlistCount > 0 && (
-                <span className={s.badge}>
-                  {wishlistCount}
-                </span>
+                <span className={s.badge}>{wishlistCount}</span>
               )}
             </Link>
 
@@ -144,9 +140,7 @@ export function Header() {
             >
               <ShoppingBag size={14} />
               {totalItems > 0 ? (
-                <span className={s.cartBadge}>
-                  {totalItems}
-                </span>
+                <span className={s.cartBadge}>{totalItems}</span>
               ) : (
                 "Cart"
               )}
@@ -175,25 +169,16 @@ export function Header() {
                       transition={{ duration: 0.15 }}
                       className={s.dropdown}
                     >
-                      <p className={s.dropdownEmail}>
-                        {user.email}
-                      </p>
+                      <p className={s.dropdownEmail}>{user.email}</p>
                       {[
                         { label: "My Account", to: "/account" },
                         { label: "Wishlist", to: "/wishlist" },
                       ].map(({ label, to }) => (
-                        <Link
-                          key={to}
-                          to={to}
-                          className={s.dropdownLink}
-                        >
+                        <Link key={to} to={to} className={s.dropdownLink}>
                           {label}
                         </Link>
                       ))}
-                      <button
-                        onClick={handleLogout}
-                        className={s.logoutBtn}
-                      >
+                      <button onClick={handleLogout} className={s.logoutBtn}>
                         <LogOut size={12} />
                         Sign Out
                       </button>
@@ -202,10 +187,7 @@ export function Header() {
                 </AnimatePresence>
               </div>
             ) : (
-              <Link
-                to="/login"
-                className={s.signInLink}
-              >
+              <Link to="/login" className={s.signInLink}>
                 <User size={13} />
                 Sign In
               </Link>
@@ -237,11 +219,7 @@ export function Header() {
               { label: "Collections", to: "/shop" },
               { label: "About", to: "/about" },
             ].map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={s.mobileNavLink}
-              >
+              <Link key={item.to} to={item.to} className={s.mobileNavLink}>
                 {item.label}
               </Link>
             ))}

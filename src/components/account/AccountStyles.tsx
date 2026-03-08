@@ -16,9 +16,7 @@ export function FormField({
 }) {
   return (
     <div>
-      <label className={s.formLabel}>
-        {label}
-      </label>
+      <label className={s.formLabel}>{label}</label>
       <input
         type={type}
         value={value}

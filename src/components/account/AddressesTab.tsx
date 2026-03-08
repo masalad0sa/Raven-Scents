@@ -195,9 +195,7 @@ export function AddressesTab({
 
       {/* Address cards */}
       {addrLoading ? (
-        <p className={s.loadingText}>
-          Loading…
-        </p>
+        <p className={s.loadingText}>Loading…</p>
       ) : addresses.length === 0 ? (
         <div className={s.emptyCard}>
           <MapPin
@@ -205,9 +203,7 @@ export function AddressesTab({
             color="rgba(212,175,55,0.3)"
             style={{ margin: "0 auto 1rem" }}
           />
-          <p className={s.emptyText}>
-            No saved addresses yet.
-          </p>
+          <p className={s.emptyText}>No saved addresses yet.</p>
         </div>
       ) : (
         <div className={s.addrGrid}>
@@ -220,9 +216,7 @@ export function AddressesTab({
                 <span className={s.defaultBadge}>Default</span>
               )}
               <p className={s.addrName}>{addr.full_name}</p>
-              {addr.phone && (
-                <p className={s.addrPhone}>{addr.phone}</p>
-              )}
+              {addr.phone && <p className={s.addrPhone}>{addr.phone}</p>}
               <p className={s.addrDetail}>
                 {addr.street}
                 <br />

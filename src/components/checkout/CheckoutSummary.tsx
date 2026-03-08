@@ -25,23 +25,15 @@ export function CheckoutSummary({
 }: Props) {
   return (
     <div className={s.wrap}>
-      <h2 className={s.title}>
-        Order Summary
-      </h2>
+      <h2 className={s.title}>Order Summary</h2>
       {items.map((item) => (
         <div
           key={`${item.product.id}-${item.variant.sku}`}
           className={s.itemRow}
         >
           <div className={s.imgWrap}>
-            <img
-              src={item.product.images[0]}
-              alt=""
-              className={s.img}
-            />
-            <span className={s.qtyBadge}>
-              {item.quantity}
-            </span>
+            <img src={item.product.images[0]} alt="" className={s.img} />
+            <span className={s.qtyBadge}>{item.quantity}</span>
           </div>
           <div className={s.itemInfo}>
             <p className={s.itemName}>{item.product.name}</p>
@@ -78,9 +70,7 @@ export function CheckoutSummary({
         ))}
         <div className={s.totalRow}>
           <span className={s.totalLabel}>Total</span>
-          <span className={s.totalValue}>
-            ₹{total.toLocaleString("en-IN")}
-          </span>
+          <span className={s.totalValue}>₹{total.toLocaleString("en-IN")}</span>
         </div>
       </div>
     </div>

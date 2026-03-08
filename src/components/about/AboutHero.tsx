@@ -24,7 +24,10 @@ export function AboutHero() {
           />
         ))}
       </div>
-      <div className="container" style={{ position: "relative", zIndex: 1, padding: "6rem 2rem" }}>
+      <div
+        className="container"
+        style={{ position: "relative", zIndex: 1, padding: "6rem 2rem" }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

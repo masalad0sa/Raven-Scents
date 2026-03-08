@@ -44,10 +44,14 @@ export function OrdersTab() {
 
   const statusClass = (status: string) => {
     switch (status) {
-      case "delivered": return s.statusDelivered;
-      case "shipped": return s.statusShipped;
-      case "cancelled": return s.statusCancelled;
-      default: return s.statusDefault;
+      case "delivered":
+        return s.statusDelivered;
+      case "shipped":
+        return s.statusShipped;
+      case "cancelled":
+        return s.statusCancelled;
+      default:
+        return s.statusDefault;
     }
   };
 
@@ -115,9 +119,7 @@ export function OrdersTab() {
 
           {order.coupon_code && (
             <div className={s.couponRow}>
-              <span className={s.couponCode}>
-                Coupon: {order.coupon_code}
-              </span>
+              <span className={s.couponCode}>Coupon: {order.coupon_code}</span>
               <span className={s.couponDiscount}>
                 −${(order.discount / 100).toFixed(2)}
               </span>

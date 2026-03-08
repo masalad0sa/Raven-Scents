@@ -59,12 +59,8 @@ function FragrancePyramid({
               }}
             >
               <div className={s.tierHeader}>
-                <span className={s.tierLabel}>
-                  {tier.label}
-                </span>
-                <span className={s.tierSublabel}>
-                  {tier.sublabel}
-                </span>
+                <span className={s.tierLabel}>{tier.label}</span>
+                <span className={s.tierSublabel}>{tier.sublabel}</span>
               </div>
               <div className={s.tierNotes}>
                 {tier.notes.map((note) => (
@@ -155,9 +151,7 @@ export function ProductTabs({ product, isMobile }: Props) {
         }}
       >
         {activeTab === "Description" && (
-          <p className={s.descText}>
-            {product.description}
-          </p>
+          <p className={s.descText}>{product.description}</p>
         )}
         {activeTab === "Fragrance Pyramid" && (
           <FragrancePyramid notes={product.notes} />
@@ -223,9 +217,7 @@ export function ProductTabs({ product, isMobile }: Props) {
             {/* Review Form */}
             {user ? (
               <div className={s.reviewForm}>
-                <h4 className={s.reviewFormTitle}>
-                  Write a Review
-                </h4>
+                <h4 className={s.reviewFormTitle}>Write a Review</h4>
                 <div className={s.ratingPicker}>
                   {[1, 2, 3, 4, 5].map((i) => (
                     <button
@@ -256,11 +248,7 @@ export function ProductTabs({ product, isMobile }: Props) {
                   rows={3}
                   className={s.reviewTextarea}
                 />
-                {reviewError && (
-                  <p className={s.reviewError}>
-                    {reviewError}
-                  </p>
-                )}
+                {reviewError && <p className={s.reviewError}>{reviewError}</p>}
                 {reviewSuccess && (
                   <p className={s.reviewSuccess}>
                     Review submitted successfully!
@@ -295,9 +283,7 @@ export function ProductTabs({ product, isMobile }: Props) {
 
             {/* Reviews List */}
             {reviewLoading ? (
-              <p className={s.loadingText}>
-                Loading reviews...
-              </p>
+              <p className={s.loadingText}>Loading reviews...</p>
             ) : reviews.length === 0 ? (
               <p className={s.loadingText}>
                 No reviews yet. Be the first to share your thoughts!
@@ -343,13 +329,9 @@ export function ProductTabs({ product, isMobile }: Props) {
                     </span>
                   </div>
                   {review.title && (
-                    <p className={s.reviewTitle}>
-                      {review.title}
-                    </p>
+                    <p className={s.reviewTitle}>{review.title}</p>
                   )}
-                  <p className={s.reviewBody}>
-                    {review.body}
-                  </p>
+                  <p className={s.reviewBody}>{review.body}</p>
                 </div>
               ))
             )}

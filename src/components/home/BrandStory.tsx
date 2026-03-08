@@ -44,13 +44,7 @@ export function BrandStory() {
               "https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=400&q=80",
               "https://images.unsplash.com/photo-1524638431109-93d95c968f03?w=400&q=80",
             ].map((url, i) => (
-              <img
-                key={i}
-                src={url}
-                alt=""
-                className={s.img}
-                loading="lazy"
-              />
+              <img key={i} src={url} alt="" className={s.img} loading="lazy" />
             ))}
           </motion.div>
         </div>

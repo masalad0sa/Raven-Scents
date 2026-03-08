@@ -519,7 +519,9 @@
   justify-content: center;
   gap: 0.4rem;
   color: #9a9590;
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
 }
 
 .uploadBtn:hover {
