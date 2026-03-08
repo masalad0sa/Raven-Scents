@@ -1,0 +1,14 @@
+.loadingWrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-ivory);
+}
+
+.loadingText {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  letter-spacing: 0.05em;
+}

@@ -1,0 +1,199 @@
+.loadingWrap {
+  text-align: center;
+  padding: 3rem;
+}
+
+.loadingText {
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+}
+
+.emptyCard {
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 10px;
+  padding: 3rem;
+  text-align: center;
+}
+
+.emptyTitle {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  color: var(--color-text);
+  margin: 0 0 0.5rem;
+}
+
+.emptyText {
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  margin: 0 0 2rem;
+}
+
+.shopLink {
+  display: inline-block;
+  background: var(--color-gold);
+  color: #0d0d0d;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 0.75rem 2rem;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.shopLink:hover {
+  opacity: 0.9;
+}
+
+.orderList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.orderCard {
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+  background: rgba(212, 175, 55, 0.03);
+}
+
+.orderMeta {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.metaLabel {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.metaValue {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--color-text);
+  margin: 0.15rem 0 0;
+}
+
+.metaValueGold {
+  composes: metaValue;
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.statusDelivered {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+}
+
+.statusShipped {
+  background: rgba(96, 165, 250, 0.12);
+  color: #60a5fa;
+}
+
+.statusCancelled {
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+}
+
+.statusDefault {
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--color-gold);
+}
+
+.orderItems {
+  padding: 1rem 1.25rem;
+}
+
+.orderItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0;
+}
+
+.orderItemBorder {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.itemImg {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.itemInfo {
+  flex: 1;
+}
+
+.itemName {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.itemQty {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin: 0.15rem 0 0;
+}
+
+.itemTotal {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.couponRow {
+  padding: 0 1.25rem 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.couponCode {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+.couponDiscount {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: #4ade80;
+}

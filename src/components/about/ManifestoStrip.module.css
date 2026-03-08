@@ -1,0 +1,26 @@
+.strip {
+  background: var(--color-gold);
+  padding: 2rem 0;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  gap: 4rem;
+  animation: marquee 18s linear infinite;
+  white-space: nowrap;
+  width: max-content;
+}
+
+.word {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--color-primary);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-25%); }
+}

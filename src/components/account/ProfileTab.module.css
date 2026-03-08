@@ -1,0 +1,72 @@
+.card {
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 480px;
+}
+
+.editActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.infoGrid {
+  display: grid;
+  gap: 1.5rem 2rem;
+}
+
+.infoLabel {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.infoValue {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.passwordCard {
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 10px;
+  margin-top: 1.5rem;
+}
+
+.passwordForm {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  max-width: 400px;
+}
+
+.passwordMsg {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .passwordCard {
+    padding: 1.5rem;
+  }
+}

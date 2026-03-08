@@ -1,3 +1,5 @@
+import s from "./ReviewStep.module.css";
+
 interface Props {
   shipping: {
     firstName: string;
@@ -26,138 +28,34 @@ export function ReviewStep({
 }: Props) {
   return (
     <div>
-      <h2
-        style={{
-          fontFamily: "var(--font-serif)",
-          fontSize: "1.5rem",
-          fontWeight: 400,
-          color: "var(--color-text)",
-          marginBottom: "2rem",
-        }}
-      >
+      <h2 className={s.title}>
         Order Review
       </h2>
       {/* Shipping summary */}
-      <div
-        style={{
-          background: "#1a1a1a",
-          border: "1px solid rgba(212,175,55,0.15)",
-          borderRadius: 6,
-          padding: "1.25rem",
-          marginBottom: "1.25rem",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "0.75rem",
-          }}
-        >
-          <h3
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.65rem",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--color-muted)",
-            }}
-          >
-            Shipping To
-          </h3>
-          <button
-            onClick={onEditShipping}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontFamily: "var(--font-display)",
-              fontSize: "0.62rem",
-              letterSpacing: "0.1em",
-              color: "var(--color-gold)",
-              textTransform: "uppercase",
-            }}
-          >
-            Edit
-          </button>
+      <div className={s.card}>
+        <div className={s.cardHeader}>
+          <h3 className={s.cardLabel}>Shipping To</h3>
+          <button onClick={onEditShipping} className={s.editBtn}>Edit</button>
         </div>
-        <p
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.9rem",
-            color: "var(--color-text)",
-          }}
-        >
+        <p className={s.name}>
           {shipping.firstName} {shipping.lastName}
         </p>
-        <p
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.85rem",
-            color: "var(--color-muted)",
-          }}
-        >
+        <p className={s.address}>
           {shipping.address}, {shipping.city}, {shipping.state} —{" "}
           {shipping.pincode}
         </p>
       </div>
       {/* Payment summary */}
-      <div
-        style={{
-          background: "#1a1a1a",
-          border: "1px solid rgba(212,175,55,0.15)",
-          borderRadius: 6,
-          padding: "1.25rem",
-          marginBottom: "2rem",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "0.75rem",
-          }}
-        >
-          <h3
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.65rem",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--color-muted)",
-            }}
-          >
-            Payment
-          </h3>
-          <button
-            onClick={onEditPayment}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontFamily: "var(--font-display)",
-              fontSize: "0.62rem",
-              letterSpacing: "0.1em",
-              color: "var(--color-gold)",
-              textTransform: "uppercase",
-            }}
-          >
-            Edit
-          </button>
+      <div className={s.cardPayment}>
+        <div className={s.cardHeader}>
+          <h3 className={s.cardLabel}>Payment</h3>
+          <button onClick={onEditPayment} className={s.editBtn}>Edit</button>
         </div>
-        <p
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.9rem",
-            color: "var(--color-text)",
-          }}
-        >
+        <p className={s.paymentText}>
           Ending in {cardLast4}
         </p>
       </div>
-      <div style={{ display: "flex", gap: "1rem" }}>
+      <div className={s.actions}>
         <button onClick={onBack} className="btn btn-outline">
           ← Back
         </button>

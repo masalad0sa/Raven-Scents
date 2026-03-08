@@ -1,0 +1,128 @@
+.wrap {
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 8px;
+  padding: 1.75rem;
+  position: sticky;
+  top: 92px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+}
+
+.couponSection {
+  margin-bottom: 1.5rem;
+}
+
+.couponLabel {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.couponApplied {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(46, 204, 113, 0.08);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 4px;
+}
+
+.couponText {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-success);
+}
+
+.couponRemove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-muted);
+  margin-left: auto;
+}
+
+.couponInputRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.couponError {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-error);
+  margin-top: 0.5rem;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.summaryLabel {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.summaryValue {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+.totalLabel {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.totalValue {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.checkoutLink {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  text-decoration: none;
+}
+
+.secureRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.secureText {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--color-muted);
+}

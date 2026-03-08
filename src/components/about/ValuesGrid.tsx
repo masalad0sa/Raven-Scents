@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Leaf, FlaskConical, Sparkles, Globe } from "lucide-react";
 import { GradientBlob } from "../effects";
+import s from "./ValuesGrid.module.css";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -40,24 +41,8 @@ const values = [
 
 export function ValuesGrid() {
   return (
-    <section
-      className="section"
-      style={{
-        background: "var(--color-surface)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "-80px",
-          transform: "translateX(-50%)",
-          opacity: 0.1,
-          pointerEvents: "none",
-        }}
-      >
+    <section className={`section ${s.section}`}>
+      <div className={s.blobWrap}>
         <GradientBlob size={700} reactToMouse={false} />
       </div>
       <div className="container">
@@ -65,39 +50,13 @@ export function ValuesGrid() {
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          style={{ textAlign: "center", marginBottom: "4rem" }}
+          className={s.headerWrap}
         >
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.65rem",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "var(--color-gold)",
-              marginBottom: "0.75rem",
-            }}
-          >
-            What Drives Us
-          </p>
-          <h2
-            style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "clamp(2rem, 4vw, 3rem)",
-              fontWeight: 300,
-              color: "var(--color-text)",
-            }}
-          >
-            Built on These Principles
-          </h2>
+          <p className={s.tagline}>What Drives Us</p>
+          <h2 className={s.heading}>Built on These Principles</h2>
         </motion.div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "1.5rem",
-          }}
-        >
+        <div className={s.grid}>
           {values.map(({ Icon, title, desc }, i) => (
             <motion.div
               key={title}
@@ -106,60 +65,13 @@ export function ValuesGrid() {
               whileInView="visible"
               viewport={{ once: true }}
               custom={i}
-              style={{
-                padding: "2.25rem",
-                background: "#1a1a1a",
-                borderRadius: 8,
-                border: "1px solid rgba(212,175,55,0.15)",
-                transition: "box-shadow 0.3s, transform 0.3s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow =
-                  "0 20px 48px rgba(0,0,0,0.4)";
-                (e.currentTarget as HTMLElement).style.transform =
-                  "translateY(-4px)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = "none";
-                (e.currentTarget as HTMLElement).style.transform =
-                  "translateY(0)";
-              }}
+              className={s.card}
             >
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 12,
-                  background: "rgba(212,175,55,0.1)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "1.25rem",
-                }}
-              >
+              <div className={s.iconWrap}>
                 <Icon size={22} color="var(--color-gold)" strokeWidth={1.5} />
               </div>
-              <h3
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "1.2rem",
-                  fontWeight: 500,
-                  color: "var(--color-text)",
-                  marginBottom: "0.75rem",
-                }}
-              >
-                {title}
-              </h3>
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.875rem",
-                  color: "var(--color-muted)",
-                  lineHeight: 1.85,
-                }}
-              >
-                {desc}
-              </p>
+              <h3 className={s.cardTitle}>{title}</h3>
+              <p className={s.cardDesc}>{desc}</p>
             </motion.div>
           ))}
         </div>

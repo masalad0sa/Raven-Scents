@@ -1,0 +1,307 @@
+.wrap {
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.tabBar {
+  display: flex;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  overflow-x: auto;
+}
+
+.tabContent {
+  max-width: 700px;
+}
+
+.descText {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  line-height: 1.9;
+}
+
+/* Fragrance Pyramid */
+.pyramidWrap {
+  padding: 0.75rem 0;
+}
+
+.pyramidCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tierHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.tierLabel {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tierSublabel {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  opacity: 0.7;
+}
+
+.tierNotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tierNote {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+}
+
+/* How to Wear */
+.howToWear {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  line-height: 1.9;
+}
+
+.howToWear p {
+  margin-bottom: 1rem;
+}
+
+.howToWear p:last-child {
+  margin-bottom: 0;
+}
+
+/* Reviews */
+.ratingSummary {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #1a1a1a;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.ratingBig {
+  font-family: var(--font-serif);
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: var(--color-gold);
+  line-height: 1;
+}
+
+.ratingStarsRow {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+.ratingStar {
+  font-size: 1rem;
+}
+
+.ratingCount {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+/* Review Form */
+.reviewForm {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #1a1a1a;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.reviewFormTitle {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.ratingPicker {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.ratingPickerBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0;
+}
+
+.reviewInput {
+  width: 100%;
+  background: #0d0d0d;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.reviewTextarea {
+  width: 100%;
+  background: #0d0d0d;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.reviewError {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-error);
+  margin-bottom: 0.5rem;
+}
+
+.reviewSuccess {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-success);
+  margin-bottom: 0.5rem;
+}
+
+.submitBtn {
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 1.5rem;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #0d0d0d;
+}
+
+.loginPrompt {
+  margin-bottom: 2rem;
+  padding: 1rem 1.5rem;
+  background: #1a1a1a;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.loginLink {
+  color: var(--color-gold);
+}
+
+.loadingText {
+  font-family: var(--font-sans);
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+/* Review Item */
+.reviewItem {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.reviewItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.reviewerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.reviewerName {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.verifiedBadge {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-success);
+  background: rgba(46, 204, 113, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+}
+
+.reviewStars {
+  display: flex;
+}
+
+.reviewStar {
+  font-size: 0.85rem;
+}
+
+.reviewDate {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.reviewTitle {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.35rem;
+}
+
+.reviewBody {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .tabContent {
+    max-width: 100%;
+    padding: 1.25rem 0;
+  }
+}

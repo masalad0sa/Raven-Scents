@@ -1,0 +1,39 @@
+.title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--color-text);
+  margin-bottom: 2rem;
+}
+
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.stateGroup {
+  flex: 1 1 calc(50% - 0.5rem);
+  min-width: 120px;
+}
+
+.fieldLabel {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.fieldError {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--color-error);
+  margin-top: 0.25rem;
+}
+
+.nextBtn {
+  margin-top: 2rem;
+}

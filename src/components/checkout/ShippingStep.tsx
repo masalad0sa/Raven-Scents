@@ -1,3 +1,5 @@
+import s from "./ShippingStep.module.css";
+
 interface ShippingData {
   firstName: string;
   lastName: string;
@@ -47,18 +49,10 @@ export function ShippingStep({
 }: Props) {
   return (
     <div>
-      <h2
-        style={{
-          fontFamily: "var(--font-serif)",
-          fontSize: "1.5rem",
-          fontWeight: 400,
-          color: "var(--color-text)",
-          marginBottom: "2rem",
-        }}
-      >
+      <h2 className={s.title}>
         Shipping Information
       </h2>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+      <div className={s.formRow}>
         {inputGroup(
           "First Name",
           "firstName",
@@ -97,18 +91,8 @@ export function ShippingStep({
           (v) => setShipping((s) => ({ ...s, city: v })),
           { half: true },
         )}
-        <div style={{ flex: "1 1 calc(50% - 0.5rem)", minWidth: 120 }}>
-          <label
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.62rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "var(--color-muted)",
-              display: "block",
-              marginBottom: "0.4rem",
-            }}
-          >
+        <div className={s.stateGroup}>
+          <label className={s.fieldLabel}>
             State
           </label>
           <select
@@ -130,14 +114,7 @@ export function ShippingStep({
             ))}
           </select>
           {errors.state && (
-            <p
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.72rem",
-                color: "var(--color-error)",
-                marginTop: "0.25rem",
-              }}
-            >
+            <p className={s.fieldError}>
               {errors.state}
             </p>
           )}
@@ -152,8 +129,7 @@ export function ShippingStep({
       </div>
       <button
         onClick={onNext}
-        className="btn btn-gold"
-        style={{ marginTop: "2rem" }}
+        className={`btn btn-gold ${s.nextBtn}`}
       >
         Continue to Payment →
       </button>

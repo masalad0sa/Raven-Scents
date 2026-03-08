@@ -1,0 +1,149 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.formCard {
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 10px;
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.formTitle {
+  margin-bottom: 1.5rem;
+}
+
+.formGrid {
+  display: grid;
+  gap: 1rem 1.25rem;
+  max-width: 600px;
+}
+
+.streetCol {
+  grid-column: 1 / -1;
+}
+
+.formActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.loadingText {
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+}
+
+.emptyCard {
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 10px;
+  padding: 3rem;
+  text-align: center;
+}
+
+.emptyText {
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.addrGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.addrCard {
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 10px;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.addrCardDefault {
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.defaultBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+}
+
+.addrName {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 0.25rem;
+}
+
+.addrPhone {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.addrDetail {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.addrActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.addrActionBtn {
+  font-size: 0.6rem;
+}
+
+.deleteBtn {
+  font-size: 0.6rem;
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.2);
+}
+
+.deleteBtn:hover {
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .addrGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 769px) {
+  .formGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .addrGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}

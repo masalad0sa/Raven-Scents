@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import s from "./CustomCursor.module.css";
 
 const SIZE = 20;
 const SIZE_GROW = 44;
@@ -85,20 +86,8 @@ export function CustomCursor() {
   return (
     <div
       ref={cursorRef}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: SIZE,
-        height: SIZE,
-        borderRadius: "50%",
-        background: "#fff",
-        pointerEvents: "none",
-        zIndex: 99999,
-        mixBlendMode: "difference",
-        willChange: "transform, width, height",
-        transition: "width 0.18s ease, height 0.18s ease",
-      }}
+      className={s.cursor}
+      style={{ width: SIZE, height: SIZE }}
     />
   );
 }

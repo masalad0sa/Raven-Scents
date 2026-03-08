@@ -1,4 +1,5 @@
 import React from "react";
+import s from "./AccountStyles.module.css";
 
 export function FormField({
   label,
@@ -15,18 +16,7 @@ export function FormField({
 }) {
   return (
     <div>
-      <label
-        style={{
-          display: "block",
-          fontFamily: "var(--font-display)",
-          fontSize: "0.58rem",
-          fontWeight: 600,
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-          color: "var(--color-text-muted)",
-          marginBottom: "0.4rem",
-        }}
-      >
+      <label className={s.formLabel}>
         {label}
       </label>
       <input
@@ -34,30 +24,19 @@ export function FormField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        style={{
-          width: "100%",
-          background: "#1a1a1a",
-          border: "1px solid rgba(212,175,55,0.2)",
-          borderRadius: 6,
-          padding: "0.7rem 1rem",
-          color: "var(--color-text)",
-          fontFamily: "var(--font-body)",
-          fontSize: "0.9rem",
-          outline: "none",
-          boxSizing: "border-box",
-          transition: "border-color 0.2s",
-        }}
-        onFocus={(e) =>
-          (e.currentTarget.style.borderColor = "var(--color-gold)")
-        }
-        onBlur={(e) =>
-          (e.currentTarget.style.borderColor = "rgba(212,175,55,0.2)")
-        }
+        className={s.formInput}
       />
     </div>
   );
 }
 
+export const sectionHeadingClass = s.sectionHeading;
+export const iconBtnClass = s.iconBtn;
+export const primaryBtnClass = (disabled: boolean) =>
+  `${s.primaryBtn}${disabled ? ` ${s.primaryBtnDisabled}` : ""}`;
+export const ghostBtnClass = s.ghostBtn;
+
+/* Keep legacy exports for backward compat during migration */
 export const sectionHeading: React.CSSProperties = {
   fontFamily: "var(--font-display)",
   fontSize: "0.7rem",

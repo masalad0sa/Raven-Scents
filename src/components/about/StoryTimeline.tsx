@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { GradientBlob } from "../effects";
+import s from "./StoryTimeline.module.css";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -39,34 +40,11 @@ const timeline = [
 
 export function StoryTimeline({ isMobile }: { isMobile: boolean }) {
   return (
-    <section
-      className="section"
-      style={{
-        background: "var(--color-ivory)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          right: "-180px",
-          top: "-120px",
-          opacity: 0.12,
-          pointerEvents: "none",
-        }}
-      >
+    <section className={`section ${s.section}`}>
+      <div className={s.blobRight}>
         <GradientBlob size={560} reactToMouse={false} />
       </div>
-      <div
-        style={{
-          position: "absolute",
-          left: "-150px",
-          bottom: "-100px",
-          opacity: 0.1,
-          pointerEvents: "none",
-        }}
-      >
+      <div className={s.blobLeft}>
         <GradientBlob size={420} reactToMouse={false} />
       </div>
       <div className="container">
@@ -74,33 +52,13 @@ export function StoryTimeline({ isMobile }: { isMobile: boolean }) {
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          style={{ textAlign: "center", marginBottom: "4rem" }}
+          className={s.headerWrap}
         >
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.65rem",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "var(--color-gold)",
-              marginBottom: "0.75rem",
-            }}
-          >
-            Our Journey
-          </p>
-          <h2
-            style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "clamp(2rem, 4vw, 3rem)",
-              fontWeight: 300,
-              color: "var(--color-text)",
-            }}
-          >
-            From Studio to Shelf
-          </h2>
+          <p className={s.tagline}>Our Journey</p>
+          <h2 className={s.heading}>From Studio to Shelf</h2>
         </motion.div>
 
-        <div style={{ position: "relative", maxWidth: 800, margin: "0 auto" }}>
+        <div className={s.timelineWrap}>
           <div
             style={{
               position: "absolute",
@@ -136,51 +94,11 @@ export function StoryTimeline({ isMobile }: { isMobile: boolean }) {
             >
               {isMobile ? (
                 <>
-                  <div
-                    style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      background: "var(--color-gold)",
-                      flexShrink: 0,
-                      marginTop: "0.25rem",
-                      boxShadow: "0 0 0 4px rgba(212,175,55,0.2)",
-                    }}
-                  />
+                  <div className={s.dotMobile} />
                   <div>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-serif)",
-                        fontSize: "2rem",
-                        fontWeight: 300,
-                        color: "var(--color-gold)",
-                        display: "block",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {item.year}
-                    </span>
-                    <h3
-                      style={{
-                        fontFamily: "var(--font-serif)",
-                        fontSize: "1.1rem",
-                        fontWeight: 500,
-                        color: "var(--color-text)",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.875rem",
-                        color: "var(--color-muted)",
-                        lineHeight: 1.8,
-                      }}
-                    >
-                      {item.desc}
-                    </p>
+                    <span className={s.yearMobile}>{item.year}</span>
+                    <h3 className={s.itemTitleMobile}>{item.title}</h3>
+                    <p className={s.itemDesc}>{item.desc}</p>
                   </div>
                 </>
               ) : (
@@ -191,51 +109,11 @@ export function StoryTimeline({ isMobile }: { isMobile: boolean }) {
                       textAlign: i % 2 === 0 ? "right" : "left",
                     }}
                   >
-                    <span
-                      style={{
-                        fontFamily: "var(--font-serif)",
-                        fontSize: "2.5rem",
-                        fontWeight: 300,
-                        color: "var(--color-gold)",
-                        display: "block",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {item.year}
-                    </span>
-                    <h3
-                      style={{
-                        fontFamily: "var(--font-serif)",
-                        fontSize: "1.25rem",
-                        fontWeight: 500,
-                        color: "var(--color-text)",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.875rem",
-                        color: "var(--color-muted)",
-                        lineHeight: 1.8,
-                      }}
-                    >
-                      {item.desc}
-                    </p>
+                    <span className={s.yearDesktop}>{item.year}</span>
+                    <h3 className={s.itemTitleDesktop}>{item.title}</h3>
+                    <p className={s.itemDesc}>{item.desc}</p>
                   </div>
-                  <div
-                    style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      background: "var(--color-gold)",
-                      flexShrink: 0,
-                      marginTop: "2.5rem",
-                      boxShadow: "0 0 0 4px rgba(212,175,55,0.2)",
-                    }}
-                  />
+                  <div className={s.dotDesktop} />
                   <div style={{ flex: 1 }} />
                 </>
               )}

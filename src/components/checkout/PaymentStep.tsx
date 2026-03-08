@@ -1,3 +1,5 @@
+import s from "./PaymentStep.module.css";
+
 interface PaymentData {
   cardName: string;
   cardNumber: string;
@@ -34,125 +36,33 @@ export function PaymentStep({
 }: Props) {
   return (
     <div>
-      <h2
-        style={{
-          fontFamily: "var(--font-serif)",
-          fontSize: "1.5rem",
-          fontWeight: 400,
-          color: "var(--color-text)",
-          marginBottom: "2rem",
-        }}
-      >
+      <h2 className={s.title}>
         Payment Details
       </h2>
       {/* Card Preview */}
-      <div
-        style={{
-          background: "var(--color-primary)",
-          borderRadius: 12,
-          padding: "1.5rem 1.75rem",
-          marginBottom: "2rem",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: -30,
-            right: -30,
-            width: 120,
-            height: 120,
-            borderRadius: "50%",
-            border: "1px solid rgba(212,175,55,0.2)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 10,
-            right: 10,
-            width: 80,
-            height: 80,
-            borderRadius: "50%",
-            background: "rgba(212,175,55,0.1)",
-          }}
-        />
-        <p
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "0.62rem",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.5)",
-            marginBottom: "2rem",
-          }}
-        >
+      <div className={s.cardPreview}>
+        <div className={s.cardCircle1} />
+        <div className={s.cardCircle2} />
+        <p className={s.cardLabel}>
           Secured Card
         </p>
-        <p
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "1.15rem",
-            letterSpacing: "0.2em",
-            color: "#fff",
-            marginBottom: "1.5rem",
-          }}
-        >
+        <p className={s.cardNumber}>
           {payment.cardNumber
             ? payment.cardNumber.padEnd(19, "•").replace(/\S(?=.{1,4}$)/g, "•")
             : "•••• •••• •••• ••••"}
         </p>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className={s.cardBottom}>
           <div>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.55rem",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.4)",
-                marginBottom: "0.25rem",
-              }}
-            >
-              Card Holder
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.8rem",
-                color: "#fff",
-              }}
-            >
-              {payment.cardName || "YOUR NAME"}
-            </p>
+            <p className={s.cardSubLabel}>Card Holder</p>
+            <p className={s.cardSubValue}>{payment.cardName || "YOUR NAME"}</p>
           </div>
           <div>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.55rem",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.4)",
-                marginBottom: "0.25rem",
-              }}
-            >
-              Expires
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.8rem",
-                color: "#fff",
-              }}
-            >
-              {payment.expiry || "MM/YY"}
-            </p>
+            <p className={s.cardSubLabel}>Expires</p>
+            <p className={s.cardSubValue}>{payment.expiry || "MM/YY"}</p>
           </div>
         </div>
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+      <div className={s.formRow}>
         {inputGroup(
           "Card Holder Name",
           "cardName",
@@ -160,18 +70,8 @@ export function PaymentStep({
           (v) => setPayment((p) => ({ ...p, cardName: v })),
           { placeholder: "As on card" },
         )}
-        <div style={{ flex: "1 1 100%" }}>
-          <label
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.62rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "var(--color-muted)",
-              display: "block",
-              marginBottom: "0.4rem",
-            }}
-          >
+        <div className={s.fieldFull}>
+          <label className={s.fieldLabel}>
             Card Number
           </label>
           <input
@@ -191,30 +91,13 @@ export function PaymentStep({
             }}
           />
           {errors.cardNumber && (
-            <p
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.72rem",
-                color: "var(--color-error)",
-                marginTop: "0.25rem",
-              }}
-            >
+            <p className={s.fieldError}>
               {errors.cardNumber}
             </p>
           )}
         </div>
-        <div style={{ flex: "1 1 calc(50% - 0.5rem)" }}>
-          <label
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.62rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "var(--color-muted)",
-              display: "block",
-              marginBottom: "0.4rem",
-            }}
-          >
+        <div className={s.fieldHalf}>
+          <label className={s.fieldLabel}>
             Expiry
           </label>
           <input
@@ -234,30 +117,13 @@ export function PaymentStep({
             }}
           />
           {errors.expiry && (
-            <p
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.72rem",
-                color: "var(--color-error)",
-                marginTop: "0.25rem",
-              }}
-            >
+            <p className={s.fieldError}>
               {errors.expiry}
             </p>
           )}
         </div>
-        <div style={{ flex: "1 1 calc(50% - 0.5rem)" }}>
-          <label
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.62rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "var(--color-muted)",
-              display: "block",
-              marginBottom: "0.4rem",
-            }}
-          >
+        <div className={s.fieldHalf}>
+          <label className={s.fieldLabel}>
             CVV
           </label>
           <input
@@ -277,20 +143,13 @@ export function PaymentStep({
             }}
           />
           {errors.cvv && (
-            <p
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.72rem",
-                color: "var(--color-error)",
-                marginTop: "0.25rem",
-              }}
-            >
+            <p className={s.fieldError}>
               {errors.cvv}
             </p>
           )}
         </div>
       </div>
-      <div style={{ display: "flex", gap: "1rem", marginTop: "2rem" }}>
+      <div className={s.actions}>
         <button onClick={onBack} className="btn btn-outline">
           ← Back
         </button>

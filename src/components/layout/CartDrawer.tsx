@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCartStore } from "../../store/cartStore";
 import { Link, useNavigate } from "react-router-dom";
+import s from "./CartDrawer.module.css";
 
 export function CartDrawer() {
   const {
@@ -42,91 +43,34 @@ export function CartDrawer() {
             transition={{ type: "spring", damping: 28, stiffness: 200 }}
           >
             {/* Header */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "1.5rem 1.5rem 1.25rem",
-                borderBottom: "1px solid rgba(212, 175, 55, 0.2)",
-              }}
-            >
+            <div className={s.drawerHeader}>
               <div>
-                <h2
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "1.4rem",
-                    fontWeight: 500,
-                    color: "var(--color-text)",
-                  }}
-                >
-                  Your Cart
-                </h2>
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.65rem",
-                    letterSpacing: "0.1em",
-                    color: "var(--color-muted)",
-                    marginTop: "0.2rem",
-                  }}
-                >
+                <h2 className={s.drawerTitle}>Your Cart</h2>
+                <p className={s.drawerCount}>
                   {items.length} {items.length === 1 ? "ITEM" : "ITEMS"}
                 </p>
               </div>
-              <button
-                onClick={closeDrawer}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--color-text)",
-                  padding: "0.25rem",
-                }}
-              >
+              <button onClick={closeDrawer} className={s.closeBtn}>
                 <X size={20} />
               </button>
             </div>
 
             {/* Free shipping bar */}
             {subtotal < freeShippingThreshold && (
-              <div
-                style={{
-                  padding: "0.75rem 1.5rem",
-                  background: "rgba(212, 175, 55, 0.08)",
-                  borderBottom: "1px solid rgba(212, 175, 55, 0.15)",
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.62rem",
-                    letterSpacing: "0.08em",
-                    color: "var(--color-muted)",
-                  }}
-                >
+              <div className={s.shippingBar}>
+                <p className={s.shippingText}>
                   Add ₹
                   {(freeShippingThreshold - subtotal).toLocaleString("en-IN")}{" "}
                   more for{" "}
-                  <strong style={{ color: "var(--color-gold)" }}>
+                  <strong className={s.shippingHighlight}>
                     FREE shipping
                   </strong>
                 </p>
-                <div
-                  style={{
-                    height: 3,
-                    background: "#333",
-                    borderRadius: 2,
-                    marginTop: "0.5rem",
-                  }}
-                >
+                <div className={s.progressTrack}>
                   <div
+                    className={s.progressFill}
                     style={{
-                      height: "100%",
-                      background: "var(--color-gold)",
-                      borderRadius: 2,
                       width: `${Math.min((subtotal / freeShippingThreshold) * 100, 100)}%`,
-                      transition: "width 0.4s ease",
                     }}
                   />
                 </div>
@@ -134,44 +78,16 @@ export function CartDrawer() {
             )}
 
             {/* Items */}
-            <div
-              style={{ flex: 1, overflowY: "auto", padding: "1rem 1.5rem" }}
-              className="no-scrollbar"
-            >
+            <div className={`${s.itemsArea} no-scrollbar`}>
               {items.length === 0 ? (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100%",
-                    gap: "1rem",
-                    padding: "3rem 0",
-                  }}
-                >
+                <div className={s.emptyState}>
                   <ShoppingBag
                     size={48}
                     strokeWidth={1}
-                    style={{ color: "rgba(212,175,55,0.5)" }}
+                    className={s.emptyIcon}
                   />
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-serif)",
-                      fontSize: "1.25rem",
-                      color: "var(--color-text)",
-                    }}
-                  >
-                    Your cart is empty
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "0.85rem",
-                      color: "var(--color-muted)",
-                      textAlign: "center",
-                    }}
-                  >
+                  <h3 className={s.emptyTitle}>Your cart is empty</h3>
+                  <p className={s.emptyText}>
                     Discover our curated collection of luxury fragrances.
                   </p>
                   <button
@@ -186,96 +102,36 @@ export function CartDrawer() {
                   </button>
                 </div>
               ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
-                >
+                <div className={s.itemsList}>
                   {items.map((item) => (
                     <div
                       key={`${item.product.id}-${item.variant.sku}`}
-                      style={{
-                        display: "flex",
-                        gap: "1rem",
-                        paddingBottom: "1.25rem",
-                        borderBottom: "1px solid rgba(212,175,55,0.15)",
-                      }}
+                      className={s.itemRow}
                     >
                       <Link
                         to={`/product/${item.product.slug}`}
                         onClick={closeDrawer}
-                        style={{ flexShrink: 0 }}
                       >
                         <img
                           src={item.product.images[0]}
                           alt={item.product.name}
-                          style={{
-                            width: 80,
-                            height: 80,
-                            objectFit: "cover",
-                            borderRadius: 4,
-                          }}
+                          className={s.itemImage}
                         />
                       </Link>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p
-                          style={{
-                            fontFamily: "var(--font-display)",
-                            fontSize: "0.6rem",
-                            letterSpacing: "0.1em",
-                            textTransform: "uppercase",
-                            color: "var(--color-muted)",
-                            marginBottom: "0.25rem",
-                          }}
-                        >
-                          {item.product.brand}
-                        </p>
+                      <div className={s.itemDetails}>
+                        <p className={s.itemBrand}>{item.product.brand}</p>
                         <Link
                           to={`/product/${item.product.slug}`}
                           onClick={closeDrawer}
                         >
-                          <h4
-                            style={{
-                              fontFamily: "var(--font-serif)",
-                              fontSize: "1rem",
-                              fontWeight: 500,
-                              color: "var(--color-text)",
-                              marginBottom: "0.3rem",
-                            }}
-                          >
-                            {item.product.name}
-                          </h4>
+                          <h4 className={s.itemName}>{item.product.name}</h4>
                         </Link>
-                        <p
-                          style={{
-                            fontFamily: "var(--font-sans)",
-                            fontSize: "0.75rem",
-                            color: "var(--color-muted)",
-                            marginBottom: "0.75rem",
-                          }}
-                        >
+                        <p className={s.itemVariant}>
                           {item.variant.size}
                           {item.variant.unit} · {item.product.concentration}
                         </p>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "0.5rem",
-                              border: "1px solid #333",
-                              borderRadius: 4,
-                              padding: "0.25rem 0.5rem",
-                            }}
-                          >
+                        <div className={s.itemActions}>
+                          <div className={s.qtyControl}>
                             <button
                               onClick={() =>
                                 updateQuantity(
@@ -284,27 +140,11 @@ export function CartDrawer() {
                                   item.quantity - 1,
                                 )
                               }
-                              style={{
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                color: "var(--color-text)",
-                                display: "flex",
-                                padding: 0,
-                              }}
+                              className={s.qtyBtn}
                             >
                               <Minus size={12} />
                             </button>
-                            <span
-                              style={{
-                                fontFamily: "var(--font-display)",
-                                fontSize: "0.75rem",
-                                fontWeight: 600,
-                                minWidth: 16,
-                                textAlign: "center",
-                                color: "var(--color-text)",
-                              }}
-                            >
+                            <span className={s.qtyValue}>
                               {item.quantity}
                             </span>
                             <button
@@ -315,33 +155,13 @@ export function CartDrawer() {
                                   item.quantity + 1,
                                 )
                               }
-                              style={{
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                color: "var(--color-text)",
-                                display: "flex",
-                                padding: 0,
-                              }}
+                              className={s.qtyBtn}
                             >
                               <Plus size={12} />
                             </button>
                           </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "0.75rem",
-                            }}
-                          >
-                            <span
-                              style={{
-                                fontFamily: "var(--font-display)",
-                                fontSize: "0.85rem",
-                                fontWeight: 700,
-                                color: "var(--color-text)",
-                              }}
-                            >
+                          <div className={s.priceArea}>
+                            <span className={s.itemPrice}>
                               ₹
                               {(
                                 item.variant.price * item.quantity
@@ -351,22 +171,7 @@ export function CartDrawer() {
                               onClick={() =>
                                 removeItem(item.product.id, item.variant.sku)
                               }
-                              style={{
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                color: "rgba(212,175,55,0.5)",
-                                display: "flex",
-                                transition: "color 0.2s",
-                              }}
-                              onMouseEnter={(e) =>
-                                ((e.currentTarget as HTMLElement).style.color =
-                                  "var(--color-error)")
-                              }
-                              onMouseLeave={(e) =>
-                                ((e.currentTarget as HTMLElement).style.color =
-                                  "rgba(212,175,55,0.5)")
-                              }
+                              className={s.removeBtn}
                             >
                               <Trash2 size={14} />
                             </button>
@@ -381,66 +186,21 @@ export function CartDrawer() {
 
             {/* Footer */}
             {items.length > 0 && (
-              <div
-                style={{
-                  padding: "1.25rem 1.5rem",
-                  borderTop: "1px solid rgba(212, 175, 55, 0.2)",
-                  background: "#0d0d0d",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "0.85rem",
-                      color: "var(--color-muted)",
-                    }}
-                  >
-                    Subtotal
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "0.85rem",
-                      fontWeight: 600,
-                      color: "var(--color-text)",
-                    }}
-                  >
+              <div className={s.drawerFooter}>
+                <div className={s.summaryRow}>
+                  <span className={s.summaryLabel}>Subtotal</span>
+                  <span className={s.summaryValue}>
                     ₹{subtotal.toLocaleString("en-IN")}
                   </span>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginBottom: "1rem",
-                  }}
-                >
+                <div className={s.summaryRowLast}>
+                  <span className={s.summaryLabel}>Shipping</span>
                   <span
-                    style={{
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "0.85rem",
-                      color: "var(--color-muted)",
-                    }}
-                  >
-                    Shipping
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "0.85rem",
-                      fontWeight: 600,
-                      color:
-                        shippingFee === 0
-                          ? "var(--color-success)"
-                          : "var(--color-text)",
-                    }}
+                    className={
+                      shippingFee === 0
+                        ? s.summaryValueFree
+                        : s.summaryValue
+                    }
                   >
                     {shippingFee === 0 ? "Free" : `₹${shippingFee}`}
                   </span>

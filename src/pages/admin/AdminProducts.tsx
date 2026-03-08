@@ -8,6 +8,7 @@ import {
   AdminVariantPayload,
 } from "../../lib/api";
 import { useAuthStore } from "../../store/authStore";
+import s from "./AdminProducts.module.css";
 
 // ── Types ─────────────────────────────────────────────────────
 interface VariantForm {
@@ -77,50 +78,6 @@ const EMPTY_FORM: AdminForm = {
   is_bestseller: false,
   is_new: true,
   variants: [{ size: "50", unit: "ml", price: "", stock: "0", sku: "" }],
-};
-
-// ── Style helpers ─────────────────────────────────────────────
-const inp: React.CSSProperties = {
-  width: "100%",
-  background: "#1a1a1a",
-  border: "1.5px solid #2a2a2a",
-  borderRadius: 4,
-  padding: "0.7rem 0.9rem",
-  color: "#e8e4dc",
-  fontFamily: "var(--font-sans)",
-  fontSize: "0.88rem",
-  outline: "none",
-  boxSizing: "border-box",
-};
-
-const lbl: React.CSSProperties = {
-  fontFamily: "var(--font-display)",
-  fontSize: "0.58rem",
-  letterSpacing: "0.15em",
-  textTransform: "uppercase" as const,
-  color: "#9a9590",
-  marginBottom: "0.4rem",
-  display: "block",
-};
-
-const sec: React.CSSProperties = {
-  background: "#111",
-  border: "1px solid rgba(212,175,55,0.1)",
-  borderRadius: 8,
-  padding: "1.5rem",
-  marginBottom: "1.25rem",
-};
-
-const secTitle: React.CSSProperties = {
-  fontFamily: "var(--font-display)",
-  fontSize: "0.62rem",
-  fontWeight: 700,
-  letterSpacing: "0.18em",
-  textTransform: "uppercase" as const,
-  color: "#d4af37",
-  marginBottom: "1.25rem",
-  paddingBottom: "0.75rem",
-  borderBottom: "1px solid rgba(212,175,55,0.15)",
 };
 
 // ── Helpers ───────────────────────────────────────────────────
@@ -392,57 +349,17 @@ export default function AdminProducts() {
   // ── Loading / Access denied ────────────────────────────────
   if (isAdmin === null) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#0d0d0d",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <p
-          style={{
-            color: "#9a9590",
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.9rem",
-          }}
-        >
-          Checking permissions…
-        </p>
+      <div className={s.loadingPage}>
+        <p className={s.loadingText}>Checking permissions…</p>
       </div>
     );
   }
 
   if (!isAdmin) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#0d0d0d",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "1rem",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--font-serif)",
-            fontSize: "1.6rem",
-            color: "#e74c3c",
-          }}
-        >
-          Access Denied
-        </p>
-        <p
-          style={{
-            fontFamily: "var(--font-sans)",
-            color: "#9a9590",
-            fontSize: "0.9rem",
-          }}
-        >
+      <div className={s.deniedPage}>
+        <p className={s.deniedTitle}>Access Denied</p>
+        <p className={s.deniedText}>
           {user ? "You don't have admin privileges." : "Please sign in first."}
         </p>
         <button onClick={() => navigate("/")} className="btn btn-outline">
@@ -460,97 +377,22 @@ export default function AdminProducts() {
 
   // ── Render ─────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100vh", background: "#0d0d0d" }}>
+    <div className={s.page}>
       {/* Admin Header */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          background: "rgba(13,13,13,0.97)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(212,175,55,0.2)",
-          height: 60,
-          display: "flex",
-          alignItems: "center",
-          padding: "0 2rem",
-          gap: "1rem",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-serif)",
-            fontSize: "1.1rem",
-            color: "#d4af37",
-            letterSpacing: "0.05em",
-          }}
-        >
+      <div className={s.adminBar}>
+        <span className={s.adminLogo}>
           RAVEN{" "}
-          <span
-            style={{
-              color: "#9a9590",
-              fontSize: "0.65rem",
-              letterSpacing: "0.25em",
-              fontFamily: "var(--font-display)",
-            }}
-          >
-            ADMIN
-          </span>
+          <span className={s.adminBadge}>ADMIN</span>
         </span>
-        <span
-          style={{
-            color: "rgba(212,175,55,0.3)",
-            fontFamily: "var(--font-display)",
-            fontSize: "0.6rem",
-          }}
-        >
-          /
-        </span>
-        <span
-          style={{
-            color: "#e8e4dc",
-            fontFamily: "var(--font-display)",
-            fontSize: "0.62rem",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-          }}
-        >
-          Products
-        </span>
-        <div style={{ flex: 1 }} />
+        <span className={s.adminSep}>/</span>
+        <span className={s.adminPageTitle}>Products</span>
+        <div className={s.adminSpacer} />
         {view === "form" && (
-          <button
-            onClick={() => setView("list")}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "#9a9590",
-              fontFamily: "var(--font-display)",
-              fontSize: "0.62rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-            }}
-          >
+          <button onClick={() => setView("list")} className={s.backBtn}>
             ← Back to List
           </button>
         )}
-        <button
-          onClick={() => navigate("/")}
-          style={{
-            background: "none",
-            border: "1px solid rgba(212,175,55,0.2)",
-            borderRadius: 4,
-            cursor: "pointer",
-            color: "#9a9590",
-            padding: "0.35rem 0.85rem",
-            fontFamily: "var(--font-display)",
-            fontSize: "0.6rem",
-            letterSpacing: "0.1em",
-          }}
-        >
+        <button onClick={() => navigate("/")} className={s.storeBtn}>
           View Store
         </button>
       </div>
@@ -558,120 +400,38 @@ export default function AdminProducts() {
       <div style={{ paddingTop: 60 }}>
         {/* ════════════════ LIST VIEW ════════════════ */}
         {view === "list" && (
-          <div style={{ padding: "2rem" }}>
+          <div className={s.listWrap}>
             {/* Title + Add */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "1.75rem",
-              }}
-            >
+            <div className={s.listHeader}>
               <div>
-                <h1
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "1.9rem",
-                    fontWeight: 400,
-                    color: "#e8e4dc",
-                    margin: 0,
-                  }}
-                >
-                  Products
-                </h1>
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.82rem",
-                    color: "#9a9590",
-                    margin: "0.3rem 0 0",
-                  }}
-                >
+                <h1 className={s.listTitle}>Products</h1>
+                <p className={s.listSubtext}>
                   {products.length} total &middot; {featuredCount} featured
                   &middot; {outOfStockCount} out of stock
                 </p>
               </div>
-              <button
-                onClick={openNew}
-                className="btn btn-gold"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.45rem",
-                }}
-              >
+              <button onClick={openNew} className={`btn btn-gold ${s.addBtn}`}>
                 <Plus size={14} /> Add Product
               </button>
             </div>
 
-            {error && (
-              <div
-                style={{
-                  background: "rgba(231,76,60,0.1)",
-                  border: "1px solid rgba(231,76,60,0.3)",
-                  borderRadius: 6,
-                  padding: "0.75rem 1rem",
-                  marginBottom: "1rem",
-                  color: "#e74c3c",
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.85rem",
-                }}
-              >
-                {error}
-              </div>
-            )}
+            {error && <div className={s.errorBox}>{error}</div>}
 
             {loading ? (
-              <p
-                style={{
-                  color: "#9a9590",
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.9rem",
-                }}
-              >
-                Loading products…
-              </p>
+              <p className={s.loadingText}>Loading products…</p>
             ) : products.length === 0 ? (
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "5rem 0",
-                  color: "#9a9590",
-                }}
-              >
-                <Package
-                  size={48}
-                  style={{ margin: "0 auto 1rem", opacity: 0.25 }}
-                />
-                <p
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "1.2rem",
-                    color: "#e8e4dc",
-                  }}
-                >
-                  No products yet
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.85rem",
-                    marginTop: "0.5rem",
-                  }}
-                >
+              <div className={s.emptyWrap}>
+                <Package size={48} className={s.emptyIcon} />
+                <p className={s.emptyTitle}>No products yet</p>
+                <p className={s.emptyText}>
                   Add your first product to get started.
                 </p>
               </div>
             ) : (
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <div className={s.tableWrap}>
+                <table className={s.table}>
                   <thead>
-                    <tr
-                      style={{
-                        borderBottom: "1px solid rgba(212,175,55,0.15)",
-                      }}
-                    >
+                    <tr className={s.thead}>
                       {[
                         "Image",
                         "Product",
@@ -680,20 +440,7 @@ export default function AdminProducts() {
                         "Flags",
                         "Actions",
                       ].map((h) => (
-                        <th
-                          key={h}
-                          style={{
-                            padding: "0.75rem 1rem",
-                            textAlign: "left",
-                            fontFamily: "var(--font-display)",
-                            fontSize: "0.58rem",
-                            letterSpacing: "0.15em",
-                            textTransform: "uppercase",
-                            color: "#9a9590",
-                            fontWeight: 600,
-                            whiteSpace: "nowrap",
-                          }}
-                        >
+                        <th key={h} className={s.th}>
                           {h}
                         </th>
                       ))}
@@ -705,92 +452,33 @@ export default function AdminProducts() {
                         (v: any) => v.stock <= 0,
                       );
                       return (
-                        <tr
-                          key={product.id}
-                          style={{
-                            borderBottom: "1px solid rgba(255,255,255,0.04)",
-                            transition: "background 0.15s",
-                          }}
-                          onMouseEnter={(e) =>
-                            ((e.currentTarget as HTMLElement).style.background =
-                              "rgba(255,255,255,0.025)")
-                          }
-                          onMouseLeave={(e) =>
-                            ((e.currentTarget as HTMLElement).style.background =
-                              "transparent")
-                          }
-                        >
+                        <tr key={product.id} className={s.tr}>
                           {/* Thumbnail */}
-                          <td style={{ padding: "0.75rem 1rem" }}>
+                          <td className={s.td}>
                             {product.images?.[0] ? (
                               <img
                                 src={product.images[0]}
                                 alt=""
-                                style={{
-                                  width: 52,
-                                  height: 52,
-                                  objectFit: "cover",
-                                  borderRadius: 4,
-                                  border: "1px solid rgba(212,175,55,0.15)",
-                                }}
+                                className={s.thumb}
                               />
                             ) : (
-                              <div
-                                style={{
-                                  width: 52,
-                                  height: 52,
-                                  background: "#1a1a1a",
-                                  borderRadius: 4,
-                                  border: "1px solid #2a2a2a",
-                                }}
-                              />
+                              <div className={s.thumbEmpty} />
                             )}
                           </td>
                           {/* Name */}
-                          <td style={{ padding: "0.75rem 1rem" }}>
-                            <p
-                              style={{
-                                fontFamily: "var(--font-serif)",
-                                color: "#e8e4dc",
-                                fontSize: "0.95rem",
-                                margin: 0,
-                              }}
-                            >
-                              {product.name}
-                            </p>
-                            <p
-                              style={{
-                                fontFamily: "var(--font-sans)",
-                                color: "#9a9590",
-                                fontSize: "0.72rem",
-                                margin: "0.15rem 0 0",
-                              }}
-                            >
+                          <td className={s.td}>
+                            <p className={s.productName}>{product.name}</p>
+                            <p className={s.productMeta}>
                               {product.brand} &middot; {product.category}
                             </p>
                           </td>
                           {/* Price */}
-                          <td style={{ padding: "0.75rem 1rem" }}>
-                            <span
-                              style={{
-                                fontFamily: "var(--font-display)",
-                                color: "#d4af37",
-                                fontSize: "0.88rem",
-                                fontWeight: 700,
-                              }}
-                            >
+                          <td className={s.td}>
+                            <span className={s.priceMain}>
                               ₹{product.price?.toLocaleString("en-IN")}
                             </span>
                             {product.compareAtPrice && (
-                              <p
-                                style={{
-                                  fontFamily: "var(--font-sans)",
-                                  color: "#9a9590",
-                                  fontSize: "0.72rem",
-                                  textDecoration: "line-through",
-                                  margin: "0.1rem 0 0",
-                                }}
-                              >
+                              <p className={s.priceCompare}>
                                 ₹
                                 {product.compareAtPrice?.toLocaleString(
                                   "en-IN",
@@ -799,13 +487,10 @@ export default function AdminProducts() {
                             )}
                           </td>
                           {/* Variants */}
-                          <td style={{ padding: "0.75rem 1rem" }}>
+                          <td className={s.td}>
                             <span
-                              style={{
-                                fontFamily: "var(--font-sans)",
-                                color: oos ? "#e74c3c" : "#2ecc71",
-                                fontSize: "0.8rem",
-                              }}
+                              className={s.stockText}
+                              style={{ color: oos ? "#e74c3c" : "#2ecc71" }}
                             >
                               {product.variants?.length || 0} size
                               {product.variants?.length !== 1 ? "s" : ""}
@@ -813,80 +498,27 @@ export default function AdminProducts() {
                             </span>
                           </td>
                           {/* Flags */}
-                          <td style={{ padding: "0.75rem 1rem" }}>
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: "0.3rem",
-                                flexWrap: "wrap",
-                              }}
-                            >
+                          <td className={s.td}>
+                            <div className={s.flagsWrap}>
                               {product.isFeatured && (
-                                <span
-                                  style={{
-                                    background: "rgba(212,175,55,0.15)",
-                                    color: "#d4af37",
-                                    borderRadius: 3,
-                                    padding: "0.15rem 0.45rem",
-                                    fontSize: "0.57rem",
-                                    fontFamily: "var(--font-display)",
-                                    letterSpacing: "0.08em",
-                                  }}
-                                >
-                                  FEATURED
-                                </span>
+                                <span className={s.flagFeatured}>FEATURED</span>
                               )}
                               {product.isBestseller && (
-                                <span
-                                  style={{
-                                    background: "rgba(212,175,55,0.08)",
-                                    color: "#d4af37",
-                                    borderRadius: 3,
-                                    padding: "0.15rem 0.45rem",
-                                    fontSize: "0.57rem",
-                                    fontFamily: "var(--font-display)",
-                                    letterSpacing: "0.08em",
-                                  }}
-                                >
+                                <span className={s.flagBestseller}>
                                   BESTSELLER
                                 </span>
                               )}
                               {product.isNew && (
-                                <span
-                                  style={{
-                                    background: "rgba(46,204,113,0.1)",
-                                    color: "#2ecc71",
-                                    borderRadius: 3,
-                                    padding: "0.15rem 0.45rem",
-                                    fontSize: "0.57rem",
-                                    fontFamily: "var(--font-display)",
-                                    letterSpacing: "0.08em",
-                                  }}
-                                >
-                                  NEW
-                                </span>
+                                <span className={s.flagNew}>NEW</span>
                               )}
                             </div>
                           </td>
                           {/* Actions */}
-                          <td style={{ padding: "0.75rem 1rem" }}>
-                            <div style={{ display: "flex", gap: "0.5rem" }}>
+                          <td className={s.td}>
+                            <div className={s.actionsWrap}>
                               <button
                                 onClick={() => openEdit(product)}
-                                style={{
-                                  background: "rgba(212,175,55,0.1)",
-                                  border: "1px solid rgba(212,175,55,0.2)",
-                                  borderRadius: 4,
-                                  padding: "0.4rem 0.7rem",
-                                  cursor: "pointer",
-                                  color: "#d4af37",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "0.3rem",
-                                  fontFamily: "var(--font-display)",
-                                  fontSize: "0.58rem",
-                                  letterSpacing: "0.08em",
-                                }}
+                                className={s.editBtn}
                               >
                                 <Edit2 size={11} /> Edit
                               </button>
@@ -895,22 +527,12 @@ export default function AdminProducts() {
                                   handleDelete(product.id, product.name)
                                 }
                                 disabled={deletingId === product.id}
+                                className={s.deleteBtn}
                                 style={{
-                                  background: "rgba(231,76,60,0.08)",
-                                  border: "1px solid rgba(231,76,60,0.2)",
-                                  borderRadius: 4,
-                                  padding: "0.4rem 0.7rem",
                                   cursor:
                                     deletingId === product.id
                                       ? "not-allowed"
                                       : "pointer",
-                                  color: "#e74c3c",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "0.3rem",
-                                  fontFamily: "var(--font-display)",
-                                  fontSize: "0.58rem",
-                                  letterSpacing: "0.08em",
                                   opacity: deletingId === product.id ? 0.5 : 1,
                                 }}
                               >
@@ -931,87 +553,58 @@ export default function AdminProducts() {
 
         {/* ════════════════ FORM VIEW ════════════════ */}
         {view === "form" && (
-          <div style={{ maxWidth: 880, margin: "0 auto", padding: "2rem" }}>
-            <h1
-              style={{
-                fontFamily: "var(--font-serif)",
-                fontSize: "1.9rem",
-                fontWeight: 400,
-                color: "#e8e4dc",
-                marginBottom: "1.75rem",
-              }}
-            >
+          <div className={s.formWrap}>
+            <h1 className={s.formTitle}>
               {editingId ? `Edit: ${form.name || "Product"}` : "New Product"}
             </h1>
 
-            {error && (
-              <div
-                style={{
-                  background: "rgba(231,76,60,0.1)",
-                  border: "1px solid rgba(231,76,60,0.3)",
-                  borderRadius: 6,
-                  padding: "0.75rem 1rem",
-                  marginBottom: "1.25rem",
-                  color: "#e74c3c",
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.85rem",
-                }}
-              >
-                {error}
-              </div>
-            )}
+            {error && <div className={s.errorBoxForm}>{error}</div>}
 
             {/* ── Basic Info ── */}
-            <div style={sec}>
-              <p style={secTitle}>Basic Info</p>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1rem",
-                }}
-              >
+            <div className={s.sec}>
+              <p className={s.secTitle}>Basic Info</p>
+              <div className={s.formGrid2}>
                 <div>
-                  <label style={lbl}>Product Name *</label>
+                  <label className={s.lbl}>Product Name *</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.name}
                     onChange={(e) => setField("name", e.target.value)}
                     placeholder="e.g. Noir Sauvage"
                   />
                 </div>
                 <div>
-                  <label style={lbl}>Brand</label>
+                  <label className={s.lbl}>Brand</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.brand}
                     onChange={(e) => setField("brand", e.target.value)}
                     placeholder="e.g. RAVEN"
                   />
                 </div>
                 <div>
-                  <label style={lbl}>Slug (URL) *</label>
+                  <label className={s.lbl}>Slug (URL) *</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.slug}
                     onChange={(e) => setField("slug", e.target.value)}
                     placeholder="raven-noir-sauvage"
                   />
                 </div>
                 <div>
-                  <label style={lbl}>Short Description</label>
+                  <label className={s.lbl}>Short Description</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.short_desc}
                     onChange={(e) => setField("short_desc", e.target.value)}
                     placeholder="One-line tagline for cards"
                   />
                 </div>
               </div>
-              <div style={{ marginTop: "1rem" }}>
-                <label style={lbl}>Full Description</label>
+              <div className={s.mtRem}>
+                <label className={s.lbl}>Full Description</label>
                 <textarea
-                  style={{ ...inp, minHeight: 110, resize: "vertical" }}
+                  className={s.textarea}
                   value={form.description}
                   onChange={(e) => setField("description", e.target.value)}
                   placeholder="Full product description shown on product detail page…"
@@ -1020,19 +613,13 @@ export default function AdminProducts() {
             </div>
 
             {/* ── Pricing ── */}
-            <div style={sec}>
-              <p style={secTitle}>Pricing</p>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1rem",
-                }}
-              >
+            <div className={s.sec}>
+              <p className={s.secTitle}>Pricing</p>
+              <div className={s.formGrid2}>
                 <div>
-                  <label style={lbl}>Price (₹) *</label>
+                  <label className={s.lbl}>Price (₹) *</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     type="number"
                     value={form.price}
                     onChange={(e) => setField("price", e.target.value)}
@@ -1040,11 +627,11 @@ export default function AdminProducts() {
                   />
                 </div>
                 <div>
-                  <label style={lbl}>
+                  <label className={s.lbl}>
                     Compare-At Price (₹) — strike-through
                   </label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     type="number"
                     value={form.compare_price}
                     onChange={(e) => setField("compare_price", e.target.value)}
@@ -1055,69 +642,17 @@ export default function AdminProducts() {
             </div>
 
             {/* ── Images ── */}
-            <div style={sec}>
-              <p style={secTitle}>Product Images</p>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "0.75rem",
-                  marginBottom: "0.75rem",
-                }}
-              >
+            <div className={s.sec}>
+              <p className={s.secTitle}>Product Images</p>
+              <div className={s.imgGallery}>
                 {/* Already-uploaded images */}
                 {form.images.map((url, i) => (
-                  <div
-                    key={url + i}
-                    style={{ position: "relative", width: 96, height: 96 }}
-                  >
-                    <img
-                      src={url}
-                      alt=""
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        borderRadius: 6,
-                        border: "1px solid rgba(212,175,55,0.25)",
-                      }}
-                    />
-                    {i === 0 && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          bottom: 4,
-                          left: 4,
-                          background: "rgba(212,175,55,0.85)",
-                          borderRadius: 3,
-                          padding: "0.1rem 0.4rem",
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.5rem",
-                          letterSpacing: "0.08em",
-                          color: "#0d0d0d",
-                        }}
-                      >
-                        MAIN
-                      </div>
-                    )}
+                  <div key={url + i} className={s.imgCard}>
+                    <img src={url} alt="" className={s.imgThumb} />
+                    {i === 0 && <div className={s.mainBadge}>MAIN</div>}
                     <button
                       onClick={() => removeUploaded(i)}
-                      style={{
-                        position: "absolute",
-                        top: 4,
-                        right: 4,
-                        width: 20,
-                        height: 20,
-                        background: "rgba(0,0,0,0.75)",
-                        border: "none",
-                        borderRadius: "50%",
-                        cursor: "pointer",
-                        color: "#fff",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: 0,
-                      }}
+                      className={s.imgRemoveBtn}
                     >
                       <X size={10} />
                     </button>
@@ -1126,56 +661,12 @@ export default function AdminProducts() {
 
                 {/* Pending (not yet uploaded) previews */}
                 {pendingPreviews.map((url, i) => (
-                  <div
-                    key={url}
-                    style={{ position: "relative", width: 96, height: 96 }}
-                  >
-                    <img
-                      src={url}
-                      alt=""
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        borderRadius: 6,
-                        border: "2px dashed rgba(212,175,55,0.45)",
-                        opacity: 0.75,
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: 4,
-                        left: 4,
-                        background: "rgba(0,0,0,0.75)",
-                        borderRadius: 3,
-                        padding: "0.1rem 0.4rem",
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.5rem",
-                        letterSpacing: "0.08em",
-                        color: "#d4af37",
-                      }}
-                    >
-                      PENDING
-                    </div>
+                  <div key={url} className={s.imgCard}>
+                    <img src={url} alt="" className={s.imgPendingThumb} />
+                    <div className={s.pendingBadge}>PENDING</div>
                     <button
                       onClick={() => removePending(i)}
-                      style={{
-                        position: "absolute",
-                        top: 4,
-                        right: 4,
-                        width: 20,
-                        height: 20,
-                        background: "rgba(0,0,0,0.75)",
-                        border: "none",
-                        borderRadius: "50%",
-                        cursor: "pointer",
-                        color: "#fff",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: 0,
-                      }}
+                      className={s.imgRemoveBtn}
                     >
                       <X size={10} />
                     </button>
@@ -1185,43 +676,10 @@ export default function AdminProducts() {
                 {/* Upload button */}
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  style={{
-                    width: 96,
-                    height: 96,
-                    background: "#1a1a1a",
-                    border: "2px dashed rgba(212,175,55,0.2)",
-                    borderRadius: 6,
-                    cursor: "pointer",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "0.4rem",
-                    color: "#9a9590",
-                    transition: "border-color 0.2s, color 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor =
-                      "rgba(212,175,55,0.55)";
-                    (e.currentTarget as HTMLElement).style.color = "#d4af37";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor =
-                      "rgba(212,175,55,0.2)";
-                    (e.currentTarget as HTMLElement).style.color = "#9a9590";
-                  }}
+                  className={s.uploadBtn}
                 >
                   <Upload size={18} />
-                  <span
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "0.5rem",
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Add Image
-                  </span>
+                  <span className={s.uploadBtnText}>Add Image</span>
                 </button>
                 <input
                   ref={fileInputRef}
@@ -1232,32 +690,20 @@ export default function AdminProducts() {
                   onChange={handleImageSelect}
                 />
               </div>
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.75rem",
-                  color: "#555",
-                }}
-              >
+              <p className={s.imgHint}>
                 Images are uploaded to Supabase Storage on save. The first image
                 is used as the primary display image and thumbnail.
               </p>
             </div>
 
             {/* ── Classification ── */}
-            <div style={sec}>
-              <p style={secTitle}>Classification</p>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr",
-                  gap: "1rem",
-                }}
-              >
+            <div className={s.sec}>
+              <p className={s.secTitle}>Classification</p>
+              <div className={s.formGrid3}>
                 <div>
-                  <label style={lbl}>Category</label>
+                  <label className={s.lbl}>Category</label>
                   <select
-                    style={{ ...inp, cursor: "pointer" }}
+                    className={s.select}
                     value={form.category}
                     onChange={(e) => setField("category", e.target.value)}
                   >
@@ -1269,9 +715,9 @@ export default function AdminProducts() {
                   </select>
                 </div>
                 <div>
-                  <label style={lbl}>Gender</label>
+                  <label className={s.lbl}>Gender</label>
                   <select
-                    style={{ ...inp, cursor: "pointer" }}
+                    className={s.select}
                     value={form.gender}
                     onChange={(e) => setField("gender", e.target.value)}
                   >
@@ -1283,51 +729,51 @@ export default function AdminProducts() {
                   </select>
                 </div>
                 <div>
-                  <label style={lbl}>Sillage</label>
+                  <label className={s.lbl}>Sillage</label>
                   <select
-                    style={{ ...inp, cursor: "pointer" }}
+                    className={s.select}
                     value={form.sillage}
                     onChange={(e) => setField("sillage", e.target.value)}
                   >
-                    {SILLAGES.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
+                    {SILLAGES.map((v) => (
+                      <option key={v} value={v}>
+                        {v}
                       </option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label style={lbl}>Scent Family</label>
+                  <label className={s.lbl}>Scent Family</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.scent_family}
                     onChange={(e) => setField("scent_family", e.target.value)}
                     placeholder="e.g. Woody Aromatic"
                   />
                 </div>
                 <div>
-                  <label style={lbl}>Concentration</label>
+                  <label className={s.lbl}>Concentration</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.concentration}
                     onChange={(e) => setField("concentration", e.target.value)}
                     placeholder="e.g. EDP, EDT, Parfum"
                   />
                 </div>
                 <div>
-                  <label style={lbl}>Longevity</label>
+                  <label className={s.lbl}>Longevity</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.longevity}
                     onChange={(e) => setField("longevity", e.target.value)}
                     placeholder="e.g. 8–12 hours"
                   />
                 </div>
               </div>
-              <div style={{ marginTop: "1rem" }}>
-                <label style={lbl}>Tags (comma-separated)</label>
+              <div className={s.mtRem}>
+                <label className={s.lbl}>Tags (comma-separated)</label>
                 <input
-                  style={inp}
+                  className={s.inp}
                   value={form.tags}
                   onChange={(e) => setField("tags", e.target.value)}
                   placeholder="fresh, woody, aromatic, bergamot"
@@ -1336,39 +782,33 @@ export default function AdminProducts() {
             </div>
 
             {/* ── Fragrance Notes ── */}
-            <div style={sec}>
-              <p style={secTitle}>Fragrance Notes</p>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
-              >
+            <div className={s.sec}>
+              <p className={s.secTitle}>Fragrance Notes</p>
+              <div className={s.formColWrap}>
                 <div>
-                  <label style={lbl}>Top Notes (comma-separated)</label>
+                  <label className={s.lbl}>Top Notes (comma-separated)</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.notes_top}
                     onChange={(e) => setField("notes_top", e.target.value)}
                     placeholder="Bergamot, Pepper, Lavender"
                   />
                 </div>
                 <div>
-                  <label style={lbl}>
+                  <label className={s.lbl}>
                     Heart / Middle Notes (comma-separated)
                   </label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.notes_middle}
                     onChange={(e) => setField("notes_middle", e.target.value)}
                     placeholder="Sichuan Pepper, Geranium, Jasmine"
                   />
                 </div>
                 <div>
-                  <label style={lbl}>Base Notes (comma-separated)</label>
+                  <label className={s.lbl}>Base Notes (comma-separated)</label>
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={form.notes_base}
                     onChange={(e) => setField("notes_base", e.target.value)}
                     placeholder="Ambroxan, Cedar, Labdanum"
@@ -1378,27 +818,9 @@ export default function AdminProducts() {
             </div>
 
             {/* ── Variants ── */}
-            <div style={sec}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: "1.25rem",
-                  paddingBottom: "0.75rem",
-                  borderBottom: "1px solid rgba(212,175,55,0.15)",
-                }}
-              >
-                <p
-                  style={{
-                    ...secTitle,
-                    margin: 0,
-                    padding: 0,
-                    border: 0,
-                  }}
-                >
-                  Variants (Sizes)
-                </p>
+            <div className={s.sec}>
+              <div className={s.variantHeader}>
+                <p className={s.variantHeaderTitle}>Variants (Sizes)</p>
                 <button
                   onClick={() =>
                     setForm((prev) => ({
@@ -1415,61 +837,32 @@ export default function AdminProducts() {
                       ],
                     }))
                   }
-                  style={{
-                    background: "rgba(212,175,55,0.1)",
-                    border: "1px solid rgba(212,175,55,0.2)",
-                    borderRadius: 4,
-                    padding: "0.35rem 0.75rem",
-                    cursor: "pointer",
-                    color: "#d4af37",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.35rem",
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.58rem",
-                    letterSpacing: "0.08em",
-                  }}
+                  className={s.addSizeBtn}
                 >
                   <Plus size={11} /> Add Size
                 </button>
               </div>
 
               {/* Header row */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "80px 70px 110px 90px 1fr 36px",
-                  gap: "0.5rem",
-                  marginBottom: "0.4rem",
-                }}
-              >
+              <div className={s.variantLabels}>
                 {["Size", "Unit", "Price (₹)", "Stock", "SKU", ""].map((h) => (
-                  <span key={h} style={lbl}>
+                  <span key={h} className={s.lbl}>
                     {h}
                   </span>
                 ))}
               </div>
 
               {form.variants.map((v, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "80px 70px 110px 90px 1fr 36px",
-                    gap: "0.5rem",
-                    marginBottom: "0.5rem",
-                    alignItems: "center",
-                  }}
-                >
+                <div key={i} className={s.variantRow}>
                   <input
-                    style={inp}
+                    className={s.inp}
                     type="number"
                     value={v.size}
                     onChange={(e) => setVariantField(i, "size", e.target.value)}
                     placeholder="50"
                   />
                   <select
-                    style={{ ...inp, cursor: "pointer" }}
+                    className={s.select}
                     value={v.unit}
                     onChange={(e) => setVariantField(i, "unit", e.target.value)}
                   >
@@ -1478,7 +871,7 @@ export default function AdminProducts() {
                     <option value="g">g</option>
                   </select>
                   <input
-                    style={inp}
+                    className={s.inp}
                     type="number"
                     value={v.price}
                     onChange={(e) =>
@@ -1487,7 +880,7 @@ export default function AdminProducts() {
                     placeholder="9500"
                   />
                   <input
-                    style={inp}
+                    className={s.inp}
                     type="number"
                     value={v.stock}
                     onChange={(e) =>
@@ -1496,7 +889,7 @@ export default function AdminProducts() {
                     placeholder="0"
                   />
                   <input
-                    style={inp}
+                    className={s.inp}
                     value={v.sku}
                     onChange={(e) => setVariantField(i, "sku", e.target.value)}
                     placeholder="auto-generated if blank"
@@ -1509,18 +902,10 @@ export default function AdminProducts() {
                       }))
                     }
                     disabled={form.variants.length === 1}
+                    className={s.variantDeleteBtn}
                     style={{
-                      width: 34,
-                      height: 38,
-                      background: "rgba(231,76,60,0.08)",
-                      border: "1px solid rgba(231,76,60,0.15)",
-                      borderRadius: 4,
                       cursor:
                         form.variants.length === 1 ? "not-allowed" : "pointer",
-                      color: "#e74c3c",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                       opacity: form.variants.length === 1 ? 0.3 : 1,
                     }}
                   >
@@ -1531,9 +916,9 @@ export default function AdminProducts() {
             </div>
 
             {/* ── Feature Flags ── */}
-            <div style={sec}>
-              <p style={secTitle}>Feature Flags</p>
-              <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
+            <div className={s.sec}>
+              <p className={s.secTitle}>Feature Flags</p>
+              <div className={s.flagRow}>
                 {(
                   [
                     {
@@ -1547,49 +932,21 @@ export default function AdminProducts() {
                     { key: "is_new" as const, label: "Mark as New" },
                   ] as const
                 ).map(({ key, label }) => (
-                  <label
-                    key={key}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.6rem",
-                      cursor: "pointer",
-                    }}
-                  >
+                  <label key={key} className={s.flagLabel}>
                     <input
                       type="checkbox"
                       checked={form[key]}
                       onChange={(e) => setField(key, e.target.checked)}
-                      style={{
-                        width: 16,
-                        height: 16,
-                        cursor: "pointer",
-                        accentColor: "#d4af37",
-                      }}
+                      className={s.flagCheckbox}
                     />
-                    <span
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.87rem",
-                        color: "#e8e4dc",
-                      }}
-                    >
-                      {label}
-                    </span>
+                    <span className={s.flagText}>{label}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             {/* ── Save / Cancel ── */}
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                justifyContent: "flex-end",
-                paddingBottom: "3rem",
-              }}
-            >
+            <div className={s.saveRow}>
               <button
                 onClick={() => setView("list")}
                 className="btn btn-outline"
@@ -1599,15 +956,8 @@ export default function AdminProducts() {
               </button>
               <button
                 onClick={handleSave}
-                className="btn btn-gold"
+                className={`btn btn-gold ${s.saveBtn}`}
                 disabled={saving}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  minWidth: 160,
-                  justifyContent: "center",
-                }}
               >
                 {saving
                   ? uploadingImages

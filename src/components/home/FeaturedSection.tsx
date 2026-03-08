@@ -1,53 +1,27 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ProductCard } from "../product";
+import s from "./FeaturedSection.module.css";
 
 export function FeaturedSection({
   featuredProducts,
-  isMobile,
 }: {
   featuredProducts: any[];
-  isMobile: boolean;
+  isMobile?: boolean;
 }) {
   return (
-    <section className="section" style={{ background: "var(--color-surface)" }}>
+    <section className={`section ${s.section}`}>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{
-            marginBottom: "3rem",
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
+          className={s.headerWrap}
         >
           <div>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.65rem",
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                color: "var(--color-gold)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Curated for You
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-serif)",
-                fontSize: "clamp(2rem, 5vw, 3.5rem)",
-                fontWeight: 300,
-                color: "var(--color-text)",
-                lineHeight: 1.1,
-              }}
-            >
+            <p className={s.tagline}>Curated for You</p>
+            <h2 className={s.heading}>
               Featured
               <br />
               <em>Collections</em>
@@ -58,15 +32,7 @@ export function FeaturedSection({
           </Link>
         </motion.div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile
-              ? "repeat(2, 1fr)"
-              : "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: "1.5rem",
-          }}
-        >
+        <div className={s.grid}>
           {featuredProducts.map((product: any) => (
             <ProductCard key={product.id} product={product} />
           ))}

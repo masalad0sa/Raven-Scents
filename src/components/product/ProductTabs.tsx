@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { reviewsApi } from "../../lib/api";
 import { useAuthStore } from "../../store/authStore";
 import { Review } from "../../types";
+import s from "./ProductTabs.module.css";
 
 const TABS = [
   "Description",
@@ -37,15 +38,8 @@ function FragrancePyramid({
     },
   ];
   return (
-    <div style={{ padding: "0.75rem 0" }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.5rem",
-          alignItems: "center",
-        }}
-      >
+    <div className={s.pyramidWrap}>
+      <div className={s.pyramidCol}>
         {tiers.map((tier, i) => (
           <div
             key={tier.label}
@@ -64,47 +58,17 @@ function FragrancePyramid({
                 color: i === 2 ? "var(--color-text)" : "#0d0d0d",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.62rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
-                >
+              <div className={s.tierHeader}>
+                <span className={s.tierLabel}>
                   {tier.label}
                 </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.65rem",
-                    opacity: 0.7,
-                  }}
-                >
+                <span className={s.tierSublabel}>
                   {tier.sublabel}
                 </span>
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+              <div className={s.tierNotes}>
                 {tier.notes.map((note) => (
-                  <span
-                    key={note}
-                    style={{
-                      background: "rgba(255,255,255,0.25)",
-                      borderRadius: 3,
-                      padding: "0.2rem 0.6rem",
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "0.75rem",
-                    }}
-                  >
+                  <span key={note} className={s.tierNote}>
                     {note}
                   </span>
                 ))}
@@ -172,20 +136,8 @@ export function ProductTabs({ product, isMobile }: Props) {
   };
 
   return (
-    <div
-      style={{
-        marginTop: "1.5rem",
-        borderTop: "1px solid rgba(212,175,55,0.15)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          borderBottom: "1px solid rgba(212,175,55,0.15)",
-          overflowX: "auto",
-        }}
-        className="no-scrollbar"
-      >
+    <div className={s.wrap}>
+      <div className={`${s.tabBar} no-scrollbar`}>
         {TABS.map((tab) => (
           <button
             key={tab}
@@ -197,20 +149,13 @@ export function ProductTabs({ product, isMobile }: Props) {
         ))}
       </div>
       <div
+        className={s.tabContent}
         style={{
           padding: isMobile ? "1.25rem 0" : "2rem 0",
-          maxWidth: isMobile ? "100%" : 700,
         }}
       >
         {activeTab === "Description" && (
-          <p
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.95rem",
-              color: "var(--color-muted)",
-              lineHeight: 1.9,
-            }}
-          >
+          <p className={s.descText}>
             {product.description}
           </p>
         )}
@@ -218,20 +163,13 @@ export function ProductTabs({ product, isMobile }: Props) {
           <FragrancePyramid notes={product.notes} />
         )}
         {activeTab === "How to Wear" && (
-          <div
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.95rem",
-              color: "var(--color-muted)",
-              lineHeight: 1.9,
-            }}
-          >
-            <p style={{ marginBottom: "1rem" }}>
+          <div className={s.howToWear}>
+            <p>
               Apply to pulse points: wrists, neck, behind ears, and inside
               elbows. These warm spots will help the fragrance bloom and project
               naturally.
             </p>
-            <p style={{ marginBottom: "1rem" }}>
+            <p>
               For longer wear, apply to moisturized skin — fragrance adheres
               better to hydrated skin. Consider layering with an unscented
               lotion first.
@@ -245,43 +183,18 @@ export function ProductTabs({ product, isMobile }: Props) {
         {activeTab === "Reviews" && (
           <div>
             {/* Rating Summary */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "2rem",
-                marginBottom: "2rem",
-                padding: "1.5rem",
-                background: "#1a1a1a",
-                borderRadius: 6,
-                border: "1px solid rgba(212,175,55,0.15)",
-              }}
-            >
+            <div className={s.ratingSummary}>
               <div style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "3.5rem",
-                    fontWeight: 300,
-                    color: "var(--color-gold)",
-                    lineHeight: 1,
-                  }}
-                >
+                <div className={s.ratingBig}>
                   {reviews.length > 0
                     ? (
-                        reviews.reduce((s, r) => s + r.rating, 0) /
+                        reviews.reduce((acc, r) => acc + r.rating, 0) /
                         reviews.length
                       ).toFixed(1)
                     : product.rating}
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    margin: "0.5rem 0",
-                  }}
-                >
-                  {[1, 2, 3, 4, 5].map((s) => {
+                <div className={s.ratingStarsRow}>
+                  {[1, 2, 3, 4, 5].map((i) => {
                     const avg =
                       reviews.length > 0
                         ? reviews.reduce((acc, r) => acc + r.rating, 0) /
@@ -289,11 +202,11 @@ export function ProductTabs({ product, isMobile }: Props) {
                         : product.rating;
                     return (
                       <span
-                        key={s}
+                        key={i}
+                        className={s.ratingStar}
                         style={{
                           color:
-                            s <= Math.round(avg) ? "var(--color-gold)" : "#444",
-                          fontSize: "1rem",
+                            i <= Math.round(avg) ? "var(--color-gold)" : "#444",
                         }}
                       >
                         ★
@@ -301,15 +214,7 @@ export function ProductTabs({ product, isMobile }: Props) {
                     );
                   })}
                 </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.6rem",
-                    letterSpacing: "0.1em",
-                    color: "var(--color-muted)",
-                    textTransform: "uppercase",
-                  }}
-                >
+                <div className={s.ratingCount}>
                   {reviews.length} {reviews.length === 1 ? "Review" : "Reviews"}
                 </div>
               </div>
@@ -317,46 +222,18 @@ export function ProductTabs({ product, isMobile }: Props) {
 
             {/* Review Form */}
             {user ? (
-              <div
-                style={{
-                  marginBottom: "2rem",
-                  padding: "1.5rem",
-                  background: "#1a1a1a",
-                  borderRadius: 6,
-                  border: "1px solid rgba(212,175,55,0.15)",
-                }}
-              >
-                <h4
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.7rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    color: "var(--color-text)",
-                    marginBottom: "1rem",
-                  }}
-                >
+              <div className={s.reviewForm}>
+                <h4 className={s.reviewFormTitle}>
                   Write a Review
                 </h4>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "0.25rem",
-                    marginBottom: "1rem",
-                  }}
-                >
-                  {[1, 2, 3, 4, 5].map((s) => (
+                <div className={s.ratingPicker}>
+                  {[1, 2, 3, 4, 5].map((i) => (
                     <button
-                      key={s}
-                      onClick={() => setReviewRating(s)}
+                      key={i}
+                      onClick={() => setReviewRating(i)}
+                      className={s.ratingPickerBtn}
                       style={{
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "1.5rem",
-                        color: s <= reviewRating ? "var(--color-gold)" : "#444",
-                        padding: 0,
+                        color: i <= reviewRating ? "var(--color-gold)" : "#444",
                       }}
                     >
                       ★
@@ -369,19 +246,7 @@ export function ProductTabs({ product, isMobile }: Props) {
                   value={reviewTitle}
                   onChange={(e) => setReviewTitle(e.target.value)}
                   maxLength={100}
-                  style={{
-                    width: "100%",
-                    background: "#0d0d0d",
-                    border: "1px solid rgba(212,175,55,0.2)",
-                    borderRadius: 4,
-                    padding: "0.6rem 0.8rem",
-                    color: "var(--color-text)",
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.85rem",
-                    marginBottom: "0.75rem",
-                    outline: "none",
-                    boxSizing: "border-box",
-                  }}
+                  className={s.reviewInput}
                 />
                 <textarea
                   placeholder="Share your experience with this fragrance..."
@@ -389,62 +254,27 @@ export function ProductTabs({ product, isMobile }: Props) {
                   onChange={(e) => setReviewBody(e.target.value)}
                   maxLength={2000}
                   rows={3}
-                  style={{
-                    width: "100%",
-                    background: "#0d0d0d",
-                    border: "1px solid rgba(212,175,55,0.2)",
-                    borderRadius: 4,
-                    padding: "0.6rem 0.8rem",
-                    color: "var(--color-text)",
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.85rem",
-                    marginBottom: "0.75rem",
-                    outline: "none",
-                    resize: "vertical",
-                    boxSizing: "border-box",
-                  }}
+                  className={s.reviewTextarea}
                 />
                 {reviewError && (
-                  <p
-                    style={{
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "0.75rem",
-                      color: "var(--color-error)",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
+                  <p className={s.reviewError}>
                     {reviewError}
                   </p>
                 )}
                 {reviewSuccess && (
-                  <p
-                    style={{
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "0.75rem",
-                      color: "var(--color-success)",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
+                  <p className={s.reviewSuccess}>
                     Review submitted successfully!
                   </p>
                 )}
                 <button
                   onClick={handleSubmitReview}
                   disabled={reviewSubmitting || !reviewBody.trim()}
+                  className={s.submitBtn}
                   style={{
                     background:
                       reviewSubmitting || !reviewBody.trim()
                         ? "rgba(212,175,55,0.5)"
                         : "var(--color-gold)",
-                    color: "#0d0d0d",
-                    border: "none",
-                    borderRadius: 4,
-                    padding: "0.6rem 1.5rem",
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.65rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
                     cursor:
                       reviewSubmitting || !reviewBody.trim()
                         ? "not-allowed"
@@ -455,19 +285,8 @@ export function ProductTabs({ product, isMobile }: Props) {
                 </button>
               </div>
             ) : (
-              <div
-                style={{
-                  marginBottom: "2rem",
-                  padding: "1rem 1.5rem",
-                  background: "#1a1a1a",
-                  borderRadius: 6,
-                  border: "1px solid rgba(212,175,55,0.15)",
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.85rem",
-                  color: "var(--color-muted)",
-                }}
-              >
-                <a href="/login" style={{ color: "var(--color-gold)" }}>
+              <div className={s.loginPrompt}>
+                <a href="/login" className={s.loginLink}>
                   Log in
                 </a>{" "}
                 to leave a review.
@@ -476,90 +295,38 @@ export function ProductTabs({ product, isMobile }: Props) {
 
             {/* Reviews List */}
             {reviewLoading ? (
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  color: "var(--color-muted)",
-                  fontSize: "0.9rem",
-                }}
-              >
+              <p className={s.loadingText}>
                 Loading reviews...
               </p>
             ) : reviews.length === 0 ? (
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  color: "var(--color-muted)",
-                  fontSize: "0.9rem",
-                }}
-              >
+              <p className={s.loadingText}>
                 No reviews yet. Be the first to share your thoughts!
               </p>
             ) : (
               reviews.map((review) => (
-                <div
-                  key={review.id}
-                  style={{
-                    padding: "1.5rem 0",
-                    borderBottom: "1px solid rgba(212,175,55,0.15)",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      marginBottom: "0.75rem",
-                    }}
-                  >
+                <div key={review.id} className={s.reviewItem}>
+                  <div className={s.reviewItemHeader}>
                     <div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.5rem",
-                          marginBottom: "0.25rem",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontFamily: "var(--font-display)",
-                            fontSize: "0.75rem",
-                            fontWeight: 700,
-                            color: "var(--color-text)",
-                            margin: 0,
-                          }}
-                        >
+                      <div className={s.reviewerRow}>
+                        <p className={s.reviewerName}>
                           {review.profiles?.full_name || "Anonymous"}
                         </p>
                         {review.verified && (
-                          <span
-                            style={{
-                              fontFamily: "var(--font-display)",
-                              fontSize: "0.55rem",
-                              fontWeight: 600,
-                              letterSpacing: "0.08em",
-                              textTransform: "uppercase",
-                              color: "var(--color-success)",
-                              background: "rgba(46,204,113,0.1)",
-                              padding: "0.15rem 0.5rem",
-                              borderRadius: 3,
-                            }}
-                          >
+                          <span className={s.verifiedBadge}>
                             Verified Purchase
                           </span>
                         )}
                       </div>
-                      <div style={{ display: "flex" }}>
-                        {[1, 2, 3, 4, 5].map((s) => (
+                      <div className={s.reviewStars}>
+                        {[1, 2, 3, 4, 5].map((i) => (
                           <span
-                            key={s}
+                            key={i}
+                            className={s.reviewStar}
                             style={{
                               color:
-                                s <= review.rating
+                                i <= review.rating
                                   ? "var(--color-gold)"
                                   : "#DDD",
-                              fontSize: "0.85rem",
                             }}
                           >
                             ★
@@ -567,13 +334,7 @@ export function ProductTabs({ product, isMobile }: Props) {
                         ))}
                       </div>
                     </div>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.75rem",
-                        color: "var(--color-muted)",
-                      }}
-                    >
+                    <span className={s.reviewDate}>
                       {new Date(review.created_at).toLocaleDateString("en-IN", {
                         year: "numeric",
                         month: "short",
@@ -582,26 +343,11 @@ export function ProductTabs({ product, isMobile }: Props) {
                     </span>
                   </div>
                   {review.title && (
-                    <p
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.9rem",
-                        fontWeight: 600,
-                        color: "var(--color-text)",
-                        marginBottom: "0.35rem",
-                      }}
-                    >
+                    <p className={s.reviewTitle}>
                       {review.title}
                     </p>
                   )}
-                  <p
-                    style={{
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "0.9rem",
-                      color: "var(--color-muted)",
-                      lineHeight: 1.7,
-                    }}
-                  >
+                  <p className={s.reviewBody}>
                     {review.body}
                   </p>
                 </div>

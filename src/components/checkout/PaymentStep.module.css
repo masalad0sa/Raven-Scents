@@ -1,0 +1,110 @@
+.title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--color-text);
+  margin-bottom: 2rem;
+}
+
+.cardPreview {
+  background: var(--color-primary);
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cardCircle1 {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.cardCircle2 {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.cardLabel {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2rem;
+}
+
+.cardNumber {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.2em;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.cardBottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cardSubLabel {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 0.25rem;
+}
+
+.cardSubValue {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.fieldFull {
+  flex: 1 1 100%;
+}
+
+.fieldHalf {
+  flex: 1 1 calc(50% - 0.5rem);
+}
+
+.fieldLabel {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.fieldError {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--color-error);
+  margin-top: 0.25rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}

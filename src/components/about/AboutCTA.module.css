@@ -1,0 +1,41 @@
+.section {
+  background: var(--color-ivory);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.blobLeft {
+  position: absolute;
+  left: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.13;
+  pointer-events: none;
+}
+
+.blobRight {
+  position: absolute;
+  right: -120px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.inner {
+  max-width: 600px;
+}
+
+.heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--color-text);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.headingEm {
+  color: var(--color-gold);
+}

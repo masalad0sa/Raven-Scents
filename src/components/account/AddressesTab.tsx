@@ -4,10 +4,11 @@ import { supabase } from "../../lib/supabase";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import {
   FormField,
-  sectionHeading,
-  primaryBtnStyle,
-  ghostBtnStyle,
+  sectionHeadingClass,
+  primaryBtnClass,
+  ghostBtnClass,
 } from "./AccountStyles";
+import s from "./AddressesTab.module.css";
 
 interface Address {
   id: string;
@@ -103,22 +104,15 @@ export function AddressesTab({
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <h2 style={sectionHeading}>Saved Addresses</h2>
+      <div className={s.header}>
+        <h2 className={sectionHeadingClass}>Saved Addresses</h2>
         {!addrForm && (
           <button
             onClick={() => {
               setAddrForm(emptyAddrForm());
               setEditingAddrId(null);
             }}
-            style={primaryBtnStyle(false)}
+            className={primaryBtnClass(false)}
           >
             <Plus size={13} />
             Add Address
@@ -128,26 +122,11 @@ export function AddressesTab({
 
       {/* Add/Edit form */}
       {addrForm && (
-        <div
-          style={{
-            background: "#111",
-            border: "1px solid rgba(212,175,55,0.2)",
-            borderRadius: 10,
-            padding: "1.75rem",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <h3 style={{ ...sectionHeading, marginBottom: "1.5rem" }}>
+        <div className={s.formCard}>
+          <h3 className={`${sectionHeadingClass} ${s.formTitle}`}>
             {editingAddrId ? "Edit Address" : "New Address"}
           </h3>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-              gap: "1rem 1.25rem",
-              maxWidth: 600,
-            }}
-          >
+          <div className={s.formGrid}>
             <FormField
               label="Full Name"
               value={addrForm.full_name}
@@ -160,7 +139,7 @@ export function AddressesTab({
               type="tel"
               placeholder="+91 98765 43210"
             />
-            <div style={{ gridColumn: "1 / -1" }}>
+            <div className={s.streetCol}>
               <FormField
                 label="Street Address"
                 value={addrForm.street}
@@ -191,11 +170,11 @@ export function AddressesTab({
               onChange={(v) => setAddrForm((f) => f && { ...f, country: v })}
             />
           </div>
-          <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.5rem" }}>
+          <div className={s.formActions}>
             <button
               onClick={saveAddress}
               disabled={addrSaving}
-              style={primaryBtnStyle(addrSaving)}
+              className={primaryBtnClass(addrSaving)}
             >
               <Check size={13} />
               {addrSaving ? "Saving…" : "Save Address"}
@@ -205,7 +184,7 @@ export function AddressesTab({
                 setAddrForm(null);
                 setEditingAddrId(null);
               }}
-              style={ghostBtnStyle}
+              className={ghostBtnClass}
             >
               <X size={13} />
               Cancel
@@ -216,129 +195,46 @@ export function AddressesTab({
 
       {/* Address cards */}
       {addrLoading ? (
-        <p
-          style={{
-            color: "var(--color-text-muted)",
-            fontFamily: "var(--font-body)",
-          }}
-        >
+        <p className={s.loadingText}>
           Loading…
         </p>
       ) : addresses.length === 0 ? (
-        <div
-          style={{
-            background: "#111",
-            border: "1px solid rgba(212,175,55,0.1)",
-            borderRadius: 10,
-            padding: "3rem",
-            textAlign: "center",
-          }}
-        >
+        <div className={s.emptyCard}>
           <MapPin
             size={32}
             color="rgba(212,175,55,0.3)"
             style={{ margin: "0 auto 1rem" }}
           />
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              color: "var(--color-text-muted)",
-              margin: 0,
-            }}
-          >
+          <p className={s.emptyText}>
             No saved addresses yet.
           </p>
         </div>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile
-              ? "repeat(2, 1fr)"
-              : "repeat(auto-fill, minmax(280px,1fr))",
-            gap: "1rem",
-          }}
-        >
+        <div className={s.addrGrid}>
           {addresses.map((addr) => (
             <div
               key={addr.id}
-              style={{
-                background: "#111",
-                border: `1px solid ${addr.is_default ? "rgba(212,175,55,0.4)" : "rgba(212,175,55,0.1)"}`,
-                borderRadius: 10,
-                padding: "1.5rem",
-                position: "relative",
-              }}
+              className={`${s.addrCard}${addr.is_default ? ` ${s.addrCardDefault}` : ""}`}
             >
               {addr.is_default && (
-                <span
-                  style={{
-                    position: "absolute",
-                    top: 12,
-                    right: 12,
-                    background: "rgba(212,175,55,0.15)",
-                    color: "var(--color-gold)",
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.55rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    padding: "0.2rem 0.6rem",
-                    borderRadius: 20,
-                  }}
-                >
-                  Default
-                </span>
+                <span className={s.defaultBadge}>Default</span>
               )}
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 600,
-                  color: "var(--color-text)",
-                  margin: "0 0 0.25rem",
-                }}
-              >
-                {addr.full_name}
-              </p>
+              <p className={s.addrName}>{addr.full_name}</p>
               {addr.phone && (
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.85rem",
-                    color: "var(--color-text-muted)",
-                    margin: "0 0 0.75rem",
-                  }}
-                >
-                  {addr.phone}
-                </p>
+                <p className={s.addrPhone}>{addr.phone}</p>
               )}
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "0.85rem",
-                  color: "var(--color-text-muted)",
-                  margin: 0,
-                  lineHeight: 1.6,
-                }}
-              >
+              <p className={s.addrDetail}>
                 {addr.street}
                 <br />
                 {addr.city}, {addr.state} {addr.postal_code}
                 <br />
                 {addr.country}
               </p>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "0.5rem",
-                  marginTop: "1.25rem",
-                  flexWrap: "wrap",
-                }}
-              >
+              <div className={s.addrActions}>
                 {!addr.is_default && (
                   <button
                     onClick={() => setDefaultAddress(addr.id)}
-                    style={{ ...ghostBtnStyle, fontSize: "0.6rem" }}
+                    className={`${ghostBtnClass} ${s.addrActionBtn}`}
                   >
                     Set Default
                   </button>
@@ -356,19 +252,14 @@ export function AddressesTab({
                     });
                     setEditingAddrId(addr.id);
                   }}
-                  style={{ ...ghostBtnStyle, fontSize: "0.6rem" }}
+                  className={`${ghostBtnClass} ${s.addrActionBtn}`}
                 >
                   <Edit2 size={11} />
                   Edit
                 </button>
                 <button
                   onClick={() => deleteAddress(addr.id)}
-                  style={{
-                    ...ghostBtnStyle,
-                    fontSize: "0.6rem",
-                    color: "#f87171",
-                    borderColor: "rgba(248,113,113,0.2)",
-                  }}
+                  className={`${ghostBtnClass} ${s.deleteBtn}`}
                 >
                   <Trash2 size={11} />
                   Delete

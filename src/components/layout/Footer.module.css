@@ -1,0 +1,152 @@
+.footer {
+  background: var(--color-primary);
+  color: var(--color-ivory);
+  padding: 4rem 0 2rem;
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 3rem;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brandName {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  letter-spacing: 0.03em;
+  color: var(--color-gold);
+}
+
+.brandDesc {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.85;
+  color: rgba(250, 246, 238, 0.55);
+  max-width: 240px;
+  margin-bottom: 1.5rem;
+}
+
+.socialRow {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.socialLink {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(250, 246, 238, 0.5);
+  transition: all 0.25s;
+  text-decoration: none;
+}
+
+.socialLink:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.columnTitle {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 1.25rem;
+}
+
+.columnLink {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: rgba(250, 246, 238, 0.55);
+  text-decoration: none;
+  margin-bottom: 0.65rem;
+  transition: color 0.2s;
+}
+
+.columnLink:hover {
+  color: var(--color-gold);
+}
+
+.contactText {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: rgba(250, 246, 238, 0.55);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.emailLink {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+  padding-bottom: 2px;
+  transition: border-color 0.2s;
+}
+
+.promiseBox {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 6px;
+}
+
+.promiseLabel {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.4rem;
+}
+
+.promiseText {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: rgba(250, 246, 238, 0.5);
+  line-height: 1.7;
+}
+
+.bottomBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.copyright {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: rgba(250, 246, 238, 0.28);
+}
+
+.legalLinks {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.legalLink {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: rgba(250, 246, 238, 0.28);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+.legalLink:hover {
+  color: var(--color-ivory);
+}

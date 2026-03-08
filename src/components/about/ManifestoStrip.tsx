@@ -1,21 +1,9 @@
+import s from "./ManifestoStrip.module.css";
+
 export function ManifestoStrip() {
   return (
-    <section
-      style={{
-        background: "var(--color-gold)",
-        padding: "2rem 0",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          gap: "4rem",
-          animation: "marquee 18s linear infinite",
-          whiteSpace: "nowrap",
-          width: "max-content",
-        }}
-      >
+    <section className={s.strip}>
+      <div className={s.track}>
         {[...Array(4)].flatMap(() =>
           [
             "CRAFTED WITH INTENTION",
@@ -26,23 +14,13 @@ export function ManifestoStrip() {
             "·",
             "YOUR SCENT, YOUR STORY",
             "·",
-          ].map((s, i) => (
-            <span
-              key={`${s}${i}`}
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.75rem",
-                fontWeight: 700,
-                letterSpacing: "0.2em",
-                color: "var(--color-primary)",
-              }}
-            >
-              {s}
+          ].map((t, i) => (
+            <span key={`${t}${i}`} className={s.word}>
+              {t}
             </span>
           )),
         )}
       </div>
-      <style>{`@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-25%)}}`}</style>
     </section>
   );
 }

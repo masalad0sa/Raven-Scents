@@ -4,11 +4,12 @@ import { supabase } from "../../lib/supabase";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import {
   FormField,
-  sectionHeading,
-  iconBtnStyle,
-  primaryBtnStyle,
-  ghostBtnStyle,
+  sectionHeadingClass,
+  iconBtnClass,
+  primaryBtnClass,
+  ghostBtnClass,
 } from "./AccountStyles";
+import s from "./ProfileTab.module.css";
 
 interface Profile {
   full_name: string | null;
@@ -97,30 +98,16 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
 
   return (
     <>
-      <div
-        style={{
-          background: "#111",
-          border: "1px solid rgba(212,175,55,0.1)",
-          borderRadius: 10,
-          padding: "2rem",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "1.75rem",
-          }}
-        >
-          <h2 style={sectionHeading}>Personal Info</h2>
+      <div className={s.card}>
+        <div className={s.cardHeader}>
+          <h2 className={sectionHeadingClass}>Personal Info</h2>
           {!profileEditing && (
             <button
               onClick={() => {
                 setProfileDraft(profile);
                 setProfileEditing(true);
               }}
-              style={iconBtnStyle}
+              className={iconBtnClass}
             >
               <Edit2 size={14} />
               Edit
@@ -129,14 +116,7 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
         </div>
 
         {profileEditing ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "1.25rem",
-              maxWidth: 480,
-            }}
-          >
+          <div className={s.editForm}>
             <FormField
               label="Full Name"
               value={profileDraft.full_name ?? ""}
@@ -149,18 +129,18 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
               type="tel"
               placeholder="+91 98765 43210"
             />
-            <div style={{ display: "flex", gap: "0.75rem" }}>
+            <div className={s.editActions}>
               <button
                 onClick={saveProfile}
                 disabled={profileSaving}
-                style={primaryBtnStyle(profileSaving)}
+                className={primaryBtnClass(profileSaving)}
               >
                 <Check size={13} />
                 {profileSaving ? "Saving…" : "Save"}
               </button>
               <button
                 onClick={() => setProfileEditing(false)}
-                style={ghostBtnStyle}
+                className={ghostBtnClass}
               >
                 <X size={13} />
                 Cancel
@@ -169,11 +149,8 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
           </div>
         ) : (
           <dl
-            style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-              gap: "1.5rem 2rem",
-            }}
+            className={s.infoGrid}
+            style={{ gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr" }}
           >
             {[
               { label: "Full Name", value: profile.full_name ?? "—" },
@@ -181,28 +158,8 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
               { label: "Phone", value: profile.phone ?? "—" },
             ].map(({ label, value }) => (
               <div key={label}>
-                <dt
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.58rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "var(--color-text-muted)",
-                    marginBottom: "0.3rem",
-                  }}
-                >
-                  {label}
-                </dt>
-                <dd
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.95rem",
-                    color: "var(--color-text)",
-                    margin: 0,
-                  }}
-                >
-                  {value}
-                </dd>
+                <dt className={s.infoLabel}>{label}</dt>
+                <dd className={s.infoValue}>{value}</dd>
               </div>
             ))}
           </dl>
@@ -211,23 +168,11 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
 
       {/* Password Change */}
       <div
-        style={{
-          background: "#111",
-          border: "1px solid rgba(212,175,55,0.1)",
-          borderRadius: 10,
-          padding: isMobile ? "1.5rem" : "2rem",
-          marginTop: "1.5rem",
-        }}
+        className={s.passwordCard}
+        style={{ padding: isMobile ? "1.5rem" : "2rem" }}
       >
-        <h3 style={sectionHeading}>Change Password</h3>
-        <div
-          style={{
-            display: "grid",
-            gap: "1rem",
-            marginTop: "1.25rem",
-            maxWidth: 400,
-          }}
-        >
+        <h3 className={sectionHeadingClass}>Change Password</h3>
+        <div className={s.passwordForm}>
           <FormField
             label="New Password"
             type="password"
@@ -244,14 +189,12 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
           />
           {passwordMsg && (
             <p
+              className={s.passwordMsg}
               style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.8rem",
                 color:
                   passwordMsg.type === "success"
                     ? "var(--color-success)"
                     : "var(--color-error)",
-                margin: 0,
               }}
             >
               {passwordMsg.text}
@@ -260,7 +203,7 @@ export function ProfileTab({ user }: { user: { id: string; email: string } }) {
           <button
             onClick={changePassword}
             disabled={passwordSaving}
-            style={primaryBtnStyle(passwordSaving)}
+            className={primaryBtnClass(passwordSaving)}
           >
             {passwordSaving ? "Updating..." : "Update Password"}
           </button>

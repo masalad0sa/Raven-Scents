@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Tag } from "lucide-react";
 import { couponsApi } from "../../lib/api";
+import s from "./CartSummary.module.css";
 
 interface Props {
   subtotal: number;
@@ -48,63 +49,21 @@ export function CartSummary({
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      style={{
-        background: "#1a1a1a",
-        border: "1px solid rgba(212,175,55,0.15)",
-        borderRadius: 8,
-        padding: "1.75rem",
-        position: "sticky",
-        top: 92,
-      }}
+      className={s.wrap}
     >
-      <h2
-        style={{
-          fontFamily: "var(--font-serif)",
-          fontSize: "1.4rem",
-          fontWeight: 500,
-          color: "var(--color-text)",
-          marginBottom: "1.5rem",
-        }}
-      >
+      <h2 className={s.title}>
         Order Summary
       </h2>
 
       {/* Coupon */}
-      <div style={{ marginBottom: "1.5rem" }}>
-        <label
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "0.62rem",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: "var(--color-muted)",
-            display: "block",
-            marginBottom: "0.5rem",
-          }}
-        >
+      <div className={s.couponSection}>
+        <label className={s.couponLabel}>
           Coupon Code
         </label>
         {appliedCoupon ? (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              padding: "0.75rem 1rem",
-              background: "rgba(46, 204, 113, 0.08)",
-              border: "1px solid rgba(46, 204, 113, 0.3)",
-              borderRadius: 4,
-            }}
-          >
+          <div className={s.couponApplied}>
             <Tag size={14} style={{ color: "var(--color-success)" }} />
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.75rem",
-                fontWeight: 700,
-                color: "var(--color-success)",
-              }}
-            >
+            <span className={s.couponText}>
               {appliedCoupon.code} — {appliedCoupon.pct}% off
             </span>
             <button
@@ -113,19 +72,13 @@ export function CartSummary({
                 setCoupon("");
                 sessionStorage.removeItem("raven_coupon");
               }}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "var(--color-muted)",
-                marginLeft: "auto",
-              }}
+              className={s.couponRemove}
             >
               ✕
             </button>
           </div>
         ) : (
-          <div style={{ display: "flex", gap: "0.5rem" }}>
+          <div className={s.couponInputRow}>
             <input
               type="text"
               value={coupon}
@@ -146,14 +99,7 @@ export function CartSummary({
           </div>
         )}
         {couponError && (
-          <p
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.75rem",
-              color: "var(--color-error)",
-              marginTop: "0.5rem",
-            }}
-          >
+          <p className={s.couponError}>
             {couponError}
           </p>
         )}
@@ -182,97 +128,33 @@ export function CartSummary({
             ]
           : []),
       ].map((row) => (
-        <div
-          key={row.label}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "0.85rem",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.9rem",
-              color: "var(--color-muted)",
-            }}
-          >
+        <div key={row.label} className={s.summaryRow}>
+          <span className={s.summaryLabel}>
             {row.label}
           </span>
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.9rem",
-              fontWeight: 600,
-              color: row.color,
-            }}
-          >
+          <span className={s.summaryValue} style={{ color: row.color }}>
             {row.val}
           </span>
         </div>
       ))}
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          paddingTop: "1rem",
-          borderTop: "1px solid rgba(212,175,55,0.15)",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "1rem",
-            fontWeight: 700,
-            color: "var(--color-primary)",
-          }}
-        >
-          Total
-        </span>
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "1.1rem",
-            fontWeight: 700,
-            color: "var(--color-primary)",
-          }}
-        >
+      <div className={s.totalRow}>
+        <span className={s.totalLabel}>Total</span>
+        <span className={s.totalValue}>
           ₹{total.toLocaleString("en-IN")}
         </span>
       </div>
 
       <Link
         to="/checkout"
-        className="btn btn-gold"
-        style={{
-          width: "100%",
-          justifyContent: "center",
-          display: "flex",
-          textDecoration: "none",
-        }}
+        className={`btn btn-gold ${s.checkoutLink}`}
       >
         Proceed to Checkout →
       </Link>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "0.5rem",
-          marginTop: "1rem",
-        }}
-      >
+      <div className={s.secureRow}>
         <span style={{ fontSize: "0.85rem" }}>🔒</span>
-        <span
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.72rem",
-            color: "var(--color-muted)",
-          }}
-        >
+        <span className={s.secureText}>
           Secure SSL encrypted checkout
         </span>
       </div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import cs from "./GradientBlob.module.css";
 
 interface GradientBlobProps {
   className?: string;
@@ -60,25 +61,8 @@ export function GradientBlob({
   return (
     <div
       ref={blobRef}
-      className={className}
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: `radial-gradient(ellipse at 38% 40%,
-          rgba(212, 175, 55, 0.85) 0%,
-          rgba(180, 60, 120, 0.65) 20%,
-          rgba(120, 60, 200, 0.5) 40%,
-          rgba(30, 140, 180, 0.35) 62%,
-          rgba(212, 175, 55, 0.15) 80%,
-          transparent 100%)`,
-        filter: "blur(32px)",
-        opacity: 1,
-        willChange: "transform",
-        pointerEvents: "none",
-        userSelect: "none",
-        flexShrink: 0,
-      }}
+      className={`${cs.blob}${className ? ` ${className}` : ""}`}
+      style={{ width: size, height: size }}
       aria-hidden="true"
     />
   );

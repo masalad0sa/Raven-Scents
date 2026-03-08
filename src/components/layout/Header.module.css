@@ -1,0 +1,272 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: transform 0.35s ease, background 0.4s ease, border-color 0.4s ease;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.logo {
+  text-decoration: none;
+}
+
+.logoText {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--color-gold);
+  letter-spacing: 0.05em;
+}
+
+.desktopNav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navLink {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
+  padding-bottom: 2px;
+  transition: border-color 0.25s;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.wishlistLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.wishlistLink:hover {
+  color: var(--color-gold);
+}
+
+.badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--color-gold);
+  color: #0d0d0d;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+
+.cartBtn {
+  background: var(--color-gold);
+  color: #0d0d0d;
+  border: none;
+  border-radius: 50px;
+  padding: 0.5rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+}
+
+.cartBadge {
+  background: #0d0d0d;
+  color: var(--color-gold);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+
+.userMenuWrap {
+  position: relative;
+}
+
+.userMenuBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 50px;
+  padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.userAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 10px;
+  padding: 0.5rem;
+  min-width: 180px;
+  z-index: 200;
+}
+
+.dropdownEmail {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  padding: 0.4rem 0.75rem 0.75rem;
+  margin: 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.dropdownLink {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.dropdownLink:hover {
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 0;
+  padding: 0.6rem 0.75rem;
+  color: #f87171;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+  transition: background 0.15s;
+}
+
+.logoutBtn:hover {
+  background: rgba(248, 113, 113, 0.07);
+}
+
+.signInLink {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 50px;
+  padding: 0.45rem 1rem;
+  color: var(--color-text);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.signInLink:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.mobileMenuBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  display: none;
+}
+
+.mobileNav {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  background: var(--color-ivory);
+  z-index: 99;
+  padding: 2rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mobileNavLink {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .desktopNav {
+    display: none !important;
+  }
+
+  .mobileMenuBtn {
+    display: flex !important;
+  }
+}

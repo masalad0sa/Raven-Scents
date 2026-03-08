@@ -1,0 +1,132 @@
+.tableHeader {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  padding: 0 0 1rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1fr 1fr auto;
+  gap: 1rem;
+}
+
+.rowDesktop {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.rowMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.productCell {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.productImg {
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.productBrand {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 0.2rem;
+}
+
+.productName {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.mobileVariant {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  margin-top: 0.15rem;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(212, 175, 55, 0.5);
+  display: flex;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.removeBtn:hover {
+  color: var(--color-error);
+}
+
+.sizeCol {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.priceCol {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.mobileBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobileTotal {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.continueLink {
+  margin-top: 1.5rem;
+}
+
+/* QtyControl */
+.qtyControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  width: fit-content;
+}
+
+.qtyBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-primary);
+  display: flex;
+}
+
+.qtyValue {
+  font-family: var(--font-display);
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+}
