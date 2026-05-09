@@ -52,6 +52,8 @@ const CATEGORIES = [
   "parfum",
   "cologne",
   "body-mist",
+  "Solid Perfume",
+  "Perfume",
 ];
 const GENDERS = ["masculine", "feminine", "unisex"];
 const SILLAGES = ["light", "moderate", "heavy"];

@@ -49,6 +49,20 @@ function App() {
     }
   }, [user]);
 
+  // Sync cart to Supabase whenever items change (for logged-in users)
+  useEffect(() => {
+    if (!user) return;
+
+    const unsubscribe = useCartStore.subscribe(
+      (state) => state.items,
+      (items) => {
+        syncCartToSupabase(user.id);
+      },
+    );
+
+    return () => unsubscribe();
+  }, [user, syncCartToSupabase]);
+
   return (
     <HelmetProvider>
       <BrowserRouter>

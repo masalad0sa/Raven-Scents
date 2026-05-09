@@ -87,7 +87,13 @@ export const useCartStore = create<CartStore>()(
 
       syncToSupabase: async (userId) => {
         const { items } = get();
+        // Delete all old cart items for this user first
+        await supabase.from("cart_items").delete().eq("user_id", userId);
+
+        // If no items, we're done (cart is cleared)
         if (!items.length) return;
+
+        // Insert current cart items
         const rows = items.map((item) => ({
           user_id: userId,
           product_id: item.product.id,
@@ -96,9 +102,7 @@ export const useCartStore = create<CartStore>()(
           item_data: item,
           updated_at: new Date().toISOString(),
         }));
-        await supabase
-          .from("cart_items")
-          .upsert(rows, { onConflict: "user_id,variant_sku" });
+        await supabase.from("cart_items").insert(rows);
       },
 
       hydrate: async (userId) => {

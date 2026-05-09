@@ -13,7 +13,9 @@ export interface Product {
     | "eau-de-toilette"
     | "parfum"
     | "cologne"
-    | "body-mist";
+    | "body-mist"
+    | "Solid Perfume"
+    | "Perfume";
   gender: "masculine" | "feminine" | "unisex";
   scentFamily: string;
   tags: string[];
