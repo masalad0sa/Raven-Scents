@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { User, Session } from "@supabase/supabase-js";
-import { supabase } from "../lib/supabase";
+import { hasSupabaseConfig, supabase } from "../lib/supabase";
 import { useCartStore } from "./cartStore";
 import { useWishlistStore } from "./wishlistStore";
 
@@ -27,6 +27,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
   initialized: false,
 
   initialize: async () => {
+    if (!hasSupabaseConfig) {
+      set({ user: null, session: null, initialized: true });
+      return () => void 0;
+    }
+
     const {
       data: { session },
     } = await supabase.auth.getSession();

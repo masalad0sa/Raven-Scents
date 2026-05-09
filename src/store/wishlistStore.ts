@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { supabase } from "../lib/supabase";
+import { hasSupabaseConfig, supabase } from "../lib/supabase";
 
 const STORAGE_KEY = "raven_wishlist";
 
@@ -39,6 +39,10 @@ export const useWishlistStore = create<WishlistStore>((set, get) => ({
       set({ ids: loadLocalWishlist() });
       return;
     }
+    if (!hasSupabaseConfig) {
+      set({ ids: loadLocalWishlist(), isLoading: false });
+      return;
+    }
     set({ isLoading: true });
     const { data } = await supabase
       .from("wishlists")
@@ -53,6 +57,7 @@ export const useWishlistStore = create<WishlistStore>((set, get) => ({
   },
 
   syncToSupabase: async (userId) => {
+    if (!hasSupabaseConfig) return;
     const local = loadLocalWishlist();
     if (!local.length) return;
     const rows = local.map((product_id) => ({ user_id: userId, product_id }));

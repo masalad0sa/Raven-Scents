@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { CartItem, Product, Variant } from "../types";
-import { supabase } from "../lib/supabase";
+import { hasSupabaseConfig, supabase } from "../lib/supabase";
 
 interface CartStore {
   items: CartItem[];
@@ -86,6 +86,7 @@ export const useCartStore = create<CartStore>()(
         ),
 
       syncToSupabase: async (userId) => {
+        if (!hasSupabaseConfig) return;
         const { items } = get();
         // Delete all old cart items for this user first
         await supabase.from("cart_items").delete().eq("user_id", userId);
@@ -106,6 +107,7 @@ export const useCartStore = create<CartStore>()(
       },
 
       hydrate: async (userId) => {
+        if (!hasSupabaseConfig) return;
         const { data } = await supabase
           .from("cart_items")
           .select("item_data, quantity")
