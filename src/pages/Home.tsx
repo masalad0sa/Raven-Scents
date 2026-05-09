@@ -28,7 +28,7 @@ export default function Home() {
           featuredProducts={featuredProducts}
           isMobile={isMobile}
         />
-        <BrandStory isMobile={isMobile} />
+        <BrandStory />
         <BestsellersSection bestsellers={bestsellers} isMobile={isMobile} />
         <ScentMarquee />
       </main>

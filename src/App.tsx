@@ -53,12 +53,14 @@ function App() {
   useEffect(() => {
     if (!user) return;
 
-    const unsubscribe = useCartStore.subscribe(
-      (state: any) => state.items,
-      () => {
+    let prevItems = useCartStore.getState().items;
+
+    const unsubscribe = useCartStore.subscribe((state) => {
+      if (state.items !== prevItems) {
+        prevItems = state.items;
         syncCartToSupabase(user.id);
-      },
-    );
+      }
+    });
 
     return () => unsubscribe();
   }, [user, syncCartToSupabase]);
