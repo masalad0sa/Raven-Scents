@@ -132,7 +132,7 @@ export default function Checkout() {
       const payload = {
         items: items.map((item) => ({
           product_id: item.product.id,
-          variant_id: item.variant.id,
+          variant_sku: item.variant.sku,
           quantity: item.quantity,
           unit_price: item.variant.price,
         })),

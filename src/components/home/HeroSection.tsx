@@ -4,6 +4,10 @@ import { ArrowRight } from "lucide-react";
 import { GradientBlob } from "../effects";
 import s from "./HeroSection.module.css";
 
+interface HeroSectionProps {
+  isMobile: boolean;
+}
+
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   visible: (i = 0) => ({
@@ -17,7 +21,7 @@ const fadeUp = {
   }),
 };
 
-export function HeroSection({ isMobile }: { isMobile: boolean }) {
+export function HeroSection({ isMobile }: HeroSectionProps) {
   return (
     <section className={s.section}>
       {/* HUD Circles */}

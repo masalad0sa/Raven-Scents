@@ -54,8 +54,8 @@ function App() {
     if (!user) return;
 
     const unsubscribe = useCartStore.subscribe(
-      (state) => state.items,
-      (items) => {
+      (state: any) => state.items,
+      () => {
         syncCartToSupabase(user.id);
       },
     );

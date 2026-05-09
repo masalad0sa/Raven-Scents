@@ -86,7 +86,9 @@ export default function Account() {
           </div>
 
           {/* Tab Content */}
-          {tab === "profile" && <ProfileTab user={user} />}
+          {tab === "profile" && (
+            <ProfileTab user={{ id: user.id, email: user.email }} />
+          )}
           {tab === "addresses" && (
             <AddressesTab
               user={user}

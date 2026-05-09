@@ -94,7 +94,7 @@ export function OrdersTab() {
             {order.order_items?.map((item: OrderItem, idx: number) => (
               <div
                 key={idx}
-                className={`${s.orderItem}${idx < order.order_items.length - 1 ? ` ${s.orderItemBorder}` : ""}`}
+                className={`${s.orderItem}${idx < (order.order_items?.length ?? 0) - 1 ? ` ${s.orderItemBorder}` : ""}`}
               >
                 {item.products?.images?.[0] && (
                   <img
