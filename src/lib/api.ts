@@ -98,6 +98,75 @@ function mapProduct(p: Record<string, unknown>): Product {
   } as Product;
 }
 
+// ── Supabase Direct Queries (fallback when backend unavailable) ────
+async function getProductsFromSupabase(filters: ProductFilters = {}) {
+  if (!hasSupabaseConfig) throw new Error("Supabase not configured");
+
+  let query = supabase.from("products").select("*, product_variants(*)");
+
+  if (filters.search) {
+    query = query.ilike("name", `%${filters.search}%`);
+  }
+  if (filters.gender) {
+    query = query.eq("gender", filters.gender);
+  }
+  if (filters.scent_family) {
+    query = query.eq("scent_family", filters.scent_family);
+  }
+  if (filters.max_price) {
+    query = query.lte("price", filters.max_price);
+  }
+  if (filters.is_new) {
+    query = query.eq("is_new", true);
+  }
+  if (filters.is_bestseller) {
+    query = query.eq("is_bestseller", true);
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data || [];
+}
+
+async function getProductFromSupabaseBySlug(slug: string) {
+  if (!hasSupabaseConfig) throw new Error("Supabase not configured");
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*, product_variants(*)")
+    .eq("slug", slug)
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+async function getFeaturedFromSupabase() {
+  if (!hasSupabaseConfig) throw new Error("Supabase not configured");
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*, product_variants(*)")
+    .eq("is_featured", true)
+    .limit(6);
+
+  if (error) throw error;
+  return data || [];
+}
+
+async function getBestsellersFromSupabase() {
+  if (!hasSupabaseConfig) throw new Error("Supabase not configured");
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*, product_variants(*)")
+    .eq("is_bestseller", true)
+    .limit(8);
+
+  if (error) throw error;
+  return data || [];
+}
+
 export const productsApi = {
   getAll: async (filters: ProductFilters = {}) => {
     // Try backend API first
@@ -128,7 +197,20 @@ export const productsApi = {
         }
       }
     } catch {
-      // Backend unavailable, fall through to local products
+      // Backend unavailable, try Supabase next
+    }
+
+    // Try Supabase directly
+    try {
+      const products = await getProductsFromSupabase(filters);
+      if (products.length > 0) {
+        return {
+          products: products.map(mapProduct),
+          total: products.length,
+        };
+      }
+    } catch {
+      // Supabase unavailable, fall through to local products
     }
 
     // Fallback to local products
@@ -147,7 +229,15 @@ export const productsApi = {
         return mapProduct(data);
       }
     } catch {
-      // Backend unavailable, fall through to local products
+      // Backend unavailable, try Supabase next
+    }
+
+    // Try Supabase directly
+    try {
+      const product = await getProductFromSupabaseBySlug(slug);
+      return mapProduct(product);
+    } catch {
+      // Supabase unavailable, fall through to local products
     }
 
     // Fallback to local products
@@ -169,7 +259,17 @@ export const productsApi = {
         }
       }
     } catch {
-      // Backend unavailable, fall through to local products
+      // Backend unavailable, try Supabase next
+    }
+
+    // Try Supabase directly
+    try {
+      const products = await getFeaturedFromSupabase();
+      if (products.length > 0) {
+        return products.map(mapProduct);
+      }
+    } catch {
+      // Supabase unavailable, fall through to local products
     }
 
     // Fallback to local products
@@ -189,7 +289,17 @@ export const productsApi = {
         }
       }
     } catch {
-      // Backend unavailable, fall through to local products
+      // Backend unavailable, try Supabase next
+    }
+
+    // Try Supabase directly
+    try {
+      const products = await getBestsellersFromSupabase();
+      if (products.length > 0) {
+        return products.map(mapProduct);
+      }
+    } catch {
+      // Supabase unavailable, fall through to local products
     }
 
     // Fallback to local products
