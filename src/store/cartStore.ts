@@ -5,6 +5,26 @@ import { hasSupabaseConfig, supabase } from "../lib/supabase";
 
 let cartSyncChain: Promise<void> = Promise.resolve();
 
+function mergeCartItems(primary: CartItem[], secondary: CartItem[]) {
+  const merged = new Map<string, CartItem>();
+
+  for (const item of [...primary, ...secondary]) {
+    const key = `${item.product.id}:${item.variant.sku}`;
+    const existing = merged.get(key);
+
+    if (existing) {
+      merged.set(key, {
+        ...existing,
+        quantity: existing.quantity + item.quantity,
+      });
+    } else {
+      merged.set(key, item);
+    }
+  }
+
+  return [...merged.values()];
+}
+
 interface CartStore {
   items: CartItem[];
   isOpen: boolean;
@@ -115,21 +135,25 @@ export const useCartStore = create<CartStore>()(
 
       hydrate: async (userId) => {
         if (!hasSupabaseConfig) return;
+        const localItems = get().items;
         const { data } = await supabase
           .from("cart_items")
           .select("item_data, quantity")
           .eq("user_id", userId);
-        if (!data?.length) return;
-        const serverItems: CartItem[] = data.map((row) => ({
+        const serverItems: CartItem[] = (data || []).map((row) => ({
           ...(row.item_data as CartItem),
           quantity: row.quantity as number,
         }));
-        // Merge: keep any local items whose variant isn't already on the server
-        const serverSkus = new Set(serverItems.map((i) => i.variant.sku));
-        const extraLocal = get().items.filter(
-          (i) => !serverSkus.has(i.variant.sku),
-        );
-        set({ items: [...serverItems, ...extraLocal] });
+
+        if (!serverItems.length) {
+          if (localItems.length) {
+            set({ items: [...localItems] });
+          }
+          return;
+        }
+
+        const mergedItems = mergeCartItems(serverItems, localItems);
+        set({ items: mergedItems });
       },
     }),
     {

@@ -35,7 +35,7 @@ export default function Login() {
       await syncToSupabase(user.id);
       await hydrate(user.id);
     }
-    navigate(from, { replace: true });
+    navigate(from, { replace: true, state: { cartMerged: true } });
   };
 
   return (

@@ -46,7 +46,7 @@ export default function Signup() {
     if (user) {
       await syncToSupabase(user.id);
       await hydrate(user.id);
-      navigate("/shop", { replace: true });
+      navigate("/shop", { replace: true, state: { cartMerged: true } });
     } else {
       // Email confirmation flow
       setSuccess(true);
