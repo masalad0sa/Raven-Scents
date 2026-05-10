@@ -88,7 +88,7 @@ export const useCartStore = create<CartStore>()(
       syncToSupabase: async (userId) => {
         if (!hasSupabaseConfig) return;
         const { items } = get();
-        
+
         // Delete all old cart items for this user first
         await supabase.from("cart_items").delete().eq("user_id", userId);
 
@@ -96,7 +96,7 @@ export const useCartStore = create<CartStore>()(
         if (!items.length) return;
 
         // Wait a moment for delete to complete before inserting
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         // Insert current cart items
         const rows = items.map((item) => ({
@@ -107,9 +107,9 @@ export const useCartStore = create<CartStore>()(
           item_data: item,
           updated_at: new Date().toISOString(),
         }));
-        
+
         const { error } = await supabase.from("cart_items").insert(rows);
-        
+
         // If we still get a conflict, try updating instead
         if (error?.code === "23505") {
           for (const row of rows) {
