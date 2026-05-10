@@ -3,6 +3,32 @@
   border-top: 1px solid rgba(212, 175, 55, 0.15);
 }
 
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.mainPanel,
+.pyramidPanel {
+  min-width: 0;
+}
+
+.pyramidPanel {
+  padding-top: 1.25rem;
+}
+
+.panelLabel {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.75rem;
+}
+
 .tabBar {
   display: flex;
   border-bottom: 1px solid rgba(212, 175, 55, 0.15);
@@ -11,6 +37,24 @@
 
 .tabContent {
   max-width: 700px;
+}
+
+@media (max-width: 920px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pyramidPanel {
+    padding-top: 0;
+    border-top: 1px solid rgba(212, 175, 55, 0.12);
+    padding-top: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .tabContent {
+    max-width: none;
+  }
 }
 
 .descText {

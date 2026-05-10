@@ -6,7 +6,7 @@ import { handleError } from '../middleware/errorHandler';
 // GET /api/products
 export async function getProducts(req: Request, res: Response) {
   try {
-    const { search, gender, scent_family, max_price, is_new, is_bestseller, sort = 'featured', page = '1', limit = '20' } = req.query;
+    const { search, gender, scent_family, max_price, is_new, is_bestseller, sort = 'featured', page = '1', limit = '100' } = req.query;
 
     const cacheKey = `products:${JSON.stringify(req.query)}`;
 
@@ -34,7 +34,7 @@ export async function getProducts(req: Request, res: Response) {
 
       // Pagination
       const pageNum = Math.max(1, Number(page));
-      const pageSize = Math.min(50, Number(limit));
+      const pageSize = Math.min(100, Number(limit));
       query = query.range((pageNum - 1) * pageSize, pageNum * pageSize - 1);
 
       const { data, error, count } = await query;
