@@ -8,7 +8,13 @@ import { ProductCard } from "../components/product";
 import type { Product } from "../types";
 import s from "./styles/Shop.module.css";
 
-type SortOption = "featured" | "price-asc" | "price-desc" | "newest" | "rating";
+type SortOption =
+  | "featured"
+  | "price-asc"
+  | "price-desc"
+  | "newest"
+  | "rating"
+  | "category";
 
 export default function Shop() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,18 +24,16 @@ export default function Shop() {
   const { data, isLoading } = useProducts();
   const products = data?.products || [];
 
-  const scentFamilies = useMemo(
+  const categories = useMemo(
     () =>
       [
-        ...new Set(products.map((p: Product) => p.scentFamily).filter(Boolean)),
+        ...new Set(products.map((p: Product) => p.category).filter(Boolean)),
       ].sort() as string[],
     [products],
   );
 
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
-  const [selectedScentFamilies, setSelectedScentFamilies] = useState<string[]>(
-    [],
-  );
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [priceMax, setPriceMax] = useState(50000);
   const [showNew, setShowNew] = useState(false);
   const [showBestseller, setShowBestseller] = useState(false);
@@ -48,10 +52,8 @@ export default function Shop() {
     }
     if (selectedGender.length > 0)
       result = result.filter((p) => selectedGender.includes(p.gender));
-    if (selectedScentFamilies.length > 0)
-      result = result.filter((p) =>
-        selectedScentFamilies.includes(p.scentFamily),
-      );
+    if (selectedCategories.length > 0)
+      result = result.filter((p) => selectedCategories.includes(p.category));
     result = result.filter((p) => p.price <= priceMax);
     if (showNew) result = result.filter((p) => p.isNew);
     if (showBestseller) result = result.filter((p) => p.isBestseller);
@@ -69,6 +71,9 @@ export default function Shop() {
       case "rating":
         result.sort((a, b) => b.rating - a.rating);
         break;
+      case "category":
+        result.sort((a, b) => a.category.localeCompare(b.category));
+        break;
       default:
         result.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
     }
@@ -77,7 +82,7 @@ export default function Shop() {
     products,
     search,
     selectedGender,
-    selectedScentFamilies,
+    selectedCategories,
     priceMax,
     sort,
     showNew,
@@ -92,7 +97,7 @@ export default function Shop() {
 
   const clearAll = () => {
     setSelectedGender([]);
-    setSelectedScentFamilies([]);
+    setSelectedCategories([]);
     setPriceMax(50000);
     setShowNew(false);
     setShowBestseller(false);
@@ -101,7 +106,7 @@ export default function Shop() {
 
   const hasFilters =
     selectedGender.length > 0 ||
-    selectedScentFamilies.length > 0 ||
+    selectedCategories.length > 0 ||
     priceMax < 50000 ||
     showNew ||
     showBestseller ||
@@ -160,6 +165,7 @@ export default function Shop() {
               <option value="price-desc">Price: High to Low</option>
               <option value="newest">Newest First</option>
               <option value="rating">Top Rated</option>
+              <option value="category">Category</option>
             </select>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -295,31 +301,31 @@ export default function Shop() {
                       </>,
                     )}
 
-                    {/* Scent Family */}
+                    {/* Category */}
                     <div>
-                      <h4 className={s.filterSectionTitle}>Scent Family</h4>
-                      {scentFamilies.map((sf) => (
+                      <h4 className={s.filterSectionTitle}>Category</h4>
+                      {categories.map((cat) => (
                         <label
-                          key={sf}
+                          key={cat}
                           className={
-                            selectedScentFamilies.includes(sf)
+                            selectedCategories.includes(cat)
                               ? s.checkLabelActive
                               : s.checkLabelInactive
                           }
                         >
                           <input
                             type="checkbox"
-                            checked={selectedScentFamilies.includes(sf)}
+                            checked={selectedCategories.includes(cat)}
                             onChange={() =>
                               toggleFilter(
-                                selectedScentFamilies,
-                                sf,
-                                setSelectedScentFamilies,
+                                selectedCategories,
+                                cat,
+                                setSelectedCategories,
                               )
                             }
                             style={{ accentColor: "var(--color-gold)" }}
                           />
-                          {sf}
+                          {cat}
                         </label>
                       ))}
                     </div>

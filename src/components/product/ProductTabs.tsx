@@ -13,20 +13,42 @@ function FragrancePyramid({
   notes: { top: string[]; middle: string[]; base: string[] };
 }) {
   const tiers = [
-    { label: "Top Notes", sublabel: "0–15 min", notes: notes.top, width: "60%" },
-    { label: "Heart Notes", sublabel: "15–60 min", notes: notes.middle, width: "78%" },
-    { label: "Base Notes", sublabel: "60+ min", notes: notes.base, width: "100%" },
+    {
+      label: "Top Notes",
+      sublabel: "0–15 min",
+      notes: notes.top,
+      width: "60%",
+    },
+    {
+      label: "Heart Notes",
+      sublabel: "15–60 min",
+      notes: notes.middle,
+      width: "78%",
+    },
+    {
+      label: "Base Notes",
+      sublabel: "60+ min",
+      notes: notes.base,
+      width: "100%",
+    },
   ];
 
   return (
     <div className={s.pyramidWrap}>
       <div className={s.pyramidCol}>
         {tiers.map((tier, index) => (
-          <div key={tier.label} style={{ width: tier.width, position: "relative" }}>
+          <div
+            key={tier.label}
+            style={{ width: tier.width, position: "relative" }}
+          >
             <div
               style={{
                 borderRadius:
-                  index === 2 ? "0 0 6px 6px" : index === 0 ? "6px 6px 0 0" : "0",
+                  index === 2
+                    ? "0 0 6px 6px"
+                    : index === 0
+                      ? "6px 6px 0 0"
+                      : "0",
                 padding: "0.6rem 1rem",
                 minHeight: 68,
                 display: "flex",
@@ -108,7 +130,9 @@ export function ProductTabs({ product, isMobile }: Props) {
       setReviewSuccess(true);
       setTimeout(() => setReviewSuccess(false), 3000);
     } catch (error: unknown) {
-      setReviewError(error instanceof Error ? error.message : "Failed to submit review");
+      setReviewError(
+        error instanceof Error ? error.message : "Failed to submit review",
+      );
     } finally {
       setReviewSubmitting(false);
     }
@@ -164,8 +188,10 @@ export function ProductTabs({ product, isMobile }: Props) {
                     <div className={s.ratingBig}>
                       {reviews.length > 0
                         ? (
-                            reviews.reduce((sum, review) => sum + review.rating, 0) /
-                            reviews.length
+                            reviews.reduce(
+                              (sum, review) => sum + review.rating,
+                              0,
+                            ) / reviews.length
                           ).toFixed(1)
                         : product.rating}
                     </div>
@@ -173,8 +199,10 @@ export function ProductTabs({ product, isMobile }: Props) {
                       {[1, 2, 3, 4, 5].map((index) => {
                         const avg =
                           reviews.length > 0
-                            ? reviews.reduce((sum, review) => sum + review.rating, 0) /
-                              reviews.length
+                            ? reviews.reduce(
+                                (sum, review) => sum + review.rating,
+                                0,
+                              ) / reviews.length
                             : product.rating;
 
                         return (
@@ -183,7 +211,9 @@ export function ProductTabs({ product, isMobile }: Props) {
                             className={s.ratingStar}
                             style={{
                               color:
-                                index <= Math.round(avg) ? "var(--color-gold)" : "#444",
+                                index <= Math.round(avg)
+                                  ? "var(--color-gold)"
+                                  : "#444",
                             }}
                           >
                             ★
@@ -192,7 +222,8 @@ export function ProductTabs({ product, isMobile }: Props) {
                       })}
                     </div>
                     <div className={s.ratingCount}>
-                      {reviews.length} {reviews.length === 1 ? "Review" : "Reviews"}
+                      {reviews.length}{" "}
+                      {reviews.length === 1 ? "Review" : "Reviews"}
                     </div>
                   </div>
                 </div>
@@ -207,7 +238,10 @@ export function ProductTabs({ product, isMobile }: Props) {
                           onClick={() => setReviewRating(index)}
                           className={s.ratingPickerBtn}
                           style={{
-                            color: index <= reviewRating ? "var(--color-gold)" : "#444",
+                            color:
+                              index <= reviewRating
+                                ? "var(--color-gold)"
+                                : "#444",
                           }}
                         >
                           ★
@@ -230,9 +264,13 @@ export function ProductTabs({ product, isMobile }: Props) {
                       rows={3}
                       className={s.reviewTextarea}
                     />
-                    {reviewError && <p className={s.reviewError}>{reviewError}</p>}
+                    {reviewError && (
+                      <p className={s.reviewError}>{reviewError}</p>
+                    )}
                     {reviewSuccess && (
-                      <p className={s.reviewSuccess}>Review submitted successfully!</p>
+                      <p className={s.reviewSuccess}>
+                        Review submitted successfully!
+                      </p>
                     )}
                     <button
                       onClick={handleSubmitReview}
@@ -244,7 +282,11 @@ export function ProductTabs({ product, isMobile }: Props) {
                   </div>
                 ) : (
                   <div className={s.loginPrompt}>
-                    Please <a href="/login" className={s.loginLink}>log in</a> to write a review.
+                    Please{" "}
+                    <a href="/login" className={s.loginLink}>
+                      log in
+                    </a>{" "}
+                    to write a review.
                   </div>
                 )}
 
@@ -268,7 +310,10 @@ export function ProductTabs({ product, isMobile }: Props) {
                                   key={index}
                                   className={s.ratingStar}
                                   style={{
-                                    color: index <= review.rating ? "var(--color-gold)" : "#444",
+                                    color:
+                                      index <= review.rating
+                                        ? "var(--color-gold)"
+                                        : "#444",
                                   }}
                                 >
                                   ★
@@ -280,8 +325,12 @@ export function ProductTabs({ product, isMobile }: Props) {
                             {new Date(review.created_at).toLocaleDateString()}
                           </div>
                         </div>
-                        {review.title && <h6 className={s.reviewTitle}>{review.title}</h6>}
-                        {review.body && <p className={s.reviewBody}>{review.body}</p>}
+                        {review.title && (
+                          <h6 className={s.reviewTitle}>{review.title}</h6>
+                        )}
+                        {review.body && (
+                          <p className={s.reviewBody}>{review.body}</p>
+                        )}
                       </div>
                     ))}
                   </div>
