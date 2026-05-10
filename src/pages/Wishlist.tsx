@@ -8,6 +8,7 @@ import { useProducts } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
+import { Product } from "../types";
 import s from "./styles/Wishlist.module.css";
 
 export default function Wishlist() {
@@ -20,7 +21,9 @@ export default function Wishlist() {
   // Fetch all products and filter by wishlisted IDs
   const { data, isLoading } = useProducts();
   const allProducts = data?.products ?? [];
-  const wishlistProducts = allProducts.filter((p) => ids.includes(p.id));
+  const wishlistProducts = allProducts.filter((p: Product) =>
+    ids.includes(p.id),
+  );
 
   const handleRemove = (productId: string) => {
     toggle(productId, user?.id ?? null);
@@ -86,7 +89,7 @@ export default function Wishlist() {
           {!isLoading && wishlistProducts.length > 0 && (
             <div className={s.grid}>
               <AnimatePresence>
-                {wishlistProducts.map((product) => {
+                {wishlistProducts.map((product: Product) => {
                   const variant = product.variants[0];
                   return (
                     <motion.div

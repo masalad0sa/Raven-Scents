@@ -4,6 +4,7 @@ import { useProducts } from "../hooks/useProducts";
 import { useIsMobile } from "../hooks/useIsMobile";
 import { Header, Footer } from "../components/layout";
 import { ProductCard } from "../components/product";
+import { Product } from "../types";
 import s from "./styles/Collections.module.css";
 
 const CATEGORY_META: Record<
@@ -124,7 +125,7 @@ export default function Collections() {
 
                 {/* Product Grid */}
                 <div className={s.productGrid}>
-                  {catProducts.map((product, pIdx) => (
+                  {catProducts.map((product: Product, pIdx: number) => (
                     <motion.div
                       key={product.id}
                       initial={{ opacity: 0, y: 28 }}
