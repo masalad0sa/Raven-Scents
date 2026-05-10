@@ -65,6 +65,25 @@ function App() {
     return () => unsubscribe();
   }, [user, syncCartToSupabase]);
 
+  // Listen for cart changes from other tabs
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "raven-cart" && e.newValue) {
+        try {
+          const newState = JSON.parse(e.newValue);
+          if (newState.state?.items) {
+            useCartStore.setState({ items: newState.state.items });
+          }
+        } catch {
+          // Ignore parse errors
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   return (
     <HelmetProvider>
       <BrowserRouter>
