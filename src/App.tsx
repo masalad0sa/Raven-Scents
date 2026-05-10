@@ -43,7 +43,12 @@ function App() {
   useEffect(() => {
     if (user) {
       syncToSupabase(user.id).then(() => hydrate(user.id));
-      syncCartToSupabase(user.id);
+      // Hydrate cart from Supabase first (get the true server state)
+      // This prevents old localStorage from overwriting removed items
+      hydrateCart(user.id).then(() => {
+        // Then sync to ensure any pending local changes go to server
+        syncCartToSupabase(user.id);
+      });
     } else {
       hydrate(null);
     }
