@@ -107,9 +107,7 @@ export const useCartStore = create<CartStore>()(
             updated_at: new Date().toISOString(),
           }));
 
-          await supabase.from("cart_items").upsert(rows, {
-            onConflict: "user_id,product_id,variant_sku",
-          });
+          await supabase.from("cart_items").insert(rows);
         });
 
         await cartSyncChain;
