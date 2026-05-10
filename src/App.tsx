@@ -43,7 +43,7 @@ function App() {
   useEffect(() => {
     if (user) {
       syncToSupabase(user.id).then(() => hydrate(user.id));
-      syncCartToSupabase(user.id).then(() => hydrateCart(user.id));
+      syncCartToSupabase(user.id);
     } else {
       hydrate(null);
     }
