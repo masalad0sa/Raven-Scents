@@ -10,6 +10,8 @@ import type {
 } from "../types";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+const IS_LOCALHOST = API_BASE.includes("localhost");
+const SKIP_BACKEND = IS_LOCALHOST && !import.meta.env.DEV;
 
 // ── Auth Token Storage ──────────────────────────────
 export function getAccessToken() {
@@ -169,35 +171,37 @@ async function getBestsellersFromSupabase() {
 
 export const productsApi = {
   getAll: async (filters: ProductFilters = {}) => {
-    // Try backend API first
-    try {
-      const query = new URLSearchParams();
-      if (filters.search) query.append("search", filters.search);
-      if (filters.gender) query.append("gender", filters.gender);
-      if (filters.scent_family)
-        query.append("scent_family", filters.scent_family);
-      if (filters.max_price)
-        query.append("max_price", filters.max_price.toString());
-      if (filters.is_new) query.append("is_new", "true");
-      if (filters.is_bestseller) query.append("is_bestseller", "true");
-      if (filters.sort) query.append("sort", filters.sort);
-      if (filters.page) query.append("page", filters.page.toString());
-      if (filters.limit) query.append("limit", filters.limit.toString());
+    // Try backend API first (only in development)
+    if (!SKIP_BACKEND) {
+      try {
+        const query = new URLSearchParams();
+        if (filters.search) query.append("search", filters.search);
+        if (filters.gender) query.append("gender", filters.gender);
+        if (filters.scent_family)
+          query.append("scent_family", filters.scent_family);
+        if (filters.max_price)
+          query.append("max_price", filters.max_price.toString());
+        if (filters.is_new) query.append("is_new", "true");
+        if (filters.is_bestseller) query.append("is_bestseller", "true");
+        if (filters.sort) query.append("sort", filters.sort);
+        if (filters.page) query.append("page", filters.page.toString());
+        if (filters.limit) query.append("limit", filters.limit.toString());
 
-      const res = await fetch(`${API_BASE}/products?${query}`, {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.products?.length) {
-          return {
-            products: data.products.map(mapProduct),
-            total: data.total || data.products.length,
-          };
+        const res = await fetch(`${API_BASE}/products?${query}`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.products?.length) {
+            return {
+              products: data.products.map(mapProduct),
+              total: data.total || data.products.length,
+            };
+          }
         }
+      } catch {
+        // Backend unavailable, try Supabase next
       }
-    } catch {
-      // Backend unavailable, try Supabase next
     }
 
     // Try Supabase directly
@@ -219,17 +223,19 @@ export const productsApi = {
   },
 
   getBySlug: async (slug: string) => {
-    // Try backend API first
-    try {
-      const res = await fetch(`${API_BASE}/products/${slug}`, {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return mapProduct(data);
+    // Try backend API first (only in development)
+    if (!SKIP_BACKEND) {
+      try {
+        const res = await fetch(`${API_BASE}/products/${slug}`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          return mapProduct(data);
+        }
+      } catch {
+        // Backend unavailable, try Supabase next
       }
-    } catch {
-      // Backend unavailable, try Supabase next
     }
 
     // Try Supabase directly
@@ -247,19 +253,21 @@ export const productsApi = {
   },
 
   getFeatured: async () => {
-    // Try backend API first
-    try {
-      const res = await fetch(`${API_BASE}/products/featured`, {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          return data.map(mapProduct);
+    // Try backend API first (only in development)
+    if (!SKIP_BACKEND) {
+      try {
+        const res = await fetch(`${API_BASE}/products/featured`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            return data.map(mapProduct);
+          }
         }
+      } catch {
+        // Backend unavailable, try Supabase next
       }
-    } catch {
-      // Backend unavailable, try Supabase next
     }
 
     // Try Supabase directly
@@ -277,19 +285,21 @@ export const productsApi = {
   },
 
   getBestsellers: async () => {
-    // Try backend API first
-    try {
-      const res = await fetch(`${API_BASE}/products/bestsellers`, {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          return data.map(mapProduct);
+    // Try backend API first (only in development)
+    if (!SKIP_BACKEND) {
+      try {
+        const res = await fetch(`${API_BASE}/products/bestsellers`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            return data.map(mapProduct);
+          }
         }
+      } catch {
+        // Backend unavailable, try Supabase next
       }
-    } catch {
-      // Backend unavailable, try Supabase next
     }
 
     // Try Supabase directly
