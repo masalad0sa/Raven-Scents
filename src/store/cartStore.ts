@@ -3,6 +3,8 @@ import { persist } from "zustand/middleware";
 import { CartItem, Product, Variant } from "../types";
 import { hasSupabaseConfig, supabase } from "../lib/supabase";
 
+let cartSyncChain: Promise<void> = Promise.resolve();
+
 interface CartStore {
   items: CartItem[];
   isOpen: boolean;
@@ -87,40 +89,30 @@ export const useCartStore = create<CartStore>()(
 
       syncToSupabase: async (userId) => {
         if (!hasSupabaseConfig) return;
-        const { items } = get();
 
-        // Delete all old cart items for this user first
-        await supabase.from("cart_items").delete().eq("user_id", userId);
+        cartSyncChain = cartSyncChain.then(async () => {
+          const { items } = get();
 
-        // If no items, we're done (cart is cleared)
-        if (!items.length) return;
+          // Delete all old cart items for this user first so the table mirrors local state.
+          await supabase.from("cart_items").delete().eq("user_id", userId);
 
-        // Wait a moment for delete to complete before inserting
-        await new Promise((resolve) => setTimeout(resolve, 100));
+          if (!items.length) return;
 
-        // Insert current cart items
-        const rows = items.map((item) => ({
-          user_id: userId,
-          product_id: item.product.id,
-          variant_sku: item.variant.sku,
-          quantity: item.quantity,
-          item_data: item,
-          updated_at: new Date().toISOString(),
-        }));
+          const rows = items.map((item) => ({
+            user_id: userId,
+            product_id: item.product.id,
+            variant_sku: item.variant.sku,
+            quantity: item.quantity,
+            item_data: item,
+            updated_at: new Date().toISOString(),
+          }));
 
-        const { error } = await supabase.from("cart_items").insert(rows);
+          await supabase.from("cart_items").upsert(rows, {
+            onConflict: "user_id,product_id,variant_sku",
+          });
+        });
 
-        // If we still get a conflict, try updating instead
-        if (error?.code === "23505") {
-          for (const row of rows) {
-            await supabase
-              .from("cart_items")
-              .update(row)
-              .eq("user_id", userId)
-              .eq("product_id", row.product_id)
-              .eq("variant_sku", row.variant_sku);
-          }
-        }
+        await cartSyncChain;
       },
 
       hydrate: async (userId) => {
