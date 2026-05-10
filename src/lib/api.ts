@@ -100,124 +100,100 @@ function mapProduct(p: Record<string, unknown>): Product {
 
 export const productsApi = {
   getAll: async (filters: ProductFilters = {}) => {
-    if (!hasSupabaseConfig) {
-      const products = filterLocalProducts(filters);
-      return { products, total: products.length };
-    }
-
+    // Try backend API first
     try {
-      let query = supabase
-        .from("products")
-        .select("*, product_variants(*)")
-        .order("is_featured", { ascending: false });
-
-      if (filters.search) query = query.ilike("name", `%${filters.search}%`);
-      if (filters.gender) query = query.eq("gender", filters.gender);
+      const query = new URLSearchParams();
+      if (filters.search) query.append("search", filters.search);
+      if (filters.gender) query.append("gender", filters.gender);
       if (filters.scent_family)
-        query = query.eq("scent_family", filters.scent_family);
-      if (filters.max_price) query = query.lte("price", filters.max_price);
-      if (filters.is_new) query = query.eq("is_new", true);
-      if (filters.is_bestseller) query = query.eq("is_bestseller", true);
+        query.append("scent_family", filters.scent_family);
+      if (filters.max_price)
+        query.append("max_price", filters.max_price.toString());
+      if (filters.is_new) query.append("is_new", "true");
+      if (filters.is_bestseller) query.append("is_bestseller", "true");
+      if (filters.sort) query.append("sort", filters.sort);
+      if (filters.page) query.append("page", filters.page.toString());
+      if (filters.limit) query.append("limit", filters.limit.toString());
 
-      switch (filters.sort) {
-        case "price_asc":
-          query = query.order("price", { ascending: true });
-          break;
-        case "price_desc":
-          query = query.order("price", { ascending: false });
-          break;
-        case "newest":
-          query = query.order("created_at", { ascending: false });
-          break;
-        case "rating":
-          query = query.order("rating", { ascending: false });
-          break;
+      const res = await fetch(`${API_BASE}/products?${query}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.products?.length) {
+          return {
+            products: data.products.map(mapProduct),
+            total: data.total || data.products.length,
+          };
+        }
       }
-
-      const page = Math.max(1, filters.page || 1);
-      const limit = Math.min(50, filters.limit || 50);
-      query = query.range((page - 1) * limit, page * limit - 1);
-
-      const { data, error } = await query;
-      if (error) throw error;
-      const products = (data || []).map(mapProduct);
-      if (!products.length) {
-        const fallback = filterLocalProducts(filters);
-        return { products: fallback, total: fallback.length };
-      }
-      return { products, total: products.length };
     } catch {
-      const products = filterLocalProducts(filters);
-      return { products, total: products.length };
+      // Backend unavailable, fall through to local products
     }
+
+    // Fallback to local products
+    const products = filterLocalProducts(filters);
+    return { products, total: products.length };
   },
 
   getBySlug: async (slug: string) => {
-    if (!hasSupabaseConfig) {
-      const product = localProducts.find((item) => item.slug === slug);
-      if (!product) throw new Error("Product not found");
-      return product;
+    // Try backend API first
+    try {
+      const res = await fetch(`${API_BASE}/products/${slug}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return mapProduct(data);
+      }
+    } catch {
+      // Backend unavailable, fall through to local products
     }
 
-    try {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*, product_variants(*), reviews(*)")
-        .eq("slug", slug)
-        .single();
-      if (error) throw error;
-      return mapProduct(data);
-    } catch {
-      const product = localProducts.find((item) => item.slug === slug);
-      if (!product) throw new Error("Product not found");
-      return product;
-    }
+    // Fallback to local products
+    const product = localProducts.find((item) => item.slug === slug);
+    if (!product) throw new Error("Product not found");
+    return product;
   },
 
   getFeatured: async () => {
-    if (!hasSupabaseConfig) {
-      return localProducts.filter((product) => product.isFeatured).slice(0, 6);
+    // Try backend API first
+    try {
+      const res = await fetch(`${API_BASE}/products/featured`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          return data.map(mapProduct);
+        }
+      }
+    } catch {
+      // Backend unavailable, fall through to local products
     }
 
-    try {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*, product_variants(*)")
-        .eq("is_featured", true)
-        .limit(6);
-      if (error) throw error;
-      const products = (data || []).map(mapProduct);
-      return products.length
-        ? products
-        : localProducts.filter((product) => product.isFeatured).slice(0, 6);
-    } catch {
-      return localProducts.filter((product) => product.isFeatured).slice(0, 6);
-    }
+    // Fallback to local products
+    return localProducts.filter((product) => product.isFeatured).slice(0, 6);
   },
 
   getBestsellers: async () => {
-    if (!hasSupabaseConfig) {
-      return localProducts
-        .filter((product) => product.isBestseller)
-        .slice(0, 8);
+    // Try backend API first
+    try {
+      const res = await fetch(`${API_BASE}/products/bestsellers`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          return data.map(mapProduct);
+        }
+      }
+    } catch {
+      // Backend unavailable, fall through to local products
     }
 
-    try {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*, product_variants(*)")
-        .eq("is_bestseller", true)
-        .limit(8);
-      if (error) throw error;
-      const products = (data || []).map(mapProduct);
-      return products.length
-        ? products
-        : localProducts.filter((product) => product.isBestseller).slice(0, 8);
-    } catch {
-      return localProducts
-        .filter((product) => product.isBestseller)
-        .slice(0, 8);
-    }
+    // Fallback to local products
+    return localProducts.filter((product) => product.isBestseller).slice(0, 8);
   },
 };
 
