@@ -59,24 +59,35 @@ export function CustomCursor() {
       }
     };
 
+    const trackedElements = new WeakSet<Element>();
+
     const attachListeners = () => {
       document
         .querySelectorAll(
           "a, button, input, select, label, textarea, [data-cursor]",
         )
         .forEach((el) => {
+          if (trackedElements.has(el)) return;
+          trackedElements.add(el);
           el.addEventListener("mouseenter", grow);
           el.addEventListener("mouseleave", shrink);
         });
     };
 
-    const observer = new MutationObserver(attachListeners);
+    let debounceTimer: ReturnType<typeof setTimeout>;
+    const debouncedAttach = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(attachListeners, 100);
+    };
+
+    const observer = new MutationObserver(debouncedAttach);
     observer.observe(document.body, { childList: true, subtree: true });
     attachListeners();
 
     return () => {
       window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(rafId);
+      clearTimeout(debounceTimer);
       observer.disconnect();
     };
   }, []);

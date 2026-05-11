@@ -1,9 +1,38 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { GradientBlob } from "../effects";
+import { supabase } from "../../lib/supabase";
+import { useState, useEffect } from "react";
 import s from "./BrandStory.module.css";
 
 export function BrandStory() {
+  const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const { data } = await supabase
+          .from("products")
+          .select("images")
+          .limit(3);
+
+        if (data) {
+          // `images` is a text[] on the products table; use the first image if present
+          const imgs = data
+            .map((item: any) =>
+              Array.isArray(item.images) ? item.images[0] : null,
+            )
+            .filter(Boolean) as string[];
+          setImages(imgs);
+        }
+      } catch (error) {
+        console.error("Failed to fetch brand story images:", error);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
   return (
     <section className={`section ${s.section}`}>
       <div className={s.blobWrap}>
@@ -39,11 +68,7 @@ export function BrandStory() {
             transition={{ duration: 0.7 }}
             className={s.imgGrid}
           >
-            {[
-              "https://images.unsplash.com/photo-1619994403073-2cec844b8e63?w=400&q=80",
-              "https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=400&q=80",
-              "https://images.unsplash.com/photo-1524638431109-93d95c968f03?w=400&q=80",
-            ].map((url, i) => (
+            {images.map((url, i) => (
               <img key={i} src={url} alt="" className={s.img} loading="lazy" />
             ))}
           </motion.div>
