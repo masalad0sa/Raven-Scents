@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import s from "./CustomCursor.module.css";
 
-const SIZE = 20;
-const SIZE_GROW = 44;
+const SIZE = 30;
+const SIZE_GROW = 50;
 
 function isTouchDevice() {
   return (
