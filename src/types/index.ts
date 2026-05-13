@@ -130,3 +130,68 @@ export interface CouponResponse {
   valid: boolean;
   discount_pct: number;
 }
+
+// ── Admin Order Types ──────────────────────────────
+export interface AdminOrderCustomer {
+  email: string;
+  full_name: string | null;
+}
+
+export interface AdminOrder extends Order {
+  customer: AdminOrderCustomer | null;
+  notes?: string;
+  updated_at?: string;
+  shipping_addr?: ShippingAddress;
+}
+
+export interface AdminOrderDetailCustomer extends AdminOrderCustomer {
+  id: string;
+  created_at: string;
+  totalOrders: number;
+  totalSpend: number;
+}
+
+export interface AdminOrderDetail extends AdminOrder {
+  customer: AdminOrderDetailCustomer | null;
+}
+
+export interface OrderStats {
+  totalOrders: number;
+  totalRevenue: number;
+  thisMonthRevenue: number;
+  lastMonthRevenue: number;
+  revenueTrend: number;
+  avgOrderValue: number;
+  totalDiscount: number;
+  todayOrders: number;
+  statusCounts: Record<string, number>;
+  pendingOrders: number;
+}
+
+export interface AdminOrderFilters {
+  status?: string;
+  search?: string;
+  date_from?: string;
+  date_to?: string;
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: 'asc' | 'desc';
+}
+
+export interface PaginatedOrders {
+  orders: AdminOrder[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export type OrderStatus =
+  | 'pending_payment'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'refunded';

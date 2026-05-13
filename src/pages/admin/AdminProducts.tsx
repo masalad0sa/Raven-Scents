@@ -8,6 +8,7 @@ import {
   AdminVariantPayload,
 } from "../../lib/api";
 import { useAuthStore } from "../../store/authStore";
+import AdminNav from "../../components/admin/AdminNav";
 import type { Product, Variant } from "../../types";
 import s from "./AdminProducts.module.css";
 
@@ -383,23 +384,7 @@ export default function AdminProducts() {
   // ── Render ─────────────────────────────────────────────────
   return (
     <div className={s.page}>
-      {/* Admin Header */}
-      <div className={s.adminBar}>
-        <span className={s.adminLogo}>
-          RAVEN <span className={s.adminBadge}>ADMIN</span>
-        </span>
-        <span className={s.adminSep}>/</span>
-        <span className={s.adminPageTitle}>Products</span>
-        <div className={s.adminSpacer} />
-        {view === "form" && (
-          <button onClick={() => setView("list")} className={s.backBtn}>
-            ← Back to List
-          </button>
-        )}
-        <button onClick={() => navigate("/")} className={s.storeBtn}>
-          View Store
-        </button>
-      </div>
+      <AdminNav />
 
       <div style={{ paddingTop: 60 }}>
         {/* ════════════════ LIST VIEW ════════════════ */}

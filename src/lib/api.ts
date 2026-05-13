@@ -7,6 +7,10 @@ import type {
   Order,
   OrderPayload,
   CouponResponse,
+  AdminOrderFilters,
+  AdminOrderDetail,
+  PaginatedOrders,
+  OrderStats,
 } from "../types";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
@@ -14,13 +18,20 @@ const IS_LOCALHOST = API_BASE.includes("localhost");
 const SKIP_BACKEND = IS_LOCALHOST && !import.meta.env.DEV;
 
 // ── Auth Token Storage ──────────────────────────────
-export function getAccessToken() {
-  return localStorage.getItem("raven_access_token");
+export async function getAccessToken() {
+  const token = localStorage.getItem("raven_access_token");
+  if (token) return token;
+
+  // Fallback to Supabase session
+  const { data } = await supabase.auth.getSession();
+  return data.session?.access_token || null;
 }
+
 export function setTokens(access: string, refresh: string) {
   localStorage.setItem("raven_access_token", access);
   localStorage.setItem("raven_refresh_token", refresh);
 }
+
 export function clearTokens() {
   localStorage.removeItem("raven_access_token");
   localStorage.removeItem("raven_refresh_token");
@@ -31,7 +42,7 @@ async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const token = getAccessToken();
+  const token = await getAccessToken();
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
@@ -507,4 +518,98 @@ export const adminApi = {
     const { data } = supabase.storage.from("product-images").getPublicUrl(path);
     return data.publicUrl;
   },
+};
+
+// ── Admin Orders API ────────────────────────────────────────
+function toQuery(params: AdminOrderFilters): string {
+  const q = new URLSearchParams();
+  if (params.status) q.append("status", params.status);
+  if (params.search) q.append("search", params.search);
+  if (params.date_from) q.append("date_from", params.date_from);
+  if (params.date_to) q.append("date_to", params.date_to);
+  if (params.page) q.append("page", params.page.toString());
+  if (params.limit) q.append("limit", params.limit.toString());
+  if (params.sort) q.append("sort", params.sort);
+  if (params.order) q.append("order", params.order);
+  return q.toString();
+}
+
+export const adminOrdersApi = {
+  getAll: (filters: AdminOrderFilters = {}) =>
+    apiFetch<PaginatedOrders>(`/admin/orders?${toQuery(filters)}`),
+
+  getById: (id: string) =>
+    apiFetch<AdminOrderDetail>(`/admin/orders/${id}`),
+
+  getStats: () =>
+    apiFetch<OrderStats>("/admin/orders/stats"),
+
+  updateStatus: (id: string, status: string) =>
+    apiFetch<Order>(`/admin/orders/${id}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    }),
+
+  updateNotes: (id: string, notes: string) =>
+    apiFetch<Order>(`/admin/orders/${id}/notes`, {
+      method: "PATCH",
+      body: JSON.stringify({ notes }),
+    }),
+};
+
+// ── Payments API (Razorpay) ─────────────────────────────────
+export interface CreatePaymentOrderPayload {
+  items: {
+    product_id: string;
+    variant_sku: string;
+    quantity: number;
+    unit_price: number;
+  }[];
+  shipping_address: {
+    full_name: string;
+    address_line1: string;
+    city: string;
+    state: string;
+    pincode: string;
+    phone: string;
+  };
+  coupon_code?: string | null;
+  discount: number;
+}
+
+export interface CreatePaymentOrderResponse {
+  order_id: string;
+  razorpay_order_id: string;
+  amount: number;
+  currency: string;
+  key_id: string;
+}
+
+export interface VerifyPaymentPayload {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+  order_id: string;
+}
+
+export interface VerifyPaymentResponse {
+  success: boolean;
+  order_id: string;
+  status: string;
+}
+
+export const paymentsApi = {
+  getKey: () => apiFetch<{ key_id: string }>("/payments/key"),
+
+  createOrder: (payload: CreatePaymentOrderPayload) =>
+    apiFetch<CreatePaymentOrderResponse>("/payments/create-order", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  verify: (payload: VerifyPaymentPayload) =>
+    apiFetch<VerifyPaymentResponse>("/payments/verify", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 };

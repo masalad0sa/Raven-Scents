@@ -23,6 +23,8 @@ import Account from "./pages/Account";
 import Wishlist from "./pages/Wishlist";
 import NotFound from "./pages/NotFound";
 import AdminProducts from "./pages/admin/AdminProducts";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminOrderDetail from "./pages/admin/AdminOrderDetail";
 
 /**
  * AppContent is defined OUTSIDE of App so that React sees a stable component
@@ -172,6 +174,22 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <AdminProducts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <ProtectedRoute>
+              <AdminOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/orders/:id"
+          element={
+            <ProtectedRoute>
+              <AdminOrderDetail />
             </ProtectedRoute>
           }
         />

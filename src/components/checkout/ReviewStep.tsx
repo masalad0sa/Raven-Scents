@@ -1,3 +1,4 @@
+import { CreditCard, Shield } from "lucide-react";
 import s from "./ReviewStep.module.css";
 
 interface Props {
@@ -9,9 +10,7 @@ interface Props {
     state: string;
     pincode: string;
   };
-  cardLast4: string;
   onEditShipping: () => void;
-  onEditPayment: () => void;
   onBack: () => void;
   onPlace: () => void;
   placing: boolean;
@@ -19,16 +18,14 @@ interface Props {
 
 export function ReviewStep({
   shipping,
-  cardLast4,
   onEditShipping,
-  onEditPayment,
   onBack,
   onPlace,
   placing,
 }: Props) {
   return (
     <div>
-      <h2 className={s.title}>Order Review</h2>
+      <h2 className={s.title}>Review Your Order</h2>
       {/* Shipping summary */}
       <div className={s.card}>
         <div className={s.cardHeader}>
@@ -45,15 +42,18 @@ export function ReviewStep({
           {shipping.pincode}
         </p>
       </div>
-      {/* Payment summary */}
+      {/* Payment info */}
       <div className={s.cardPayment}>
         <div className={s.cardHeader}>
-          <h3 className={s.cardLabel}>Payment</h3>
-          <button onClick={onEditPayment} className={s.editBtn}>
-            Edit
-          </button>
+          <h3 className={s.cardLabel}>
+            <CreditCard size={14} style={{ verticalAlign: "middle", marginRight: 6 }} />
+            Payment
+          </h3>
         </div>
-        <p className={s.paymentText}>Ending in {cardLast4}</p>
+        <p className={s.paymentText}>
+          <Shield size={13} style={{ verticalAlign: "middle", marginRight: 4 }} />
+          Secure payment via Razorpay — UPI, Cards, Wallets, Net Banking
+        </p>
       </div>
       <div className={s.actions}>
         <button onClick={onBack} className="btn btn-outline">
@@ -65,7 +65,7 @@ export function ReviewStep({
           disabled={placing}
           style={{ opacity: placing ? 0.7 : 1 }}
         >
-          {placing ? "Placing Order..." : "✓ Place Order"}
+          {placing ? "Processing..." : "💳 Pay Now"}
         </button>
       </div>
     </div>

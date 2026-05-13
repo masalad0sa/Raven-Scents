@@ -1,26 +1,24 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
-import { ordersApi } from "../lib/api";
+import { paymentsApi } from "../lib/api";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
 import {
   ShippingStep,
-  PaymentStep,
   ReviewStep,
   CheckoutSummary,
 } from "../components/checkout";
 import s from "./styles/Checkout.module.css";
 
-type Step = "shipping" | "payment" | "review";
-const STEPS: Step[] = ["shipping", "payment", "review"];
+type Step = "shipping" | "review";
+const STEPS: Step[] = ["shipping", "review"];
 
 const stepLabel: Record<Step, string> = {
   shipping: "Shipping",
-  payment: "Payment",
-  review: "Review",
+  review: "Review & Pay",
 };
 
 interface ShippingData {
@@ -32,13 +30,6 @@ interface ShippingData {
   city: string;
   state: string;
   pincode: string;
-}
-
-interface PaymentData {
-  cardName: string;
-  cardNumber: string;
-  expiry: string;
-  cvv: string;
 }
 
 export default function Checkout() {
@@ -54,12 +45,6 @@ export default function Checkout() {
     city: "",
     state: "",
     pincode: "",
-  });
-  const [payment, setPayment] = useState<PaymentData>({
-    cardName: "",
-    cardNumber: "",
-    expiry: "",
-    cvv: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [placing, setPlacing] = useState(false);
@@ -97,35 +82,11 @@ export default function Checkout() {
     return Object.keys(e).length === 0;
   };
 
-  const validatePayment = () => {
-    const e: Record<string, string> = {};
-    if (!payment.cardName.trim()) e.cardName = "Required";
-    if (!payment.cardNumber.replace(/\s/g, "").match(/^[0-9]{16}$/))
-      e.cardNumber = "Valid 16-digit card required";
-    if (!payment.expiry.match(/^(0[1-9]|1[0-2])\/[0-9]{2}$/))
-      e.expiry = "MM/YY format required";
-    if (!payment.cvv.match(/^[0-9]{3,4}$/)) e.cvv = "3-4 digits required";
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
-
-  const formatCard = (value: string) =>
-    value
-      .replace(/\D/g, "")
-      .replace(/(.{4})/g, "$1 ")
-      .trim()
-      .slice(0, 19);
-  const formatExpiry = (value: string) => {
-    const d = value.replace(/\D/g, "");
-    if (d.length >= 2) return d.slice(0, 2) + "/" + d.slice(2, 4);
-    return d;
-  };
-
   const handleNext = () => {
-    if (step === "shipping" && validateShipping()) setStep("payment");
-    else if (step === "payment" && validatePayment()) setStep("review");
+    if (step === "shipping" && validateShipping()) setStep("review");
   };
 
+  // ── Razorpay Payment Flow ──────────────────────────
   const handlePlaceOrder = async () => {
     setPlacing(true);
     try {
@@ -148,17 +109,77 @@ export default function Checkout() {
         coupon_code: savedCoupon?.code || null,
       };
 
-      await ordersApi.create(payload);
-      sessionStorage.removeItem("raven_coupon");
-      clearCart();
-      navigate("/order-confirmation");
+      // 1. Create order on backend + Razorpay
+      const paymentOrder = await paymentsApi.createOrder(payload);
+
+      // 2. Open Razorpay checkout modal
+      const options: RazorpayOptions = {
+        key: paymentOrder.key_id,
+        amount: paymentOrder.amount,
+        currency: paymentOrder.currency,
+        name: "Raven Scents",
+        description: `Order #${paymentOrder.order_id.slice(0, 8)}`,
+        order_id: paymentOrder.razorpay_order_id,
+        prefill: {
+          name: `${shipping.firstName} ${shipping.lastName}`.trim(),
+          email: shipping.email,
+          contact: shipping.phone,
+        },
+        theme: {
+          color: "#d4af37",
+          backdrop_color: "rgba(13, 13, 13, 0.85)",
+        },
+        modal: {
+          confirm_close: true,
+          escape: false,
+          ondismiss: () => {
+            setPlacing(false);
+          },
+        },
+        handler: async (response: RazorpayResponse) => {
+          try {
+            // 3. Verify payment on backend
+            await paymentsApi.verify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              order_id: paymentOrder.order_id,
+            });
+
+            // 4. Success — clear cart & navigate
+            sessionStorage.removeItem("raven_coupon");
+            clearCart();
+            navigate("/order-confirmation");
+          } catch (verifyErr: unknown) {
+            console.error("Payment verification failed:", verifyErr);
+            alert(
+              "Payment was received but verification failed. Please contact support with your order ID: " +
+                paymentOrder.order_id,
+            );
+            setPlacing(false);
+          }
+        },
+      };
+
+      if (typeof window.Razorpay === "undefined") {
+        throw new Error(
+          "Razorpay SDK not loaded. Please refresh the page and try again.",
+        );
+      }
+
+      const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", (response: unknown) => {
+        console.error("Payment failed:", response);
+        alert("Payment failed. Please try again.");
+        setPlacing(false);
+      });
+      rzp.open();
     } catch (err: unknown) {
-      console.error("Failed to place order:", err);
+      console.error("Failed to initiate payment:", err);
       alert(
         (err instanceof Error ? err.message : null) ||
-          "Failed to place order. Please try again or log in.",
+          "Failed to initiate payment. Please try again.",
       );
-    } finally {
       setPlacing(false);
     }
   };
@@ -255,25 +276,11 @@ export default function Checkout() {
                   inputGroup={inputGroup}
                 />
               )}
-              {step === "payment" && (
-                <PaymentStep
-                  payment={payment}
-                  setPayment={setPayment}
-                  errors={errors}
-                  onNext={handleNext}
-                  onBack={() => setStep("shipping")}
-                  formatCard={formatCard}
-                  formatExpiry={formatExpiry}
-                  inputGroup={inputGroup}
-                />
-              )}
               {step === "review" && (
                 <ReviewStep
                   shipping={shipping}
-                  cardLast4={payment.cardNumber.replace(/\s/g, "").slice(-4)}
                   onEditShipping={() => setStep("shipping")}
-                  onEditPayment={() => setStep("payment")}
-                  onBack={() => setStep("payment")}
+                  onBack={() => setStep("shipping")}
                   onPlace={handlePlaceOrder}
                   placing={placing}
                 />
