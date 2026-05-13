@@ -1,0 +1,101 @@
+/* ── Admin Navigation ──────────────────────────── */
+.adminBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(13, 13, 13, 0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  gap: 0;
+}
+
+.adminLogo {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: #d4af37;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.adminBadge {
+  color: #9a9590;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  font-family: var(--font-display);
+  margin-left: 0.4rem;
+}
+
+.adminSep {
+  color: rgba(212, 175, 55, 0.3);
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  margin: 0 1rem;
+}
+
+.navLinks {
+  display: flex;
+  gap: 0;
+  height: 100%;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 1.25rem;
+  height: 100%;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a9590;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  cursor: pointer;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.navLink:hover {
+  color: #e8e4dc;
+  background: rgba(212, 175, 55, 0.04);
+}
+
+.navLinkActive {
+  composes: navLink;
+  color: #e8e4dc;
+  border-bottom-color: #d4af37;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.storeBtn {
+  background: none;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  color: #9a9590;
+  padding: 0.35rem 0.85rem;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.storeBtn:hover {
+  color: #d4af37;
+  border-color: rgba(212, 175, 55, 0.5);
+}

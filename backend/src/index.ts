@@ -7,6 +7,8 @@ import productRoutes from "./routes/products";
 import authRoutes from "./routes/auth";
 import orderRoutes from "./routes/orders";
 import couponRoutes from "./routes/coupons";
+import adminRoutes from "./routes/admin";
+import paymentRoutes from "./routes/payments";
 import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
@@ -43,6 +45,8 @@ app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/coupons", couponRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // ── 404 Handler ─────────────────────────────────────
 app.use((_req, res) => {
