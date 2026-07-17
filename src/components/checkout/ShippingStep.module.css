@@ -6,6 +6,116 @@
   margin-bottom: 2rem;
 }
 
+/* ── Saved Addresses ──────────────────── */
+.savedSection {
+  margin-bottom: 2rem;
+}
+
+.savedLabel {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 0.75rem;
+}
+
+.savedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.addrCard {
+  background: var(--color-surface);
+  border: 1.5px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+
+.addrCard:hover {
+  border-color: rgba(212, 175, 55, 0.25);
+}
+
+.addrCardActive {
+  composes: addrCard;
+  border-color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.04);
+}
+
+.addrDefault {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.1);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+}
+
+.addrName {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--color-text);
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.addrDetail {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.newAddrCard {
+  composes: addrCard;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 90px;
+  color: var(--color-muted);
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-style: dashed;
+}
+
+.newAddrCard:hover {
+  color: var(--color-gold);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background: rgba(212, 175, 55, 0.12);
+}
+
+.dividerText {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ── Form ──────────────────────────────── */
 .formRow {
   display: flex;
   flex-wrap: wrap;
