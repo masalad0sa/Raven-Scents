@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
+import { useAuthStore } from "../store/authStore";
 import { paymentsApi } from "../lib/api";
+import { supabase } from "../lib/supabase";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
 import {
@@ -93,7 +95,7 @@ export default function Checkout() {
       const payload = {
         items: items.map((item) => ({
           product_id: item.product.id,
-          variant_sku: item.variant.sku,
+          variant_id: item.variant.id,
           quantity: item.quantity,
           unit_price: item.variant.price,
         })),
@@ -146,7 +148,34 @@ export default function Checkout() {
               order_id: paymentOrder.order_id,
             });
 
-            // 4. Success — clear cart & navigate
+            // 4. Save address for next time (if logged in)
+            const user = useAuthStore.getState().user;
+            if (user) {
+              const fullName = `${shipping.firstName} ${shipping.lastName}`.trim();
+              // Check if address already saved (by street + pincode)
+              const { data: existing } = await supabase
+                .from("user_addresses")
+                .select("id")
+                .eq("user_id", user.id)
+                .eq("street", shipping.address)
+                .eq("postal_code", shipping.pincode)
+                .maybeSingle();
+
+              if (!existing) {
+                await supabase.from("user_addresses").insert({
+                  user_id: user.id,
+                  full_name: fullName,
+                  phone: shipping.phone,
+                  street: shipping.address,
+                  city: shipping.city,
+                  state: shipping.state,
+                  postal_code: shipping.pincode,
+                  country: "India",
+                });
+              }
+            }
+
+            // 5. Success — clear cart & navigate
             sessionStorage.removeItem("raven_coupon");
             clearCart();
             navigate("/order-confirmation");

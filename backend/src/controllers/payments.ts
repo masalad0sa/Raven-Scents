@@ -16,7 +16,7 @@ const razorpay = new Razorpay({
 const createOrderSchema = z.object({
   items: z.array(z.object({
     product_id: z.string().uuid(),
-    variant_sku: z.string(),
+    variant_id: z.string().uuid(),
     quantity: z.number().int().min(1),
     unit_price: z.number().int().min(0),
   })).min(1),

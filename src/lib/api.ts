@@ -561,7 +561,7 @@ export const adminOrdersApi = {
 export interface CreatePaymentOrderPayload {
   items: {
     product_id: string;
-    variant_sku: string;
+    variant_id: string;
     quantity: number;
     unit_price: number;
   }[];
