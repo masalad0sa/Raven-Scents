@@ -138,12 +138,24 @@ export function Header() {
               id="cart-btn"
               aria-label="Open cart"
             >
-              <ShoppingBag size={14} />
-              {totalItems > 0 ? (
-                <span className={s.cartBadge}>{totalItems}</span>
-              ) : (
-                "Cart"
-              )}
+              <div className={s.cartIconWrap}>
+                <ShoppingBag size={14} />
+                <AnimatePresence>
+                  {totalItems > 0 && (
+                    <motion.span
+                      key="badge"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={s.cartBadge}
+                    >
+                      {totalItems}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </div>
+              <span>Cart</span>
             </button>
 
             {/* Auth: Avatar dropdown or Sign In */}

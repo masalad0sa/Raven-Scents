@@ -43,6 +43,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       if (event === "SIGNED_OUT") {
         set({ user: null, session: null });
         useCartStore.getState().clearCart();
+        useCartStore.setState({ cartUserId: null });
         useWishlistStore.getState().clear();
       } else if (
         event === "SIGNED_IN" ||

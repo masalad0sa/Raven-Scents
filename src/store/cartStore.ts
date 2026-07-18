@@ -28,6 +28,7 @@ function mergeCartItems(primary: CartItem[], secondary: CartItem[]) {
 interface CartStore {
   items: CartItem[];
   isOpen: boolean;
+  cartUserId: string | null;
   addItem: (product: Product, variant: Variant, quantity?: number) => void;
   removeItem: (productId: string, variantSku: string) => void;
   updateQuantity: (
@@ -50,6 +51,7 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
       isOpen: false,
+      cartUserId: null,
 
       addItem: (product, variant, quantity = 1) => {
         if (!variant) return;
@@ -135,7 +137,6 @@ export const useCartStore = create<CartStore>()(
 
       hydrate: async (userId) => {
         if (!hasSupabaseConfig) return;
-        const localItems = get().items;
         const { data } = await supabase
           .from("cart_items")
           .select("item_data, quantity")
@@ -145,20 +146,32 @@ export const useCartStore = create<CartStore>()(
           quantity: row.quantity as number,
         }));
 
-        if (!serverItems.length) {
-          if (localItems.length) {
-            set({ items: [...localItems] });
-          }
+        const localItems = get().items;
+        const localCartUserId = get().cartUserId;
+
+        if (localCartUserId === userId) {
+          // Local cart is already loaded for this user. Trust the server state.
+          set({ items: serverItems, cartUserId: userId });
           return;
         }
 
-        const mergedItems = mergeCartItems(serverItems, localItems);
-        set({ items: mergedItems });
+        if (localCartUserId === null) {
+          // This was a guest cart. Merge it with server cart.
+          const mergedItems = mergeCartItems(serverItems, localItems);
+          set({ items: mergedItems, cartUserId: userId });
+
+          // Trigger sync immediately to save merged guest items to DB
+          await get().syncToSupabase(userId);
+          return;
+        }
+
+        // Different user or fallback: overwrite with server items
+        set({ items: serverItems, cartUserId: userId });
       },
     }),
     {
       name: "raven-cart",
-      partialize: (state) => ({ items: state.items }),
+      partialize: (state) => ({ items: state.items, cartUserId: state.cartUserId }),
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.items = state.items.filter((i) => i?.product && i?.variant);

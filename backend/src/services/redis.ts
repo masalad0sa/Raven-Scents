@@ -38,7 +38,7 @@ export async function getOrSet<T>(
     }
     console.log(`❌ Cache MISS: ${key}`);
     const data = await fetchFn();
-    await redis.setex(key, ttl, JSON.stringify(data));
+    await redis.setex(key, ttl, data);
     return data;
   } catch (err) {
     // If Redis fails, fallback to direct DB

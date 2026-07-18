@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCartStore } from "../../store/cartStore";
@@ -20,6 +21,37 @@ export function CartDrawer() {
   const freeShippingThreshold = 5000;
   const shippingFee = subtotal >= freeShippingThreshold ? 0 : 299;
   const total = subtotal + shippingFee;
+
+  useEffect(() => {
+    if (isOpen) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      if (scrollbarWidth > 0) {
+        document.body.style.overflow = "hidden";
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+        const header = document.querySelector("header");
+        if (header) {
+          header.style.paddingRight = `${scrollbarWidth}px`;
+        }
+      } else {
+        document.body.style.overflow = "hidden";
+      }
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+      const header = document.querySelector("header");
+      if (header) {
+        header.style.paddingRight = "";
+      }
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+      const header = document.querySelector("header");
+      if (header) {
+        header.style.paddingRight = "";
+      }
+    };
+  }, [isOpen]);
 
   return (
     <AnimatePresence>

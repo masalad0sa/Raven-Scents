@@ -105,17 +105,29 @@
   transition: all 0.25s ease;
 }
 
+.cartIconWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .cartBadge {
+  position: absolute;
+  top: -8px;
+  right: -9px;
   background: #0d0d0d;
   color: var(--color-gold);
+  border: 1px solid var(--color-gold);
   border-radius: 50%;
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.6rem;
+  font-size: 0.5rem;
   font-weight: 700;
+  line-height: 1;
 }
 
 .userMenuWrap {

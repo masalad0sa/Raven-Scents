@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 
@@ -23,6 +23,16 @@ import Account from "./pages/Account";
 import Wishlist from "./pages/Wishlist";
 import NotFound from "./pages/NotFound";
 import AdminProducts from "./pages/admin/AdminProducts";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 /**
  * AppContent is defined OUTSIDE of App so that React sees a stable component
@@ -111,6 +121,7 @@ function AppContent() {
 
   return (
     <>
+      <ScrollToTop />
       {cartNoticeVisible && (
         <div
           style={{
