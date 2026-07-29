@@ -1,17 +1,38 @@
-import { Request, Response } from 'express';
-import { supabase } from '../services/supabase';
+import { Response } from 'express';
+import { supabase, supabaseAdmin } from '../services/supabase';
 import { handleError, AppError } from '../middleware/errorHandler';
+import { AuthRequest } from '../middleware/auth';
 
 // POST /api/coupons/validate
-export async function validateCoupon(req: Request, res: Response) {
+export async function validateCoupon(req: AuthRequest, res: Response) {
   try {
     const { code, cart_total } = req.body;
     if (!code) throw new AppError(400, 'Coupon code is required');
 
+    const cleanCode = code.toUpperCase().trim();
+
+    // Check if it is a first-order welcome coupon
+    if (cleanCode === 'WELCOME15') {
+      const userId = req.userId;
+      if (!userId) {
+        throw new AppError(401, 'Please log in to apply the first-order discount code.');
+      }
+      const { count, error: countErr } = await supabaseAdmin
+        .from('orders')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .not('status', 'in', '("cancelled","pending_payment")');
+
+      if (countErr) throw countErr;
+      if (count && count > 0) {
+        throw new AppError(400, 'This welcome code is only valid for your first order.');
+      }
+    }
+
     const { data, error } = await supabase
       .from('coupons')
       .select('*')
-      .eq('code', code.toUpperCase().trim())
+      .eq('code', cleanCode)
       .eq('is_active', true)
       .single();
 
