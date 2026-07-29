@@ -19,22 +19,8 @@ const SKIP_BACKEND = IS_LOCALHOST && !import.meta.env.DEV;
 
 // ── Auth Token Storage ──────────────────────────────
 export async function getAccessToken() {
-  const token = localStorage.getItem("raven_access_token");
-  if (token) return token;
-
-  // Fallback to Supabase session
   const { data } = await supabase.auth.getSession();
   return data.session?.access_token || null;
-}
-
-export function setTokens(access: string, refresh: string) {
-  localStorage.setItem("raven_access_token", access);
-  localStorage.setItem("raven_refresh_token", refresh);
-}
-
-export function clearTokens() {
-  localStorage.removeItem("raven_access_token");
-  localStorage.removeItem("raven_refresh_token");
 }
 
 // ── Base Fetch (for auth/orders/coupons routes) ─────
@@ -328,29 +314,7 @@ export const productsApi = {
   },
 };
 
-// ── Auth ────────────────────────────────────────────
-export const authApi = {
-  register: async (email: string, password: string, full_name?: string) => {
-    const data = await apiFetch<AuthResponse>("/auth/register", {
-      method: "POST",
-      body: JSON.stringify({ email, password, full_name }),
-    });
-    if (data.access_token) setTokens(data.access_token, data.refresh_token);
-    return data;
-  },
-  login: async (email: string, password: string) => {
-    const data = await apiFetch<AuthResponse>("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
-    if (data.access_token) setTokens(data.access_token, data.refresh_token);
-    return data;
-  },
-  logout: async () => {
-    await apiFetch("/auth/logout", { method: "POST" }).catch(() => {});
-    clearTokens();
-  },
-};
+
 
 // ── Orders ──────────────────────────────────────────
 export const ordersApi = {
@@ -563,7 +527,7 @@ export interface CreatePaymentOrderPayload {
     product_id: string;
     variant_id: string;
     quantity: number;
-    unit_price: number;
+    unit_price?: number;
   }[];
   shipping_address: {
     full_name: string;
@@ -611,5 +575,11 @@ export const paymentsApi = {
     apiFetch<VerifyPaymentResponse>("/payments/verify", {
       method: "POST",
       body: JSON.stringify(payload),
+    }),
+
+  cancelOrder: (orderId: string) =>
+    apiFetch<{ success: boolean; message: string }>("/payments/cancel", {
+      method: "POST",
+      body: JSON.stringify({ order_id: orderId }),
     }),
 };

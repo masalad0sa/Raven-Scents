@@ -95,9 +95,10 @@ export default function Checkout() {
       const payload = {
         items: items.map((item) => ({
           product_id: item.product.id,
-          variant_id: item.variant.id,
+          variant_id: item.variant.id || "",
           quantity: item.quantity,
-          unit_price: item.variant.price,
+          // NOTE: unit_price intentionally omitted — the backend fetches
+          // canonical prices from product_variants to prevent tampering.
         })),
         shipping_address: {
           full_name: `${shipping.firstName} ${shipping.lastName}`.trim(),
@@ -134,7 +135,13 @@ export default function Checkout() {
         modal: {
           confirm_close: true,
           escape: false,
-          ondismiss: () => {
+          ondismiss: async () => {
+            // User closed the modal — cancel the order and restore the reserved stock
+            try {
+              await paymentsApi.cancelOrder(paymentOrder.order_id);
+            } catch (e) {
+              console.warn("Failed to cancel order on dismiss:", e);
+            }
             setPlacing(false);
           },
         },
@@ -197,18 +204,27 @@ export default function Checkout() {
       }
 
       const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", (response: unknown) => {
+      rzp.on("payment.failed", async (response: unknown) => {
         console.error("Payment failed:", response);
-        alert("Payment failed. Please try again.");
+        // Cancel the order and restore reserved stock
+        try {
+          await paymentsApi.cancelOrder(paymentOrder.order_id);
+        } catch (e) {
+          console.warn("Failed to cancel order after payment failure:", e);
+        }
+        alert("Payment failed. Your cart is unchanged — please try again.");
         setPlacing(false);
       });
       rzp.open();
     } catch (err: unknown) {
       console.error("Failed to initiate payment:", err);
-      alert(
-        (err instanceof Error ? err.message : null) ||
-          "Failed to initiate payment. Please try again.",
-      );
+      // Show a user-friendly message for out-of-stock errors
+      const message =
+        err instanceof Error && err.message.includes("OUT_OF_STOCK")
+          ? "Sorry, one or more items in your cart are out of stock. Please update your cart."
+          : (err instanceof Error ? err.message : null) ??
+            "Failed to initiate payment. Please try again.";
+      alert(message);
       setPlacing(false);
     }
   };

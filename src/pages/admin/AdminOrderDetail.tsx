@@ -115,11 +115,13 @@ export default function AdminOrderDetail() {
       setLoading(false);
       return;
     }
-    supabase
-      .from("profiles")
-      .select("is_admin")
-      .eq("id", user.id)
-      .single()
+    Promise.resolve(
+      supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", user.id)
+        .single()
+    )
       .then(({ data }) => {
         const admin = data?.is_admin === true;
         setIsAdmin(admin);

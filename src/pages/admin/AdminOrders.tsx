@@ -85,18 +85,25 @@ function getCustomerEmail(order: AdminOrder): string {
   return "—";
 }
 
+// Simple client-side cache to prevent reloading/flashing on navigate back
+let cachedOrdersIsAdmin: boolean | null = null;
+let cachedOrders: AdminOrder[] = [];
+let cachedOrdersStats: OrderStats | null = null;
+let cachedTotalOrders = 0;
+let cachedTotalPages = 1;
+
 // ── Component ─────────────────────────────────────────────
 export default function AdminOrders() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
   // Admin gate
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(cachedOrdersIsAdmin);
 
   // Data
-  const [orders, setOrders] = useState<AdminOrder[]>([]);
-  const [stats, setStats] = useState<OrderStats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState<AdminOrder[]>(cachedOrders);
+  const [stats, setStats] = useState<OrderStats | null>(cachedOrdersStats);
+  const [loading, setLoading] = useState(cachedOrders.length === 0);
   const [error, setError] = useState<string | null>(null);
 
   // Filters
@@ -108,8 +115,8 @@ export default function AdminOrders() {
     sort: "created_at",
     order: "desc",
   });
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalOrders, setTotalOrders] = useState(0);
+  const [totalPages, setTotalPages] = useState(cachedTotalPages);
+  const [totalOrders, setTotalOrders] = useState(cachedTotalOrders);
 
   // Debounced search
   const [searchInput, setSearchInput] = useState("");
@@ -122,7 +129,15 @@ export default function AdminOrders() {
   const checkAdmin = async () => {
     if (!user) {
       setIsAdmin(false);
+      cachedOrdersIsAdmin = false;
       setLoading(false);
+      return;
+    }
+    // If already verified, bypass double fetch flashing
+    if (cachedOrdersIsAdmin === true) {
+      setIsAdmin(true);
+      loadOrders();
+      loadStats();
       return;
     }
     try {
@@ -133,22 +148,29 @@ export default function AdminOrders() {
         .single();
       const admin = data?.is_admin === true;
       setIsAdmin(admin);
+      cachedOrdersIsAdmin = admin;
       if (!admin) setLoading(false);
     } catch {
       setIsAdmin(false);
+      cachedOrdersIsAdmin = false;
       setLoading(false);
     }
   };
 
   // ── Load Data ──────────────────────────────────
   const loadOrders = useCallback(async () => {
-    setLoading(true);
+    if (cachedOrders.length === 0) {
+      setLoading(true);
+    }
     setError(null);
     try {
       const result = await adminOrdersApi.getAll(filters);
       setOrders(result.orders);
+      cachedOrders = result.orders;
       setTotalPages(result.totalPages);
+      cachedTotalPages = result.totalPages;
       setTotalOrders(result.total);
+      cachedTotalOrders = result.total;
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to load orders");
     } finally {
@@ -160,6 +182,7 @@ export default function AdminOrders() {
     try {
       const data = await adminOrdersApi.getStats();
       setStats(data);
+      cachedOrdersStats = data;
     } catch {
       // Stats are non-critical
     }

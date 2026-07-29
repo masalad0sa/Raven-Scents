@@ -27,9 +27,16 @@ export const useAuthStore = create<AuthStore>((set) => ({
   initialized: false,
 
   initialize: async () => {
+    const handleSessionExpired = () => {
+      useAuthStore.getState().logout();
+    };
+    window.addEventListener("auth-session-expired", handleSessionExpired);
+
     if (!hasSupabaseConfig) {
       set({ user: null, session: null, initialized: true });
-      return () => void 0;
+      return () => {
+        window.removeEventListener("auth-session-expired", handleSessionExpired);
+      };
     }
 
     const {
@@ -56,7 +63,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
     });
 
     // Return unsubscribe so App.tsx can clean up on unmount
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener("auth-session-expired", handleSessionExpired);
+    };
   },
 
   login: async (email, password) => {

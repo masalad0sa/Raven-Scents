@@ -115,21 +115,42 @@ export const useCartStore = create<CartStore>()(
         cartSyncChain = cartSyncChain.then(async () => {
           const { items } = get();
 
-          // Delete all old cart items for this user first so the table mirrors local state.
-          await supabase.from("cart_items").delete().eq("user_id", userId);
+          // 1. Get or create cart for user
+          let { data: cart } = await supabase
+            .from("carts")
+            .select("id")
+            .eq("user_id", userId)
+            .maybeSingle();
+
+          if (!cart) {
+            const { data: newCart, error: createErr } = await supabase
+              .from("carts")
+              .insert({ user_id: userId })
+              .select("id")
+              .single();
+
+            if (createErr || !newCart) return;
+            cart = newCart;
+          }
+
+          // 2. Delete all existing items for this cart
+          await supabase.from("cart_items").delete().eq("cart_id", cart.id);
 
           if (!items.length) return;
 
-          const rows = items.map((item) => ({
-            user_id: userId,
-            product_id: item.product.id,
-            variant_sku: item.variant.sku,
-            quantity: item.quantity,
-            item_data: item,
-            updated_at: new Date().toISOString(),
-          }));
+          // 3. Insert normalized cart items (referencing product_id and variant_id)
+          const rows = items
+            .filter((i) => i.product?.id && i.variant?.id)
+            .map((item) => ({
+              cart_id: cart.id,
+              product_id: item.product.id,
+              variant_id: item.variant.id,
+              quantity: item.quantity,
+            }));
 
-          await supabase.from("cart_items").insert(rows);
+          if (rows.length) {
+            await supabase.from("cart_items").insert(rows);
+          }
         });
 
         await cartSyncChain;
@@ -137,14 +158,36 @@ export const useCartStore = create<CartStore>()(
 
       hydrate: async (userId) => {
         if (!hasSupabaseConfig) return;
-        const { data } = await supabase
-          .from("cart_items")
-          .select("item_data, quantity")
-          .eq("user_id", userId);
-        const serverItems: CartItem[] = (data || []).map((row) => ({
-          ...(row.item_data as CartItem),
-          quantity: row.quantity as number,
-        }));
+
+        // Fetch user's cart and joined products + variants
+        const { data: cart } = await supabase
+          .from("carts")
+          .select(`
+            id,
+            cart_items (
+              quantity,
+              product:products (*),
+              variant:product_variants (*)
+            )
+          `)
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        const rawItems = (cart as unknown as {
+          cart_items: {
+            quantity: number;
+            product: Product;
+            variant: Variant;
+          }[];
+        })?.cart_items || [];
+
+        const serverItems: CartItem[] = rawItems
+          .filter((row) => row.product && row.variant)
+          .map((row) => ({
+            product: row.product,
+            variant: row.variant,
+            quantity: row.quantity,
+          }));
 
         const localItems = get().items;
         const localCartUserId = get().cartUserId;
@@ -156,16 +199,16 @@ export const useCartStore = create<CartStore>()(
         }
 
         if (localCartUserId === null) {
-          // This was a guest cart. Merge it with server cart.
+          // Guest cart: merge with server items
           const mergedItems = mergeCartItems(serverItems, localItems);
           set({ items: mergedItems, cartUserId: userId });
 
-          // Trigger sync immediately to save merged guest items to DB
+          // Sync merged cart back to Supabase
           await get().syncToSupabase(userId);
           return;
         }
 
-        // Different user or fallback: overwrite with server items
+        // Fallback: overwrite with server items
         set({ items: serverItems, cartUserId: userId });
       },
     }),

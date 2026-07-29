@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Tag } from "lucide-react";
 import { couponsApi } from "../../lib/api";
+import { supabase } from "../../lib/supabase";
+import { useAuthStore } from "../../store/authStore";
 import s from "./CartSummary.module.css";
 
 interface Props {
@@ -22,12 +24,50 @@ export function CartSummary({
   appliedCoupon,
   setAppliedCoupon,
 }: Props) {
+  const { user } = useAuthStore();
   const [coupon, setCoupon] = useState("");
   const [couponError, setCouponError] = useState("");
   const [couponLoading, setCouponLoading] = useState(false);
+  const [availableCoupons, setAvailableCoupons] = useState<{ code: string; discount_pct: number }[]>([]);
 
-  const applyCoupon = async () => {
-    const code = coupon.trim().toUpperCase();
+  useEffect(() => {
+    const fetchCouponsAndCheckFirstOrder = async () => {
+      try {
+        // Fetch active coupons from Supabase
+        const { data: couponsData, error: couponsErr } = await supabase
+          .from("coupons")
+          .select("code, discount_pct")
+          .eq("is_active", true);
+
+        if (couponsErr) throw couponsErr;
+        
+        let codes = couponsData || [];
+
+        // If user is logged in, check if they have completed orders
+        if (user) {
+          const { count, error: ordersErr } = await supabase
+            .from("orders")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", user.id)
+            .not("status", "in", '("cancelled","pending_payment")');
+
+          if (!ordersErr && count && count > 0) {
+            // User has placed orders before, filter out WELCOME15!
+            codes = codes.filter((c: any) => c.code.toUpperCase() !== "WELCOME15");
+          }
+        }
+
+        setAvailableCoupons(codes);
+      } catch (err) {
+        console.error("Error loading coupons:", err);
+      }
+    };
+
+    fetchCouponsAndCheckFirstOrder();
+  }, [user]);
+
+  const applyCoupon = async (codeOverride?: string) => {
+    const code = (codeOverride || coupon).trim().toUpperCase();
     if (!code) return;
     setCouponLoading(true);
     setCouponError("");
@@ -87,7 +127,7 @@ export function CartSummary({
               onKeyDown={(e) => e.key === "Enter" && applyCoupon()}
             />
             <button
-              onClick={applyCoupon}
+              onClick={() => applyCoupon()}
               disabled={couponLoading}
               className="btn btn-outline"
               style={{ padding: "0.75rem 1rem", whiteSpace: "nowrap" }}
@@ -97,6 +137,28 @@ export function CartSummary({
           </div>
         )}
         {couponError && <p className={s.couponError}>{couponError}</p>}
+
+        {/* Available Coupons list */}
+        {availableCoupons.length > 0 && !appliedCoupon && (
+          <div className={s.availableCoupons}>
+            <span className={s.availableTitle}>Available Coupons (click to apply):</span>
+            <div className={s.couponTags}>
+              {availableCoupons.map((c) => (
+                <button
+                  key={c.code}
+                  type="button"
+                  className={s.couponTagBtn}
+                  onClick={() => {
+                    setCoupon(c.code);
+                    applyCoupon(c.code);
+                  }}
+                >
+                  {c.code} ({c.discount_pct}%)
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Totals */}
@@ -104,13 +166,13 @@ export function CartSummary({
         {
           label: "Subtotal",
           val: `₹${subtotal.toLocaleString("en-IN")}`,
-          color: "var(--color-primary)",
+          color: "var(--color-text)",
         },
         {
           label: "Shipping",
           val: shippingFee === 0 ? "Free" : `₹${shippingFee}`,
           color:
-            shippingFee === 0 ? "var(--color-success)" : "var(--color-primary)",
+            shippingFee === 0 ? "var(--color-success)" : "var(--color-text)",
         },
         ...(appliedCoupon
           ? [

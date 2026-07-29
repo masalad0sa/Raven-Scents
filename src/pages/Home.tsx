@@ -4,7 +4,9 @@ import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
 import {
   HeroSection,
+  StatsRibbon,
   FeaturedSection,
+  FragranceFinderSection,
   BrandStory,
   BestsellersSection,
   ScentMarquee,
@@ -23,11 +25,13 @@ export default function Home() {
       />
       <Header />
       <main>
-        <HeroSection isMobile={isMobile} />
+        <HeroSection isMobile={isMobile} featuredProducts={featuredProducts} />
+        <StatsRibbon />
         <FeaturedSection
           featuredProducts={featuredProducts}
           isMobile={isMobile}
         />
+        <FragranceFinderSection />
         <BrandStory />
         <BestsellersSection bestsellers={bestsellers} isMobile={isMobile} />
         <ScentMarquee />

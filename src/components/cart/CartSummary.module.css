@@ -82,6 +82,7 @@
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 600;
+  color: var(--color-text);
 }
 
 .totalRow {
@@ -96,14 +97,14 @@
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .totalValue {
   font-family: var(--font-display);
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .checkoutLink {
@@ -125,4 +126,40 @@
   font-family: var(--font-sans);
   font-size: 0.72rem;
   color: var(--color-muted);
+}
+
+.availableCoupons {
+  margin-top: 1rem;
+}
+
+.availableTitle {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.couponTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.couponTagBtn {
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px dashed rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+  color: var(--color-gold);
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.couponTagBtn:hover {
+  background: rgba(212, 175, 55, 0.12);
+  border-color: var(--color-gold);
 }

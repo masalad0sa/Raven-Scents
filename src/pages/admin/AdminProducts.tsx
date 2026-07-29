@@ -1,15 +1,32 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Trash2, Edit2, Upload, X, Package } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Edit2,
+  Upload,
+  X,
+  Package,
+  TrendingUp,
+  DollarSign,
+  ShoppingBag,
+  Clock,
+  ArrowUpRight,
+  ArrowDownRight,
+  AlertTriangle,
+  BarChart3,
+  Award,
+} from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import {
   adminApi,
+  adminOrdersApi,
   AdminProductPayload,
   AdminVariantPayload,
 } from "../../lib/api";
 import { useAuthStore } from "../../store/authStore";
 import AdminNav from "../../components/admin/AdminNav";
-import type { Product, Variant } from "../../types";
+import type { Product, Variant, OrderStats } from "../../types";
 import s from "./AdminProducts.module.css";
 
 // ── Types ─────────────────────────────────────────────────────
@@ -99,16 +116,38 @@ const csv = (s: string) =>
     .filter(Boolean);
 
 // ── Component ─────────────────────────────────────────────────
+// Simple client-side cache to prevent reloading/flashing on navigate back
+let cachedIsAdmin: boolean | null = null;
+let cachedProducts: any[] = [];
+let cachedStats: any = null;
+let cachedLowStockAlerts: any[] = [];
+let cachedTopSellingProducts: any[] = [];
+let cachedMoodPopularity: any[] = [];
+let cachedTab: "overview" | "products" = "overview";
+
+// ── Component ─────────────────────────────────────────────────
 export default function AdminProducts() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
   // Admin gate
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(cachedIsAdmin);
+
+  // Tabs / Navigation
+  const [tab, setTab] = useState<"overview" | "products">(cachedTab);
 
   // Data
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<any[]>(cachedProducts);
+  const [loading, setLoading] = useState(cachedProducts.length === 0);
+
+  // Analytics State
+  const [stats, setStats] = useState<any | null>(cachedStats);
+  const [lowStockAlerts, setLowStockAlerts] = useState<any[]>(cachedLowStockAlerts);
+  const [topSellingProducts, setTopSellingProducts] = useState<any[]>(cachedTopSellingProducts);
+  const [moodPopularity, setMoodPopularity] = useState<any[]>(cachedMoodPopularity);
+  const [analyticsLoading, setAnalyticsLoading] = useState(
+    cachedStats === null && cachedLowStockAlerts.length === 0
+  );
 
   // View
   const [view, setView] = useState<"list" | "form">("list");
@@ -132,10 +171,24 @@ export default function AdminProducts() {
     checkAdmin();
   }, [user]);
 
+  // Tab change wrapper
+  const handleTabChange = (nextTab: "overview" | "products") => {
+    setTab(nextTab);
+    cachedTab = nextTab;
+  };
+
   const checkAdmin = async () => {
     if (!user) {
       setIsAdmin(false);
+      cachedIsAdmin = false;
       setLoading(false);
+      return;
+    }
+    // If already verified, bypass double fetch flashing
+    if (cachedIsAdmin === true) {
+      setIsAdmin(true);
+      loadProducts();
+      loadAnalytics();
       return;
     }
     try {
@@ -146,19 +199,115 @@ export default function AdminProducts() {
         .single();
       const admin = data?.is_admin === true;
       setIsAdmin(admin);
-      if (admin) loadProducts();
-      else setLoading(false);
+      cachedIsAdmin = admin;
+      if (admin) {
+        loadProducts();
+        loadAnalytics();
+      } else {
+        setLoading(false);
+      }
     } catch {
       setIsAdmin(false);
+      cachedIsAdmin = false;
       setLoading(false);
     }
   };
 
+  const loadAnalytics = async () => {
+    if (cachedStats === null && cachedLowStockAlerts.length === 0) {
+      setAnalyticsLoading(true);
+    }
+    
+    // 1. Get stats from backend
+    try {
+      const data = await adminOrdersApi.getStats();
+      setStats(data);
+      cachedStats = data;
+    } catch (err) {
+      console.error("Failed to load order stats:", err);
+    }
+
+    // 2. Fetch low stock
+    try {
+      const { data: lowStockData, error: dbErr } = await supabase
+        .from("product_variants")
+        .select("id, size, unit, stock, sku, products(id, name, slug, images)")
+        .lte("stock", 5)
+        .order("stock", { ascending: true });
+
+      if (dbErr) {
+        console.error("Database error fetching low stock variants:", dbErr);
+      } else {
+        const mapped = (lowStockData || []).map((item: any) => {
+          const prod = Array.isArray(item.products) ? item.products[0] : item.products;
+          return {
+            id: item.id,
+            size: item.size,
+            unit: item.unit,
+            stock: item.stock,
+            sku: item.sku,
+            productName: prod?.name || "Unknown Product",
+            productImage: prod?.images?.[0] || null,
+          };
+        });
+        setLowStockAlerts(mapped);
+        cachedLowStockAlerts = mapped;
+      }
+    } catch (err) {
+      console.error("Failed to load low stock alerts:", err);
+    }
+
+    // 3. Fetch sales items
+    try {
+      const { data: salesItems, error: dbErr } = await supabase
+        .from("order_items")
+        .select("quantity, products(name, scent_family)");
+
+      if (dbErr) {
+        console.error("Database error fetching sales items:", dbErr);
+      } else if (salesItems) {
+        const productCounts: Record<string, number> = {};
+        const moodCounts: Record<string, number> = {};
+
+        salesItems.forEach((item: any) => {
+          const qty = item.quantity || 1;
+          const prod = Array.isArray(item.products) ? item.products[0] : item.products;
+          const name = prod?.name || "Unknown Product";
+          const mood = prod?.scent_family || "Other";
+
+          productCounts[name] = (productCounts[name] || 0) + qty;
+          moodCounts[mood] = (moodCounts[mood] || 0) + qty;
+        });
+
+        const sortedProducts = Object.entries(productCounts)
+          .map(([name, qty]) => ({ name, qty }))
+          .sort((a, b) => b.qty - a.qty)
+          .slice(0, 5);
+
+        const sortedMoods = Object.entries(moodCounts)
+          .map(([name, qty]) => ({ name, qty }))
+          .sort((a, b) => b.qty - a.qty);
+
+        setTopSellingProducts(sortedProducts);
+        cachedTopSellingProducts = sortedProducts;
+        setMoodPopularity(sortedMoods);
+        cachedMoodPopularity = sortedMoods;
+      }
+    } catch (err) {
+      console.error("Failed to load sales items stats:", err);
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  };
+
   const loadProducts = async () => {
-    setLoading(true);
+    if (cachedProducts.length === 0) {
+      setLoading(true);
+    }
     try {
       const list = await adminApi.getAllProducts();
       setProducts(list);
+      cachedProducts = list;
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to load products");
     } finally {
@@ -393,10 +542,9 @@ export default function AdminProducts() {
             {/* Title + Add */}
             <div className={s.listHeader}>
               <div>
-                <h1 className={s.listTitle}>Products</h1>
+                <h1 className={s.listTitle}>Dashboard Overview</h1>
                 <p className={s.listSubtext}>
-                  {products.length} total &middot; {featuredCount} featured
-                  &middot; {outOfStockCount} out of stock
+                  Detailed business metrics, sales insights, and inventory levels
                 </p>
               </div>
               <button onClick={openNew} className={`btn btn-gold ${s.addBtn}`}>
@@ -404,138 +552,311 @@ export default function AdminProducts() {
               </button>
             </div>
 
+            {/* Tab Swapping Header */}
+            <div className={s.tabHeader}>
+              <button
+                onClick={() => handleTabChange("overview")}
+                className={tab === "overview" ? s.tabBtnActive : s.tabBtn}
+              >
+                <TrendingUp size={13} style={{ marginRight: 6, display: "inline" }} />
+                Business Insights
+              </button>
+              <button
+                onClick={() => handleTabChange("products")}
+                className={tab === "products" ? s.tabBtnActive : s.tabBtn}
+              >
+                <Package size={13} style={{ marginRight: 6, display: "inline" }} />
+                Product Inventory ({products.length})
+              </button>
+            </div>
+
             {error && <div className={s.errorBox}>{error}</div>}
 
-            {loading ? (
-              <p className={s.loadingText}>Loading products…</p>
-            ) : products.length === 0 ? (
-              <div className={s.emptyWrap}>
-                <Package size={48} className={s.emptyIcon} />
-                <p className={s.emptyTitle}>No products yet</p>
-                <p className={s.emptyText}>
-                  Add your first product to get started.
-                </p>
-              </div>
-            ) : (
-              <div className={s.tableWrap}>
-                <table className={s.table}>
-                  <thead>
-                    <tr className={s.thead}>
-                      {[
-                        "Image",
-                        "Product",
-                        "Price",
-                        "Variants / Stock",
-                        "Flags",
-                        "Actions",
-                      ].map((h) => (
-                        <th key={h} className={s.th}>
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.map((product) => {
-                      const oos = (product.variants || []).every(
-                        (v: Variant) => v.stock <= 0,
-                      );
-                      return (
-                        <tr key={product.id} className={s.tr}>
-                          {/* Thumbnail */}
-                          <td className={s.td}>
-                            {product.images?.[0] ? (
-                              <img
-                                src={product.images[0]}
-                                alt=""
-                                className={s.thumb}
-                              />
-                            ) : (
-                              <div className={s.thumbEmpty} />
-                            )}
-                          </td>
-                          {/* Name */}
-                          <td className={s.td}>
-                            <p className={s.productName}>{product.name}</p>
-                            <p className={s.productMeta}>
-                              {product.brand} &middot; {product.category}
-                            </p>
-                          </td>
-                          {/* Price */}
-                          <td className={s.td}>
-                            <span className={s.priceMain}>
-                              ₹{product.price?.toLocaleString("en-IN")}
-                            </span>
-                            {product.compareAtPrice && (
-                              <p className={s.priceCompare}>
-                                ₹
-                                {product.compareAtPrice?.toLocaleString(
-                                  "en-IN",
+            {/* ── SUB-VIEW 1: OVERVIEW / BUSINESS INSIGHTS ── */}
+            {tab === "overview" && (
+              <div>
+                {analyticsLoading ? (
+                  <p className={s.loadingText}>Loading business insights…</p>
+                ) : (
+                  <>
+                    {/* Stats Grid */}
+                    <div className={s.overviewGrid}>
+                      <div className={s.statCard}>
+                        <div className={s.statLabel}>
+                          <DollarSign size={12} style={{ color: "#d4af37", marginRight: 4, display: "inline" }} />
+                          Total Revenue
+                        </div>
+                        <span className={s.statValue}>
+                          ₹{(stats?.totalRevenue || 0).toLocaleString("en-IN")}
+                        </span>
+                        <span className={s.statSubtext}>
+                          {stats?.revenueTrend && stats.revenueTrend !== 0
+                            ? `${stats.revenueTrend > 0 ? "+" : ""}${stats.revenueTrend}% vs last month`
+                            : "Stable trend"}
+                        </span>
+                      </div>
+                      <div className={s.statCard}>
+                        <div className={s.statLabel}>
+                          <ShoppingBag size={12} style={{ color: "#2ecc71", marginRight: 4, display: "inline" }} />
+                          Total Orders
+                        </div>
+                        <span className={s.statValue}>{stats?.totalOrders || 0}</span>
+                        <span className={s.statSubtext}>
+                          {stats?.todayOrders || 0} placed today
+                        </span>
+                      </div>
+                      <div className={s.statCard}>
+                        <div className={s.statLabel}>
+                          <BarChart3 size={12} style={{ color: "#3498db", marginRight: 4, display: "inline" }} />
+                          Avg Order Value
+                        </div>
+                        <span className={s.statValue}>
+                          ₹{(stats?.avgOrderValue || 0).toLocaleString("en-IN")}
+                        </span>
+                        <span className={s.statSubtext}>Per paid transaction</span>
+                      </div>
+                      <div className={s.statCard}>
+                        <div className={s.statLabel}>
+                          <Award size={12} style={{ color: "#9b59b6", marginRight: 4, display: "inline" }} />
+                          Total Discounts
+                        </div>
+                        <span className={s.statValue}>
+                          ₹{(stats?.totalDiscount || 0).toLocaleString("en-IN")}
+                        </span>
+                        <span className={s.statSubtext}>From coupon validations</span>
+                      </div>
+                    </div>
+
+                    {/* Detailed Row */}
+                    <div className={s.analyticsRow}>
+                      {/* Low Stock Alerts */}
+                      <div className={s.analyticsCard}>
+                        <h3 className={s.analyticsTitle}>
+                          <AlertTriangle size={16} style={{ color: "#e74c3c", marginRight: 8, display: "inline" }} />
+                          Low Stock Alerts ({lowStockAlerts.length})
+                        </h3>
+                        {lowStockAlerts.length === 0 ? (
+                          <p className={s.loadingText}>All items are in healthy stock levels.</p>
+                        ) : (
+                          <div className={s.lowStockList}>
+                            {lowStockAlerts.map((item) => (
+                              <div key={item.id} className={s.lowStockItem}>
+                                {item.productImage ? (
+                                  <img
+                                    src={item.productImage}
+                                    alt=""
+                                    className={s.lowStockThumb}
+                                  />
+                                ) : (
+                                  <div style={{ width: 44, height: 44, background: "#121212", borderRadius: 6 }} />
                                 )}
-                              </p>
-                            )}
-                          </td>
-                          {/* Variants */}
-                          <td className={s.td}>
-                            <span
-                              className={s.stockText}
-                              style={{ color: oos ? "#e74c3c" : "#2ecc71" }}
-                            >
-                              {product.variants?.length || 0} size
-                              {product.variants?.length !== 1 ? "s" : ""}
-                              {oos && " · out of stock"}
-                            </span>
-                          </td>
-                          {/* Flags */}
-                          <td className={s.td}>
-                            <div className={s.flagsWrap}>
-                              {product.isFeatured && (
-                                <span className={s.flagFeatured}>FEATURED</span>
-                              )}
-                              {product.isBestseller && (
-                                <span className={s.flagBestseller}>
-                                  BESTSELLER
+                                <div className={s.lowStockInfo}>
+                                  <p className={s.lowStockName}>{item.productName}</p>
+                                  <p className={s.lowStockMeta}>
+                                    Size: {item.size}
+                                    {item.unit} &middot; SKU: {item.sku || "—"}
+                                  </p>
+                                </div>
+                                <span
+                                  className={
+                                    item.stock === 0 ? s.lowStockCritical : s.lowStockCount
+                                  }
+                                >
+                                  {item.stock === 0 ? "OUT OF STOCK" : `${item.stock} LEFT`}
                                 </span>
-                              )}
-                              {product.isNew && (
-                                <span className={s.flagNew}>NEW</span>
-                              )}
-                            </div>
-                          </td>
-                          {/* Actions */}
-                          <td className={s.td}>
-                            <div className={s.actionsWrap}>
-                              <button
-                                onClick={() => openEdit(product)}
-                                className={s.editBtn}
-                              >
-                                <Edit2 size={11} /> Edit
-                              </button>
-                              <button
-                                onClick={() =>
-                                  handleDelete(product.id, product.name)
-                                }
-                                disabled={deletingId === product.id}
-                                className={s.deleteBtn}
-                                style={{
-                                  cursor:
-                                    deletingId === product.id
-                                      ? "not-allowed"
-                                      : "pointer",
-                                  opacity: deletingId === product.id ? 0.5 : 1,
-                                }}
-                              >
-                                <Trash2 size={11} />{" "}
-                                {deletingId === product.id ? "…" : "Delete"}
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Scent Mood Popularity */}
+                      <div className={s.analyticsCard}>
+                        <h3 className={s.analyticsTitle}>Scent Mood Popularity</h3>
+                        {moodPopularity.length === 0 ? (
+                          <p className={s.loadingText}>No sales data available yet.</p>
+                        ) : (
+                          <div className={s.popList}>
+                            {moodPopularity.map((mood) => {
+                              const totalQty = moodPopularity.reduce((sum, m) => sum + m.qty, 0);
+                              const pct = totalQty > 0 ? Math.round((mood.qty / totalQty) * 100) : 0;
+                              return (
+                                <div key={mood.name} className={s.popRow}>
+                                  <div className={s.popMeta}>
+                                    <span className={s.popLabel}>{mood.name || "Other"}</span>
+                                    <span className={s.popVal}>{mood.qty} sold ({pct}%)</span>
+                                  </div>
+                                  <div className={s.progressBarBg}>
+                                    <div
+                                      className={s.progressBarFill}
+                                      style={{ width: `${pct}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
+            )}
+
+            {/* ── SUB-VIEW 2: PRODUCTS INVENTORY TABLE ── */}
+            {tab === "products" && (
+              <>
+                {loading ? (
+                  <p className={s.loadingText}>Loading products…</p>
+                ) : products.length === 0 ? (
+                  <div className={s.emptyWrap}>
+                    <Package size={48} className={s.emptyIcon} />
+                    <p className={s.emptyTitle}>No products yet</p>
+                    <p className={s.emptyText}>
+                      Add your first product to get started.
+                    </p>
+                  </div>
+                ) : (
+                  <div className={s.tableWrap}>
+                    <table className={s.table}>
+                      <thead>
+                        <tr className={s.thead}>
+                          {[
+                            "Image",
+                            "Product",
+                            "Price",
+                            "Variants / Stock Status",
+                            "Flags",
+                            "Actions",
+                          ].map((h) => (
+                            <th key={h} className={s.th}>
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {products.map((product) => {
+                          const oos = (product.variants || []).every(
+                            (v: Variant) => v.stock <= 0,
+                          );
+                          return (
+                            <tr key={product.id} className={s.tr}>
+                              {/* Thumbnail */}
+                              <td className={s.td}>
+                                {product.images?.[0] ? (
+                                  <img
+                                    src={product.images[0]}
+                                    alt=""
+                                    className={s.thumb}
+                                  />
+                                ) : (
+                                  <div className={s.thumbEmpty} />
+                                )}
+                              </td>
+                              {/* Name */}
+                              <td className={s.td}>
+                                <p className={s.productName}>{product.name}</p>
+                                <p className={s.productMeta}>
+                                  {product.brand} &middot; {product.category}
+                                </p>
+                              </td>
+                              {/* Price */}
+                              <td className={s.td}>
+                                <span className={s.priceMain}>
+                                  ₹{product.price?.toLocaleString("en-IN")}
+                                </span>
+                                {product.compareAtPrice && (
+                                  <p className={s.priceCompare}>
+                                    ₹
+                                    {product.compareAtPrice?.toLocaleString(
+                                      "en-IN",
+                                    )}
+                                  </p>
+                                )}
+                              </td>
+                              {/* Variants and Stock Sizing */}
+                              <td className={s.td}>
+                                <div className={s.variantsList}>
+                                  {(product.variants || []).map((v: Variant) => (
+                                    <div key={v.id} className={s.variantStockItem}>
+                                      <span className={s.variantSize}>
+                                        {v.size}
+                                        {v.unit}
+                                      </span>
+                                      <span
+                                        className={s.variantStockVal}
+                                        style={{
+                                          color:
+                                            v.stock <= 0
+                                              ? "#e74c3c"
+                                              : v.stock <= 5
+                                                ? "#f39c12"
+                                                : "#2ecc71",
+                                        }}
+                                      >
+                                        ({v.stock} units)
+                                      </span>
+                                    </div>
+                                  ))}
+                                  {oos && (
+                                    <span className={s.oosLabel}>out of stock</span>
+                                  )}
+                                </div>
+                              </td>
+                              {/* Flags */}
+                              <td className={s.td}>
+                                <div className={s.flagsWrap}>
+                                  {product.isFeatured && (
+                                    <span className={s.flagFeatured}>FEATURED</span>
+                                  )}
+                                  {product.isBestseller && (
+                                    <span className={s.flagBestseller}>
+                                      BESTSELLER
+                                    </span>
+                                  )}
+                                  {product.isNew && (
+                                    <span className={s.flagNew}>NEW</span>
+                                  )}
+                                </div>
+                              </td>
+                              {/* Actions */}
+                              <td className={s.td}>
+                                <div className={s.actionsWrap}>
+                                  <button
+                                    onClick={() => openEdit(product)}
+                                    className={s.editBtn}
+                                  >
+                                    <Edit2 size={11} /> Edit
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleDelete(product.id, product.name)
+                                    }
+                                    disabled={deletingId === product.id}
+                                    className={s.deleteBtn}
+                                    style={{
+                                      cursor:
+                                        deletingId === product.id
+                                          ? "not-allowed"
+                                          : "pointer",
+                                      opacity: deletingId === product.id ? 0.5 : 1,
+                                    }}
+                                  >
+                                    <Trash2 size={11} />{" "}
+                                    {deletingId === product.id ? "…" : "Delete"}
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
