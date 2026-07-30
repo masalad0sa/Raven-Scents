@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, Sun, Moon } from "lucide-react";
 import { useProducts } from "../hooks/useProducts";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
@@ -20,6 +20,23 @@ export default function Shop() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortOption>("featured");
+
+  const [isLight, setIsLight] = useState(() => {
+    return localStorage.getItem("raven-theme") === "light";
+  });
+
+  useEffect(() => {
+    if (isLight) {
+      document.body.classList.add("theme-light");
+      localStorage.setItem("raven-theme", "light");
+    } else {
+      document.body.classList.remove("theme-light");
+      localStorage.setItem("raven-theme", "dark");
+    }
+    return () => {
+      document.body.classList.remove("theme-light");
+    };
+  }, [isLight]);
 
   const { data, isLoading } = useProducts();
   const products = data?.products || [];
@@ -122,7 +139,7 @@ export default function Shop() {
   return (
     <>
       <SEO
-        title="Shop Fragrances"
+        title="Our Collections"
         description="Browse our curated collection of luxury perfumes. Filter by scent family, gender, and price to find your signature fragrance."
       />
       <Header />
@@ -135,7 +152,7 @@ export default function Shop() {
               transition={{ duration: 0.5 }}
             >
               <p className={s.bannerEyebrow}>Discover</p>
-              <h1 className={s.bannerTitle}>All Fragrances</h1>
+              <h1 className={s.bannerTitle}>The Collections</h1>
             </motion.div>
           </div>
         </div>
@@ -363,6 +380,50 @@ export default function Shop() {
         </div>
       </main>
       <Footer />
+
+      {/* Floating Golden Theme Toggle */}
+      <motion.button
+        onClick={() => setIsLight((prev) => !prev)}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.5, type: "spring", stiffness: 260, damping: 20 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        style={{
+          position: "fixed",
+          bottom: "2rem",
+          right: "2rem",
+          zIndex: 999,
+          width: "50px",
+          height: "50px",
+          borderRadius: "50%",
+          backgroundColor: "rgba(212, 175, 55, 0.12)",
+          border: "1px solid var(--color-gold)",
+          color: "var(--color-gold)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          boxShadow: "0 8px 32px rgba(212, 175, 55, 0.2)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          outline: "none",
+        }}
+        title={isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={isLight ? "light" : "dark"}
+            initial={{ y: -20, opacity: 0, rotate: -90 }}
+            animate={{ y: 0, opacity: 1, rotate: 0 }}
+            exit={{ y: 20, opacity: 0, rotate: 90 }}
+            transition={{ duration: 0.25 }}
+            style={{ display: "flex" }}
+          >
+            {isLight ? <Moon size={20} /> : <Sun size={20} />}
+          </motion.div>
+        </AnimatePresence>
+      </motion.button>
     </>
   );
 }

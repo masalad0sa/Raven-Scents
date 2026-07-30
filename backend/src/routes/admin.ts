@@ -7,12 +7,16 @@ import {
   getOrderStats,
   updateOrderStatus,
   updateOrderNotes,
+  getAdminAnalytics,
 } from '../controllers/admin';
 
 const router = Router();
 
 // All admin routes require auth + admin check
 router.use(requireAuth, requireAdmin);
+
+// Analytics
+router.get('/analytics', getAdminAnalytics);
 
 // Order management
 router.get('/orders/stats', getOrderStats);

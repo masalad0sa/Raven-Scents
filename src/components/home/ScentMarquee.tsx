@@ -36,7 +36,7 @@ export function ScentMarquee() {
                 fontSize: "clamp(2rem, 4vw, 3rem)",
                 fontWeight: 300,
                 color:
-                  i % 2 === 0 ? "var(--color-text)" : "rgba(212,175,55,0.2)",
+                  i % 2 === 0 ? "var(--color-text)" : "var(--color-marquee-alt)",
                 fontStyle: "italic",
               }}
             >

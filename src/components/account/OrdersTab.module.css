@@ -9,8 +9,8 @@
 }
 
 .emptyCard {
-  background: #111;
-  border: 1px solid rgba(212, 175, 55, 0.1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
   border-radius: 10px;
   padding: 3rem;
   text-align: center;
@@ -54,8 +54,8 @@
 }
 
 .orderCard {
-  background: #111;
-  border: 1px solid rgba(212, 175, 55, 0.1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -67,8 +67,8 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.08);
-  background: rgba(212, 175, 55, 0.03);
+  border-bottom: 1px solid var(--color-card-border);
+  background: var(--color-bg);
 }
 
 .orderMeta {
@@ -142,7 +142,7 @@
 }
 
 .orderItemBorder {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--color-card-border);
 }
 
 .itemImg {
@@ -150,7 +150,7 @@
   height: 48px;
   object-fit: cover;
   border-radius: 6px;
-  border: 1px solid rgba(212, 175, 55, 0.1);
+  border: 1px solid var(--color-card-border);
 }
 
 .itemInfo {
@@ -197,3 +197,109 @@
   font-size: 0.7rem;
   color: #4ade80;
 }
+
+/* ─── Status pipeline ──────────────────────────────────────────── */
+
+.pipeline {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem 1.25rem 1.25rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.08);
+  gap: 0;
+  overflow-x: auto;
+}
+
+.pipelineItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  min-width: 64px;
+}
+
+/* Horizontal connecting line sits above the row, between nodes */
+.pipelineConnector {
+  position: absolute;
+  top: 16px;
+  right: 50%;
+  left: -50%;
+  height: 2px;
+  background: var(--color-card-border);
+  z-index: 0;
+}
+
+.pipelineConnectorDone {
+  background: var(--color-gold);
+}
+
+/* Circular node */
+.pipelineNode {
+  position: relative;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.45rem;
+  transition: all 0.25s ease;
+}
+
+.pipelineNodeDone {
+  background: rgba(212, 175, 55, 0.18);
+  color: var(--color-gold);
+  border: 1.5px solid var(--color-gold);
+}
+
+.pipelineNodeActive {
+  background: var(--color-gold);
+  color: #0d0d0d;
+  border: 1.5px solid var(--color-gold);
+  box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.15);
+}
+
+.pipelineNodePending {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 1.5px solid var(--color-card-border);
+}
+
+/* Step label */
+.pipelineLabel {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.pipelineLabelDone {
+  color: var(--color-gold);
+}
+
+.pipelineLabelActive {
+  color: var(--color-gold);
+  font-weight: 700;
+}
+
+.pipelineLabelPending {
+  color: var(--color-text-muted);
+}
+
+/* Cancelled banner */
+.cancelledBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid rgba(248, 113, 113, 0.15);
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f87171;
+}
+

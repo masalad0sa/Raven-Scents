@@ -51,7 +51,7 @@ export function ProductGallery({ images, name, isMobile }: Props) {
               border:
                 i === mainImage
                   ? "2px solid var(--color-gold)"
-                  : "2px solid rgba(255,255,255,0.08)",
+                  : "2px solid var(--color-card-border)",
             }}
           >
             <img src={img} alt="" className={s.thumbImg} />

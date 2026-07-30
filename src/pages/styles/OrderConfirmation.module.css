@@ -52,8 +52,8 @@
 }
 
 .detailsBox {
-  background: #1a1a1a;
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
   border-radius: 8px;
   padding: 1.5rem;
   text-align: left;
@@ -64,7 +64,7 @@
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid var(--color-card-border);
 }
 
 .detailLabel {
@@ -114,8 +114,8 @@
 
 .statusCirclePending {
   composes: statusCircle;
-  background: #333;
-  color: #9a9590;
+  background: var(--color-card-border);
+  color: var(--color-text-muted);
 }
 
 .statusLabel {

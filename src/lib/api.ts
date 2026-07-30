@@ -508,6 +508,9 @@ export const adminOrdersApi = {
   getStats: () =>
     apiFetch<OrderStats>("/admin/orders/stats"),
 
+  getAnalytics: () =>
+    apiFetch<any>("/admin/analytics"),
+
   updateStatus: (id: string, status: string) =>
     apiFetch<Order>(`/admin/orders/${id}/status`, {
       method: "PATCH",
@@ -567,6 +570,12 @@ export const paymentsApi = {
 
   createOrder: (payload: CreatePaymentOrderPayload) =>
     apiFetch<CreatePaymentOrderResponse>("/payments/create-order", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  mockCheckout: (payload: CreatePaymentOrderPayload) =>
+    apiFetch<{ success: boolean; order_id: string; status: string }>("/payments/mock-checkout", {
       method: "POST",
       body: JSON.stringify(payload),
     }),

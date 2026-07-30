@@ -14,7 +14,11 @@
   --color-text: #e8e4dc;
   --color-muted: #9a9590;
   --color-success: #2ecc71;
+  --color-success-bg: rgba(46, 204, 113, 0.08);
+  --color-success-border: rgba(46, 204, 113, 0.25);
   --color-error: #e74c3c;
+  --color-error-bg: rgba(231, 76, 60, 0.08);
+  --color-error-border: rgba(231, 76, 60, 0.25);
 
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
@@ -23,6 +27,15 @@
 
   --color-bg: #0d0d0d;
   --color-text-muted: #9a9590;
+  
+  --color-header-bg: rgba(13, 13, 13, 0.92);
+  --color-header-border: rgba(212, 175, 55, 0.15);
+  --color-stats-bg: #141414;
+  
+  --color-tagline: var(--color-gold);
+  --color-marquee-alt: var(--color-gold);
+  --color-card-border: rgba(212, 175, 55, 0.12);
+  --color-about-blob-opacity: 0.06;
 }
 
 /* ─── Base Reset ────────────────────────────────── */
@@ -243,12 +256,20 @@ body {
   font-family: var(--font-sans);
   font-size: 0.9rem;
   padding: 0.875rem 1rem;
-  background: #1a1a1a;
-  border: 1.5px solid #333;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-card-border);
   border-radius: 4px;
   color: var(--color-text);
   outline: none;
   transition: border-color 0.25s ease;
+}
+select.input {
+  padding-right: 2.5rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239a9590' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
 }
 .input:focus {
   border-color: var(--color-gold);
@@ -330,7 +351,7 @@ body {
   right: 0;
   height: 100vh;
   width: min(480px, 100vw);
-  background: #111111;
+  background: var(--color-surface);
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -412,4 +433,79 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ─── Light Theme Overrides ─────────────────────── */
+body.theme-light {
+  background-color: #f5f4f0;
+  color: #1a1a1a;
+
+  --color-bg: #f5f4f0;
+  --color-ivory: #f5f4f0;
+  --color-text: #1a1a1a;
+  --color-text-muted: #5e5954;
+  --color-muted: #5e5954;
+  --color-surface: #ffffff;
+  --color-secondary: #eae8e3;
+  --color-primary: #1a1a1a;
+  --color-primary-dark: #0d0d0d;
+
+  /* High contrast success/error variables for light theme */
+  --color-success: #196f3d;
+  --color-success-bg: rgba(25, 111, 61, 0.06);
+  --color-success-border: rgba(25, 111, 61, 0.2);
+  --color-error: #c0392b;
+  --color-error-bg: rgba(192, 57, 43, 0.06);
+  --color-error-border: rgba(192, 57, 43, 0.2);
+
+  --color-header-bg: rgba(245, 244, 240, 0.95);
+  --color-header-border: rgba(212, 175, 55, 0.15);
+  --color-stats-bg: #eae8e3;
+
+  /* High contrast gold for light background */
+  --color-gold: #b8960a;
+
+  /* Fragrance Finder Quiz card variables with increased border contrast */
+  --color-mood-card-bg: rgba(255, 255, 255, 0.85);
+  --color-mood-card-border: rgba(0, 0, 0, 0.16);
+
+  /* Darker rich antique bronze/brass color for high-contrast taglines and marquee */
+  --color-tagline: #6e520f;
+  --color-marquee-alt: #6e520f;
+
+  /* High contrast border for product cards */
+  --color-card-border: rgba(0, 0, 0, 0.14);
+
+  /* About page component overrides */
+  --color-about-hero-desc: rgba(26, 26, 26, 0.7);
+  --color-about-card-bg: #ffffff;
+  --color-about-card-border: rgba(0, 0, 0, 0.1);
+  --color-about-icon-bg: rgba(0, 0, 0, 0.06);
+  --color-about-process-desc: rgba(26, 26, 26, 0.6);
+  --color-circle-border: rgba(0, 0, 0, 0.1);
+  --color-dot-shadow: rgba(0, 0, 0, 0.15);
+  --color-about-blob-opacity: 0.05;
+}
+
+/* Force higher visibility/font-weight/color for taglines on light backgrounds */
+body.theme-light .tagline,
+body.theme-light [class*="tagline"] {
+  font-weight: 700 !important;
+  color: var(--color-tagline) !important;
+}
+
+/* Increase contrast for outline buttons on light background */
+body.theme-light .btn-outline {
+  color: #6e520f;
+  border-color: #6e520f;
+  font-weight: 600;
+}
+body.theme-light .btn-outline:hover {
+  background: #6e520f;
+  color: #ffffff;
+  border-color: #6e520f;
+}
+
+body.theme-light ::-webkit-scrollbar-track {
+  background: #f5f4f0;
 }

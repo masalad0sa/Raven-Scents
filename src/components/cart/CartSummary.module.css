@@ -1,6 +1,6 @@
 .wrap {
-  background: #1a1a1a;
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
   border-radius: 8px;
   padding: 1.75rem;
   position: sticky;
@@ -34,8 +34,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background: rgba(46, 204, 113, 0.08);
-  border: 1px solid rgba(46, 204, 113, 0.3);
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
   border-radius: 4px;
 }
 
@@ -89,7 +89,7 @@
   display: flex;
   justify-content: space-between;
   padding-top: 1rem;
-  border-top: 1px solid rgba(212, 175, 55, 0.15);
+  border-top: 1px solid var(--color-card-border);
   margin-bottom: 1.5rem;
 }
 

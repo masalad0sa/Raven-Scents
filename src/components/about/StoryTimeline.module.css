@@ -8,7 +8,7 @@
   position: absolute;
   right: -180px;
   top: -120px;
-  opacity: 0.12;
+  opacity: var(--color-about-blob-opacity, 0.12);
   pointer-events: none;
 }
 
@@ -16,7 +16,7 @@
   position: absolute;
   left: -150px;
   bottom: -100px;
-  opacity: 0.1;
+  opacity: var(--color-about-blob-opacity, 0.1);
   pointer-events: none;
 }
 
@@ -53,7 +53,7 @@
   border-radius: 50%;
   background: var(--color-gold);
   flex-shrink: 0;
-  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 0 0 4px var(--color-dot-shadow, rgba(212, 175, 55, 0.2));
 }
 
 .dotMobile {
@@ -68,10 +68,12 @@
 
 .year {
   font-family: var(--font-serif);
-  font-weight: 300;
+  font-weight: 500;
   color: var(--color-gold);
   display: block;
   line-height: 1;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum";
 }
 
 .yearMobile {

@@ -99,7 +99,7 @@ export function ProductInfo({ product, isMobile }: Props) {
               onClick={() => setSelectedVariant(v)}
               className={s.sizeBtn}
               style={{
-                border: `1.5px solid ${selectedVariant?.sku === v.sku ? "var(--color-gold)" : "rgba(255,255,255,0.12)"}`,
+                border: `1.5px solid ${selectedVariant?.sku === v.sku ? "var(--color-gold)" : "var(--color-card-border)"}`,
                 background:
                   selectedVariant?.sku === v.sku
                     ? "rgba(212,175,55,0.08)"
@@ -147,7 +147,7 @@ export function ProductInfo({ product, isMobile }: Props) {
           className={s.addToCartBtn}
           style={{
             background: added ? "rgba(39,174,96,0.9)" : "var(--color-text)",
-            color: added ? "#fff" : "#0d0d0d",
+            color: added ? "#fff" : "var(--color-bg)",
           }}
         >
           <ShoppingBag size={14} />
@@ -160,7 +160,7 @@ export function ProductInfo({ product, isMobile }: Props) {
           className={s.wishlistBtn}
           style={{
             background: wishlisted ? "rgba(231,76,60,0.08)" : "transparent",
-            border: `1.5px solid ${wishlisted ? "#E74C3C" : "rgba(255,255,255,0.15)"}`,
+            border: `1.5px solid ${wishlisted ? "#E74C3C" : "var(--color-card-border)"}`,
             color: wishlisted ? "#E74C3C" : "var(--color-muted)",
           }}
         >

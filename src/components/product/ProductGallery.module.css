@@ -24,7 +24,7 @@
   border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
-  background: #1a1a1a;
+  background: var(--color-surface);
   padding: 0;
   transition: border-color 0.2s;
   flex-shrink: 0;
@@ -40,7 +40,7 @@
   flex: 1;
   border-radius: 8px;
   overflow: hidden;
-  background: #1a1a1a;
+  background: var(--color-surface);
   position: relative;
 }
 
