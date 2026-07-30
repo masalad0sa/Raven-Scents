@@ -6,6 +6,7 @@ import {
   cancelOrder,
   getRazorpayKey,
   handleRazorpayWebhook,
+  mockCheckout,
 } from '../controllers/payments';
 
 const router = Router();
@@ -16,6 +17,9 @@ router.get('/key', getRazorpayKey);
 // Create a Razorpay order — atomically reserves stock before payment opens
 // (optional auth — guest checkout supported)
 router.post('/create-order', optionalAuth, createPaymentOrder);
+
+// Mock checkout for testing/debugging (bypasses Razorpay completely)
+router.post('/mock-checkout', optionalAuth, mockCheckout);
 
 // Verify payment after Razorpay checkout completes
 router.post('/verify', optionalAuth, verifyPayment);
