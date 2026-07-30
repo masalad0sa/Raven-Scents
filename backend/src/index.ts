@@ -20,7 +20,7 @@ app.use(helmet());
 
 // ── HTTP Request Logger ─────────────────────────────
 // dev format: METHOD /path STATUS time - bytes
-app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173",
@@ -68,10 +68,10 @@ app.use((_req, res) => {
 // ── Error Handler ───────────────────────────────────
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`\n🚀 Raven API running at http://localhost:${PORT}`);
-  console.log(`   Health: http://localhost:${PORT}/health`);
-  console.log(`   Products: http://localhost:${PORT}/api/products\n`);
+app.listen(Number(PORT), "0.0.0.0", () => {
+  console.log(`\n🚀 Raven API running on port ${PORT}`);
+  console.log(`   Health: /health`);
+  console.log(`   Products: /api/products\n`);
 });
 
 export default app;
