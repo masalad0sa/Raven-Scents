@@ -2,17 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
-  ShoppingBag,
-  DollarSign,
-  TrendingUp,
-  Clock,
   Eye,
   ChevronLeft,
   ChevronRight,
   Package,
-  ArrowUpRight,
-  ArrowDownRight,
-  Minus,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import { adminOrdersApi } from "../../lib/api";
@@ -20,11 +15,11 @@ import { useAuthStore } from "../../store/authStore";
 import AdminNav from "../../components/admin/AdminNav";
 import type {
   AdminOrder,
-  OrderStats,
   AdminOrderFilters,
   OrderStatus,
 } from "../../types";
 import s from "./AdminOrders.module.css";
+import { motion, AnimatePresence } from "framer-motion";
 
 // ── Status Config ─────────────────────────────────────────
 const STATUS_CONFIG: Record<
@@ -73,7 +68,6 @@ function formatCurrency(amount: number) {
 }
 
 function getCustomerName(order: AdminOrder): string {
-  // Try customer profile first, then shipping address
   if (order.customer?.full_name) return order.customer.full_name;
   const addr = order.shipping_addr || order.shipping_address;
   if (addr?.full_name) return addr.full_name;
@@ -88,7 +82,6 @@ function getCustomerEmail(order: AdminOrder): string {
 // Simple client-side cache to prevent reloading/flashing on navigate back
 let cachedOrdersIsAdmin: boolean | null = null;
 let cachedOrders: AdminOrder[] = [];
-let cachedOrdersStats: OrderStats | null = null;
 let cachedTotalOrders = 0;
 let cachedTotalPages = 1;
 
@@ -102,7 +95,6 @@ export default function AdminOrders() {
 
   // Data
   const [orders, setOrders] = useState<AdminOrder[]>(cachedOrders);
-  const [stats, setStats] = useState<OrderStats | null>(cachedOrdersStats);
   const [loading, setLoading] = useState(cachedOrders.length === 0);
   const [error, setError] = useState<string | null>(null);
 
@@ -121,6 +113,21 @@ export default function AdminOrders() {
   // Debounced search
   const [searchInput, setSearchInput] = useState("");
 
+  // Theme support
+  const [isLight, setIsLight] = useState(() => {
+    return localStorage.getItem("raven-theme") === "light";
+  });
+
+  useEffect(() => {
+    if (isLight) {
+      document.body.classList.add("theme-light");
+      localStorage.setItem("raven-theme", "light");
+    } else {
+      document.body.classList.remove("theme-light");
+      localStorage.setItem("raven-theme", "dark");
+    }
+  }, [isLight]);
+
   // ── Admin Check ────────────────────────────────
   useEffect(() => {
     checkAdmin();
@@ -137,7 +144,6 @@ export default function AdminOrders() {
     if (cachedOrdersIsAdmin === true) {
       setIsAdmin(true);
       loadOrders();
-      loadStats();
       return;
     }
     try {
@@ -149,7 +155,11 @@ export default function AdminOrders() {
       const admin = data?.is_admin === true;
       setIsAdmin(admin);
       cachedOrdersIsAdmin = admin;
-      if (!admin) setLoading(false);
+      if (admin) {
+        loadOrders();
+      } else {
+        setLoading(false);
+      }
     } catch {
       setIsAdmin(false);
       cachedOrdersIsAdmin = false;
@@ -178,22 +188,11 @@ export default function AdminOrders() {
     }
   }, [filters]);
 
-  const loadStats = useCallback(async () => {
-    try {
-      const data = await adminOrdersApi.getStats();
-      setStats(data);
-      cachedOrdersStats = data;
-    } catch {
-      // Stats are non-critical
-    }
-  }, []);
-
   useEffect(() => {
     if (isAdmin) {
       loadOrders();
-      loadStats();
     }
-  }, [isAdmin, loadOrders, loadStats]);
+  }, [isAdmin, loadOrders]);
 
   // ── Search debounce ────────────────────────────
   useEffect(() => {
@@ -245,68 +244,6 @@ export default function AdminOrders() {
       <AdminNav />
 
       <div className={s.content}>
-        {/* ── Stats Grid ── */}
-        {stats && (
-          <div className={s.statsGrid}>
-            <div className={s.statCard}>
-              <div className={s.statIconGold}>
-                <DollarSign size={18} />
-              </div>
-              <p className={s.statLabel}>Total Revenue</p>
-              <p className={s.statValue}>{formatCurrency(stats.totalRevenue)}</p>
-              <div
-                className={
-                  stats.revenueTrend > 0
-                    ? s.statTrendUp
-                    : stats.revenueTrend < 0
-                      ? s.statTrendDown
-                      : s.statTrendNeutral
-                }
-              >
-                {stats.revenueTrend > 0 ? (
-                  <ArrowUpRight size={12} />
-                ) : stats.revenueTrend < 0 ? (
-                  <ArrowDownRight size={12} />
-                ) : (
-                  <Minus size={12} />
-                )}
-                {Math.abs(stats.revenueTrend)}% vs last month
-              </div>
-            </div>
-
-            <div className={s.statCard}>
-              <div className={s.statIconGreen}>
-                <ShoppingBag size={18} />
-              </div>
-              <p className={s.statLabel}>Total Orders</p>
-              <p className={s.statValue}>{stats.totalOrders}</p>
-              <div className={s.statTrendNeutral}>
-                {stats.todayOrders} today
-              </div>
-            </div>
-
-            <div className={s.statCard}>
-              <div className={s.statIconBlue}>
-                <TrendingUp size={18} />
-              </div>
-              <p className={s.statLabel}>Avg Order Value</p>
-              <p className={s.statValue}>{formatCurrency(stats.avgOrderValue)}</p>
-              <div className={s.statTrendNeutral}>
-                {formatCurrency(stats.thisMonthRevenue)} this month
-              </div>
-            </div>
-
-            <div className={s.statCard}>
-              <div className={s.statIconPurple}>
-                <Clock size={18} />
-              </div>
-              <p className={s.statLabel}>Pending Orders</p>
-              <p className={s.statValue}>{stats.pendingOrders}</p>
-              <div className={s.statTrendNeutral}>Needs attention</div>
-            </div>
-          </div>
-        )}
-
         {/* ── Toolbar ── */}
         <div className={s.toolbar}>
           <div className={s.toolbarLeft}>
@@ -334,14 +271,6 @@ export default function AdminOrders() {
               }
             >
               {tab.label}
-              {stats?.statusCounts && tab.key !== "all" && (
-                <span className={s.tabCount}>
-                  {stats.statusCounts[tab.key] || 0}
-                </span>
-              )}
-              {tab.key === "all" && stats && (
-                <span className={s.tabCount}>{stats.totalOrders}</span>
-              )}
             </button>
           ))}
         </div>
@@ -516,6 +445,50 @@ export default function AdminOrders() {
           )}
         </div>
       </div>
+
+      {/* Floating golden theme toggle */}
+      <motion.button
+        onClick={() => setIsLight((prev) => !prev)}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.3, type: "spring", stiffness: 260, damping: 20 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        style={{
+          position: "fixed",
+          bottom: "2rem",
+          right: "2rem",
+          zIndex: 999,
+          width: "50px",
+          height: "50px",
+          borderRadius: "50%",
+          backgroundColor: "rgba(212, 175, 55, 0.12)",
+          border: "1px solid var(--color-gold)",
+          color: "var(--color-gold)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          boxShadow: "0 8px 32px rgba(212, 175, 55, 0.2)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          outline: "none",
+        }}
+        title={isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={isLight ? "light" : "dark"}
+            initial={{ y: -20, opacity: 0, rotate: -90 }}
+            animate={{ y: 0, opacity: 1, rotate: 0 }}
+            exit={{ y: 20, opacity: 0, rotate: 90 }}
+            transition={{ duration: 0.25 }}
+            style={{ display: "flex" }}
+          >
+            {isLight ? <Moon size={20} /> : <Sun size={20} />}
+          </motion.div>
+        </AnimatePresence>
+      </motion.button>
     </div>
   );
 }

@@ -44,7 +44,7 @@
   font-family: var(--font-serif);
   font-size: clamp(2rem, 4vw, 3.25rem);
   font-weight: 300;
-  color: var(--color-ivory);
+  color: #e8e4dc;
   line-height: 1.2;
   margin-bottom: 1.5rem;
 }

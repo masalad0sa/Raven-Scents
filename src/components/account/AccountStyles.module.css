@@ -11,8 +11,8 @@
 
 .formInput {
   width: 100%;
-  background: #1a1a1a;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
   border-radius: 6px;
   padding: 0.7rem 1rem;
   color: var(--color-text);
@@ -42,7 +42,7 @@
   align-items: center;
   gap: 0.4rem;
   background: none;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid var(--color-card-border);
   border-radius: 6px;
   padding: 0.4rem 0.8rem;
   color: var(--color-text-muted);
@@ -91,7 +91,7 @@
   align-items: center;
   gap: 0.4rem;
   background: none;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid var(--color-card-border);
   border-radius: 6px;
   padding: 0.6rem 1rem;
   color: var(--color-text-muted);

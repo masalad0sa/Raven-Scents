@@ -78,11 +78,16 @@ export function Header() {
         className={s.header}
         style={{
           transform: hidden ? "translateY(-100%)" : "translateY(0)",
-          background: scrolled ? "rgba(13, 13, 13, 0.92)" : "transparent",
+          background: scrolled ? "var(--color-header-bg)" : "transparent",
           backdropFilter: scrolled ? "blur(16px)" : "none",
           borderBottom: scrolled
-            ? "1px solid rgba(212, 175, 55, 0.15)"
+            ? "1px solid var(--color-header-border)"
             : "none",
+          ...((location.pathname === "/" && !scrolled) ? {
+            color: "#e8e4dc",
+            "--color-text": "#e8e4dc",
+            "--color-text-muted": "rgba(232, 228, 220, 0.65)",
+          } : {}) as React.CSSProperties
         }}
       >
         <div className={`${s.headerInner} container`}>
@@ -94,8 +99,7 @@ export function Header() {
           {/* Desktop Nav */}
           <nav className={s.desktopNav}>
             {[
-              { label: "Shop", to: "/shop" },
-              { label: "Collections", to: "/shop?category=eau-de-parfum" },
+              { label: "Collections", to: "/shop" },
               { label: "About", to: "/about" },
             ].map((item) => (
               <Link
@@ -180,6 +184,17 @@ export function Header() {
                       exit={{ opacity: 0, y: -8, scale: 0.97 }}
                       transition={{ duration: 0.15 }}
                       className={s.dropdown}
+                      style={{
+                        // Explicitly re-declare the colour tokens the hero header
+                        // overrides via inline style. This ensures the dropdown
+                        // always uses the correct body-level values.
+                        "--color-text": document.body.classList.contains("theme-light")
+                          ? "#1a1a1a"
+                          : "#e8e4dc",
+                        "--color-text-muted": document.body.classList.contains("theme-light")
+                          ? "#5e5954"
+                          : "#9a9590",
+                      } as React.CSSProperties}
                     >
                       <p className={s.dropdownEmail}>{user.email}</p>
                       {[
@@ -227,7 +242,6 @@ export function Header() {
             className={s.mobileNav}
           >
             {[
-              { label: "Shop", to: "/shop" },
               { label: "Collections", to: "/shop" },
               { label: "About", to: "/about" },
             ].map((item) => (

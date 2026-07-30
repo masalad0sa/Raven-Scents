@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 1.5rem 1.25rem;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid var(--color-card-border);
 }
 
 .drawerTitle {
@@ -15,9 +15,10 @@
 
 .drawerCount {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-size: 0.68rem;
   letter-spacing: 0.1em;
-  color: var(--color-muted);
+  color: var(--color-text);
+  font-weight: 700;
   margin-top: 0.2rem;
 }
 
@@ -32,14 +33,15 @@
 .shippingBar {
   padding: 0.75rem 1.5rem;
   background: rgba(212, 175, 55, 0.08);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  border-bottom: 1px solid var(--color-card-border);
 }
 
 .shippingText {
   font-family: var(--font-display);
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   letter-spacing: 0.08em;
-  color: var(--color-muted);
+  color: var(--color-text);
+  font-weight: 600;
 }
 
 .shippingHighlight {
@@ -48,7 +50,7 @@
 
 .progressTrack {
   height: 3px;
-  background: #333;
+  background: var(--color-card-border);
   border-radius: 2px;
   margin-top: 0.5rem;
 }
@@ -103,7 +105,7 @@
   display: flex;
   gap: 1rem;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  border-bottom: 1px solid var(--color-card-border);
 }
 
 .itemImage {
@@ -152,7 +154,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #333;
+  border: 1px solid var(--color-card-border);
   border-radius: 4px;
   padding: 0.25rem 0.5rem;
 }
@@ -203,8 +205,8 @@
 
 .drawerFooter {
   padding: 1.25rem 1.5rem;
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
-  background: #0d0d0d;
+  border-top: 1px solid var(--color-card-border);
+  background: var(--color-bg);
 }
 
 .summaryRow {

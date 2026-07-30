@@ -13,6 +13,7 @@ interface Props {
   onEditShipping: () => void;
   onBack: () => void;
   onPlace: () => void;
+  onPlaceMock?: () => void;
   placing: boolean;
 }
 
@@ -21,6 +22,7 @@ export function ReviewStep({
   onEditShipping,
   onBack,
   onPlace,
+  onPlaceMock,
   placing,
 }: Props) {
   return (
@@ -55,7 +57,7 @@ export function ReviewStep({
           Secure payment via Razorpay — UPI, Cards, Wallets, Net Banking
         </p>
       </div>
-      <div className={s.actions}>
+      <div className={s.actions} style={{ flexWrap: "wrap", gap: "0.75rem" }}>
         <button onClick={onBack} className="btn btn-outline">
           ← Back
         </button>
@@ -67,6 +69,20 @@ export function ReviewStep({
         >
           {placing ? "Processing..." : "💳 Pay Now"}
         </button>
+        {onPlaceMock && (
+          <button
+            onClick={onPlaceMock}
+            className="btn"
+            disabled={placing}
+            style={{
+              opacity: placing ? 0.7 : 1,
+              backgroundColor: "var(--color-success, #2ecc71)",
+              color: "#fff",
+            }}
+          >
+            {placing ? "Processing..." : "⚡ Mock Payment (Test)"}
+          </button>
+        )}
       </div>
     </div>
   );

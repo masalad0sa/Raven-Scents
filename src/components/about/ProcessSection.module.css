@@ -1,5 +1,5 @@
 .section {
-  background: var(--color-primary);
+  background: var(--color-bg);
   overflow: hidden;
   position: relative;
 }
@@ -8,7 +8,7 @@
   position: absolute;
   right: -100px;
   bottom: -100px;
-  opacity: 0.15;
+  opacity: var(--color-about-blob-opacity, 0.15);
   pointer-events: none;
 }
 
@@ -30,7 +30,7 @@
   font-family: var(--font-serif);
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 300;
-  color: var(--color-ivory);
+  color: var(--color-text);
   line-height: 1.15;
   margin-bottom: 1.5rem;
 }
@@ -60,7 +60,7 @@
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-ivory);
+  color: var(--color-text);
   font-weight: 600;
   margin-bottom: 0.3rem;
 }
@@ -68,7 +68,7 @@
 .stepDesc {
   font-family: var(--font-sans);
   font-size: 0.85rem;
-  color: rgba(232, 228, 220, 0.55);
+  color: var(--color-about-process-desc, rgba(232, 228, 220, 0.55));
   line-height: 1.75;
 }
 

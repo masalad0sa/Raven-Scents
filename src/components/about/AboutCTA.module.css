@@ -10,7 +10,7 @@
   left: -100px;
   top: 50%;
   transform: translateY(-50%);
-  opacity: 0.13;
+  opacity: var(--color-about-blob-opacity, 0.13);
   pointer-events: none;
 }
 
@@ -19,7 +19,7 @@
   right: -120px;
   top: 50%;
   transform: translateY(-50%);
-  opacity: 0.1;
+  opacity: var(--color-about-blob-opacity, 0.1);
   pointer-events: none;
 }
 

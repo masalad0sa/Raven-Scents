@@ -56,8 +56,8 @@ export function CartItemsList({
                 alt={item.product.name}
                 className={s.productImg}
                 style={{
-                  width: isMobile ? 64 : 72,
-                  height: isMobile ? 64 : 72,
+                  width: isMobile ? 76 : 96,
+                  height: isMobile ? 76 : 96,
                 }}
               />
             </Link>
@@ -66,7 +66,7 @@ export function CartItemsList({
               <Link to={`/product/${item.product.slug}`}>
                 <h3
                   className={s.productName}
-                  style={{ fontSize: isMobile ? "0.9rem" : "1rem" }}
+                  style={{ fontSize: isMobile ? "0.98rem" : "1.15rem" }}
                 >
                   {item.product.name}
                 </h3>

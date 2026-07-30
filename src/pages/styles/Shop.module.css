@@ -5,7 +5,7 @@
 }
 
 .banner {
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid var(--color-header-border);
   background: var(--color-surface);
   padding: 2rem 0;
 }
@@ -102,10 +102,10 @@
   width: 240px;
   max-width: 240px;
   flex-shrink: 0;
-  background: #1a1a1a;
+  background: var(--color-surface);
   border-radius: 6px;
   padding: 1.5rem;
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--color-card-border);
   position: sticky;
   top: 92px;
   max-height: calc(100vh - 110px);
@@ -173,7 +173,7 @@
 .filterSection {
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  border-bottom: 1px solid var(--color-card-border);
 }
 
 .filterSectionTitle {
