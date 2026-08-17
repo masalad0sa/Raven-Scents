@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check, Sun, Moon } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
 import { useAuthStore } from "../store/authStore";
-import { paymentsApi } from "../lib/api";
+import { paymentsApi, shippingSettingsApi, type ShippingSettings } from "../lib/api";
 import { supabase } from "../lib/supabase";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
@@ -78,8 +78,39 @@ export default function Checkout() {
     }
   })();
 
+  const [shippingSettings, setShippingSettings] = useState<ShippingSettings>({
+    id: "default-shipping-settings",
+    free_shipping_threshold: 0,
+    standard_shipping_fee: 0,
+    currency: "INR",
+    is_active: true,
+    updated_at: new Date().toISOString(),
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    shippingSettingsApi
+      .get()
+      .then((settings) => {
+        if (active) setShippingSettings(settings);
+      })
+      .catch(() => {
+        if (active) {
+          setShippingSettings((prev) => ({ ...prev, currency: "INR" }));
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const subtotal = getSubtotal();
-  const shippingFee = subtotal >= 5000 ? 0 : 299;
+  const shippingFee =
+    subtotal >= shippingSettings.free_shipping_threshold
+      ? 0
+      : shippingSettings.standard_shipping_fee;
   const discount = savedCoupon
     ? Math.round((subtotal * savedCoupon.pct) / 100)
     : 0;

@@ -21,6 +21,12 @@ const notesSchema = z.object({
   notes: z.string().max(2000),
 });
 
+const shippingSettingsSchema = z.object({
+  free_shipping_threshold: z.number().int().min(0).default(5000),
+  standard_shipping_fee: z.number().int().min(0).default(299),
+  currency: z.string().min(2).max(10).default('INR'),
+});
+
 // Valid status transitions
 const STATUS_TRANSITIONS: Record<string, string[]> = {
   pending_payment: ['confirmed', 'cancelled'],
@@ -327,6 +333,70 @@ export async function updateOrderNotes(req: AuthRequest, res: Response) {
     if (!updated) throw new AppError(404, 'Order not found');
 
     res.json(updated);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+// ── GET /api/admin/shipping-settings ──────────────────────
+export async function getShippingSettings(_req: AuthRequest, res: Response) {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('shipping_settings')
+      .select('*')
+      .eq('is_active', true)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+
+    if (!data) {
+      const fallback = {
+        id: 'default',
+        free_shipping_threshold: 5000,
+        standard_shipping_fee: 299,
+        currency: 'INR',
+        is_active: true,
+        updated_at: new Date().toISOString(),
+      };
+      return res.json(fallback);
+    }
+
+    res.json(data);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+// ── PATCH /api/admin/shipping-settings ─────────────────────
+export async function updateShippingSettings(req: AuthRequest, res: Response) {
+  try {
+    const parsed = shippingSettingsSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: parsed.error.errors[0]?.message || 'Invalid shipping settings',
+      });
+    }
+
+    const payload = {
+      ...parsed.data,
+      updated_at: new Date().toISOString(),
+      is_active: true,
+    };
+
+    const { data, error } = await supabaseAdmin
+      .from('shipping_settings')
+      .upsert({ ...payload, id: 'default-shipping-settings' }, {
+        onConflict: 'id',
+        ignoreDuplicates: false,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    res.json(data);
   } catch (err) {
     handleError(err, res);
   }

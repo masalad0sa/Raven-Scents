@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCartStore } from "../../store/cartStore";
 import { Link, useNavigate } from "react-router-dom";
+import { shippingSettingsApi, type ShippingSettings } from "../../lib/api";
 import s from "./CartDrawer.module.css";
 
 export function CartDrawer() {
@@ -17,9 +18,39 @@ export function CartDrawer() {
   const items = rawItems.filter((i) => i?.product && i?.variant);
   const subtotal = getSubtotal();
   const navigate = useNavigate();
+  const [shippingSettings, setShippingSettings] = useState<ShippingSettings>({
+    id: "default-shipping-settings",
+    free_shipping_threshold: 0,
+    standard_shipping_fee: 0,
+    currency: "INR",
+    is_active: true,
+    updated_at: new Date().toISOString(),
+  });
 
-  const freeShippingThreshold = 5000;
-  const shippingFee = subtotal >= freeShippingThreshold ? 0 : 299;
+  useEffect(() => {
+    let active = true;
+
+    shippingSettingsApi
+      .get()
+      .then((settings) => {
+        if (active) setShippingSettings(settings);
+      })
+      .catch(() => {
+        if (active) {
+          setShippingSettings((prev) => ({ ...prev, currency: "INR" }));
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const freeShippingThreshold = shippingSettings.free_shipping_threshold;
+  const shippingFee =
+    subtotal >= freeShippingThreshold
+      ? 0
+      : shippingSettings.standard_shipping_fee;
   const total = subtotal + shippingFee;
 
   useEffect(() => {

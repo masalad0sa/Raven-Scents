@@ -7,6 +7,8 @@ import {
   getOrderStats,
   updateOrderStatus,
   updateOrderNotes,
+  getShippingSettings,
+  updateShippingSettings,
   getAdminAnalytics,
 } from '../controllers/admin';
 
@@ -14,6 +16,10 @@ const router = Router();
 
 // All admin routes require auth + admin check
 router.use(requireAuth, requireAdmin);
+
+// Shipping settings
+router.get('/shipping-settings', getShippingSettings);
+router.patch('/shipping-settings', updateShippingSettings);
 
 // Analytics
 router.get('/analytics', getAdminAnalytics);
