@@ -4,7 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check, Sun, Moon } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
 import { useAuthStore } from "../store/authStore";
-import { paymentsApi, shippingSettingsApi, type ShippingSettings } from "../lib/api";
+import {
+  paymentsApi,
+  shippingSettingsApi,
+  type ShippingSettings,
+} from "../lib/api";
 import { supabase } from "../lib/supabase";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
@@ -207,7 +211,8 @@ export default function Checkout() {
             // 4. Save address for next time (if logged in)
             const user = useAuthStore.getState().user;
             if (user) {
-              const fullName = `${shipping.firstName} ${shipping.lastName}`.trim();
+              const fullName =
+                `${shipping.firstName} ${shipping.lastName}`.trim();
               // Check if address already saved (by street + pincode)
               const { data: existing } = await supabase
                 .from("user_addresses")
@@ -271,8 +276,8 @@ export default function Checkout() {
       const message =
         err instanceof Error && err.message.includes("OUT_OF_STOCK")
           ? "Sorry, one or more items in your cart are out of stock. Please update your cart."
-          : (err instanceof Error ? err.message : null) ??
-            "Failed to initiate payment. Please try again.";
+          : ((err instanceof Error ? err.message : null) ??
+            "Failed to initiate payment. Please try again.");
       alert(message);
       setPlacing(false);
     }
@@ -341,8 +346,8 @@ export default function Checkout() {
       const message =
         err instanceof Error && err.message.includes("OUT_OF_STOCK")
           ? "Sorry, one or more items in your cart are out of stock. Please update your cart."
-          : (err instanceof Error ? err.message : null) ??
-            "Failed to place order. Please try again.";
+          : ((err instanceof Error ? err.message : null) ??
+            "Failed to place order. Please try again.");
       alert(message);
       setPlacing(false);
     }

@@ -522,10 +522,10 @@ export interface ShippingSettingsUpdate {
 }
 
 export const shippingSettingsApi = {
-  get: () => apiFetch<ShippingSettings>('/admin/shipping-settings'),
+  get: () => apiFetch<ShippingSettings>("/admin/shipping-settings"),
   update: (payload: ShippingSettingsUpdate) =>
-    apiFetch<ShippingSettings>('/admin/shipping-settings', {
-      method: 'PATCH',
+    apiFetch<ShippingSettings>("/admin/shipping-settings", {
+      method: "PATCH",
       body: JSON.stringify(payload),
     }),
 };
