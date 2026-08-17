@@ -251,6 +251,110 @@ export async function cancelOrder(req: AuthRequest, res: Response) {
   }
 }
 
+// ── POST /api/payments/mock-checkout ──────────────────────
+// Mock checkout endpoint to bypass Razorpay for local debugging/testing.
+export async function mockCheckout(req: AuthRequest, res: Response) {
+  try {
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(403).json({
+        error: 'Mock checkout is disabled in production environments.',
+        code: 'FORBIDDEN',
+      });
+    }
+
+    const parsed = createOrderSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: parsed.error.errors[0]?.message || 'Invalid request body',
+      });
+    }
+
+    const { items, shipping_address, coupon_code, discount } = parsed.data;
+
+    // 1. Validate if WELCOME15 first order rule is met
+    if (coupon_code && coupon_code.toUpperCase().trim() === 'WELCOME15') {
+      const userId = req.userId;
+      if (!userId) {
+        return res.status(401).json({
+          error: 'Please log in to apply the first-order discount code.',
+          code: 'INVALID_COUPON',
+        });
+      }
+      const { count, error: countErr } = await supabaseAdmin
+        .from('orders')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .not('status', 'in', '("cancelled","pending_payment")');
+
+      if (countErr) throw countErr;
+      if (count && count > 0) {
+        return res.status(400).json({
+          error: 'This welcome code is only valid for your first order.',
+          code: 'INVALID_COUPON',
+        });
+      }
+    }
+
+    // 2. Create the order atomically and reserve stock
+    const { data: rpcResult, error: rpcError } = await supabaseAdmin.rpc(
+      'create_order_atomic',
+      {
+        p_user_id:       req.userId ?? null,
+        p_shipping_addr: shipping_address,
+        p_coupon_code:   coupon_code ?? null,
+        p_discount:      discount,
+        p_items:         items,
+      },
+    );
+
+    if (rpcError) {
+      if (rpcError.code === 'P0001') {
+        return res.status(409).json({
+          error: 'One or more items in your order are out of stock.',
+          code: 'OUT_OF_STOCK',
+        });
+      }
+      if (rpcError.code === 'P0002') {
+        return res.status(404).json({
+          error: 'One or more product variants could not be found.',
+          code: 'VARIANT_NOT_FOUND',
+        });
+      }
+      if (rpcError.code === 'P0004') {
+        return res.status(400).json({
+          error: rpcError.message || 'Invalid or expired coupon code.',
+          code: 'INVALID_COUPON',
+        });
+      }
+      throw rpcError;
+    }
+
+    const { order_id } = rpcResult as { order_id: string; total: number };
+    const mockPaymentId = `pay_mock_${crypto.randomBytes(8).toString('hex')}`;
+
+    // 3. Immediately mark the order as confirmed and store mock payment ID
+    const { error: updateError } = await supabaseAdmin
+      .from('orders')
+      .update({
+        status: 'confirmed',
+        razorpay_payment_id: mockPaymentId,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', order_id);
+
+    if (updateError) throw updateError;
+
+    res.status(201).json({
+      success: true,
+      order_id,
+      status: 'confirmed',
+    });
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+
 // ── GET /api/payments/key ─────────────────────────────────
 // Returns the Razorpay publishable key to the frontend
 export function getRazorpayKey(_req: AuthRequest, res: Response) {

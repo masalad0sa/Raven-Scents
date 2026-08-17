@@ -25,6 +25,7 @@ import NotFound from "./pages/NotFound";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminOrderDetail from "./pages/admin/AdminOrderDetail";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -182,6 +183,22 @@ function AppContent() {
         />
         <Route
           path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminAnalytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/analytics"
+          element={
+            <ProtectedRoute>
+              <AdminAnalytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/products"
           element={
             <ProtectedRoute>
               <AdminProducts />

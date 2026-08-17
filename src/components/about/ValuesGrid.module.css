@@ -9,7 +9,7 @@
   left: 50%;
   top: -80px;
   transform: translateX(-50%);
-  opacity: 0.1;
+  opacity: var(--color-about-blob-opacity, 0.1);
   pointer-events: none;
 }
 
@@ -42,9 +42,9 @@
 
 .card {
   padding: 2.25rem;
-  background: #1a1a1a;
+  background: var(--color-about-card-bg, #1a1a1a);
   border-radius: 8px;
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--color-about-card-border, rgba(212, 175, 55, 0.15));
   transition:
     box-shadow 0.3s,
     transform 0.3s;
@@ -59,7 +59,7 @@
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: rgba(212, 175, 55, 0.1);
+  background: var(--color-about-icon-bg, rgba(212, 175, 55, 0.1));
   display: flex;
   align-items: center;
   justify-content: center;

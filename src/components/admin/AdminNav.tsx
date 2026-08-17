@@ -1,9 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { Package, ShoppingCart } from "lucide-react";
+import { Package, ShoppingCart, BarChart3 } from "lucide-react";
 import s from "./AdminNav.module.css";
 
 const NAV_ITEMS = [
-  { path: "/admin", label: "Products", icon: Package },
+  { path: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+  { path: "/admin/products", label: "Products", icon: Package },
   { path: "/admin/orders", label: "Orders", icon: ShoppingCart },
 ];
 
@@ -11,7 +12,9 @@ export default function AdminNav() {
   const { pathname } = useLocation();
 
   const isActive = (path: string) => {
-    if (path === "/admin") return pathname === "/admin";
+    if (path === "/admin/analytics") {
+      return pathname === "/admin" || pathname === "/admin/analytics";
+    }
     return pathname.startsWith(path);
   };
 
@@ -27,7 +30,7 @@ export default function AdminNav() {
         {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
           <Link
             key={path}
-            to={path}
+            to={path === "/admin/analytics" ? "/admin" : path}
             className={isActive(path) ? s.navLinkActive : s.navLink}
           >
             <Icon size={13} />

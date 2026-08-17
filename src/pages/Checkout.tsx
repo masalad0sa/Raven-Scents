@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, Sun, Moon } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
 import { useAuthStore } from "../store/authStore";
 import { paymentsApi } from "../lib/api";
@@ -37,6 +37,24 @@ interface ShippingData {
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, getSubtotal, clearCart } = useCartStore();
+
+  const [isLight, setIsLight] = useState(() => {
+    return localStorage.getItem("raven-theme") === "light";
+  });
+
+  useEffect(() => {
+    if (isLight) {
+      document.body.classList.add("theme-light");
+      localStorage.setItem("raven-theme", "light");
+    } else {
+      document.body.classList.remove("theme-light");
+      localStorage.setItem("raven-theme", "dark");
+    }
+    return () => {
+      document.body.classList.remove("theme-light");
+    };
+  }, [isLight]);
+
   const [step, setStep] = useState<Step>("shipping");
   const [shipping, setShipping] = useState<ShippingData>({
     firstName: "",
@@ -229,6 +247,76 @@ export default function Checkout() {
     }
   };
 
+  const handlePlaceOrderMock = async () => {
+    setPlacing(true);
+    try {
+      const payload = {
+        items: items.map((item) => ({
+          product_id: item.product.id,
+          variant_id: item.variant.id || "",
+          quantity: item.quantity,
+        })),
+        shipping_address: {
+          full_name: `${shipping.firstName} ${shipping.lastName}`.trim(),
+          address_line1: shipping.address,
+          city: shipping.city,
+          state: shipping.state,
+          pincode: shipping.pincode,
+          phone: shipping.phone,
+        },
+        discount,
+        coupon_code: savedCoupon?.code || null,
+      };
+
+      // 1. Call mock payment checkout endpoint
+      const result = await paymentsApi.mockCheckout(payload);
+
+      if (!result.success) {
+        throw new Error("Failed to complete mock checkout.");
+      }
+
+      // 2. Save address for next time (if logged in)
+      const user = useAuthStore.getState().user;
+      if (user) {
+        const fullName = `${shipping.firstName} ${shipping.lastName}`.trim();
+        const { data: existing } = await supabase
+          .from("user_addresses")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("street", shipping.address)
+          .eq("postal_code", shipping.pincode)
+          .maybeSingle();
+
+        if (!existing) {
+          await supabase.from("user_addresses").insert({
+            user_id: user.id,
+            full_name: fullName,
+            phone: shipping.phone,
+            street: shipping.address,
+            city: shipping.city,
+            state: shipping.state,
+            postal_code: shipping.pincode,
+            country: "India",
+          });
+        }
+      }
+
+      // 3. Success — clear cart & navigate
+      sessionStorage.removeItem("raven_coupon");
+      clearCart();
+      navigate("/order-confirmation");
+    } catch (err: unknown) {
+      console.error("Failed to complete mock checkout:", err);
+      const message =
+        err instanceof Error && err.message.includes("OUT_OF_STOCK")
+          ? "Sorry, one or more items in your cart are out of stock. Please update your cart."
+          : (err instanceof Error ? err.message : null) ??
+            "Failed to place order. Please try again.";
+      alert(message);
+      setPlacing(false);
+    }
+  };
+
   const inputGroup = (
     label: string,
     field: string,
@@ -327,6 +415,7 @@ export default function Checkout() {
                   onEditShipping={() => setStep("shipping")}
                   onBack={() => setStep("shipping")}
                   onPlace={handlePlaceOrder}
+                  onPlaceMock={handlePlaceOrderMock}
                   placing={placing}
                 />
               )}
@@ -345,6 +434,50 @@ export default function Checkout() {
         </div>
       </main>
       <Footer />
+
+      {/* Floating Golden Theme Toggle */}
+      <motion.button
+        onClick={() => setIsLight((prev) => !prev)}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.5, type: "spring", stiffness: 260, damping: 20 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        style={{
+          position: "fixed",
+          bottom: "2rem",
+          right: "2rem",
+          zIndex: 999,
+          width: "50px",
+          height: "50px",
+          borderRadius: "50%",
+          backgroundColor: "rgba(212, 175, 55, 0.12)",
+          border: "1px solid var(--color-gold)",
+          color: "var(--color-gold)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          boxShadow: "0 8px 32px rgba(212, 175, 55, 0.2)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          outline: "none",
+        }}
+        title={isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={isLight ? "light" : "dark"}
+            initial={{ y: -20, opacity: 0, rotate: -90 }}
+            animate={{ y: 0, opacity: 1, rotate: 0 }}
+            exit={{ y: 20, opacity: 0, rotate: 90 }}
+            transition={{ duration: 0.25 }}
+            style={{ display: "flex" }}
+          >
+            {isLight ? <Moon size={20} /> : <Sun size={20} />}
+          </motion.div>
+        </AnimatePresence>
+      </motion.button>
     </>
   );
 }

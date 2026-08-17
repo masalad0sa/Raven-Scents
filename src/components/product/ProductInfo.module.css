@@ -80,7 +80,7 @@
 }
 
 .divider {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--color-card-border);
   margin-bottom: 0.9rem;
 }
 
@@ -130,7 +130,7 @@
 .qtyBox {
   display: flex;
   align-items: center;
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border: 1.5px solid var(--color-card-border);
   border-radius: 4px;
   overflow: hidden;
   flex-shrink: 0;
@@ -149,7 +149,7 @@
 .qtyBtns {
   display: flex;
   flex-direction: column;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid var(--color-card-border);
 }
 
 .qtyBtn {
@@ -165,7 +165,7 @@
 }
 
 .qtyBtnTop {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--color-card-border);
 }
 
 .addToCartBtn {
@@ -205,8 +205,8 @@
 }
 
 .charItem {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
   border-radius: 6px;
   padding: 0.45rem 0.6rem;
 }

@@ -331,3 +331,140 @@ export async function updateOrderNotes(req: AuthRequest, res: Response) {
     handleError(err, res);
   }
 }
+
+// ── GET /api/admin/analytics ──────────────────────────────
+export async function getAdminAnalytics(req: AuthRequest, res: Response) {
+  try {
+    // 1. Get all orders for general stats & timeline
+    const { data: orders, error: ordersErr } = await supabaseAdmin
+      .from('orders')
+      .select('id, status, total, discount, created_at')
+      .order('created_at', { ascending: true });
+
+    if (ordersErr) throw ordersErr;
+
+    const allOrders = orders || [];
+
+    // 2. Fetch order items with product details for product-level analytics
+    const { data: items, error: itemsErr } = await supabaseAdmin
+      .from('order_items')
+      .select('quantity, unit_price, products(id, name, scent_family, images)');
+
+    if (itemsErr) throw itemsErr;
+    const allItems = items || [];
+
+    // Calculate core statistics
+    const activeOrders = allOrders.filter(
+      (o: any) => !['cancelled', 'refunded', 'pending_payment'].includes(o.status)
+    );
+    const totalOrders = allOrders.length;
+    const totalRevenue = activeOrders.reduce((sum: number, o: any) => sum + (o.total || 0), 0);
+    const avgOrderValue = activeOrders.length > 0 ? Math.round(totalRevenue / activeOrders.length) : 0;
+    const totalDiscount = allOrders.reduce((sum: number, o: any) => sum + (o.discount || 0), 0);
+
+    // Status distribution
+    const statusDistribution: Record<string, number> = {};
+    allOrders.forEach((o: any) => {
+      statusDistribution[o.status] = (statusDistribution[o.status] || 0) + 1;
+    });
+
+    // Timeline calculations: group active orders by date (last 30 days)
+    const timelineData: Record<string, { date: string; revenue: number; orders: number }> = {};
+    
+    // Pre-populate last 30 days to ensure no gaps
+    const now = new Date();
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+      const dateStr = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+      const isoStr = d.toISOString().split('T')[0];
+      timelineData[isoStr] = { date: dateStr, revenue: 0, orders: 0 };
+    }
+
+    activeOrders.forEach((o: any) => {
+      const isoStr = o.created_at.split('T')[0];
+      if (timelineData[isoStr]) {
+        timelineData[isoStr].revenue += o.total || 0;
+        timelineData[isoStr].orders += 1;
+      }
+    });
+
+    const timeline = Object.values(timelineData);
+
+    // Top selling products & Scent family counts
+    const productCounts: Record<string, { name: string; qty: number; revenue: number; image: string | null }> = {};
+    const scentFamilyCounts: Record<string, { family: string; qty: number; revenue: number }> = {};
+
+    allItems.forEach((item: any) => {
+      const qty = item.quantity || 1;
+      const price = item.unit_price || 0;
+      const rev = qty * price;
+      const prod = Array.isArray(item.products) ? item.products[0] : item.products;
+      
+      if (prod) {
+        const name = prod.name || "Unknown Product";
+        const family = prod.scent_family || "Other";
+        const image = prod.images?.[0] || null;
+
+        // Products
+        if (!productCounts[name]) {
+          productCounts[name] = { name, qty: 0, revenue: 0, image };
+        }
+        productCounts[name].qty += qty;
+        productCounts[name].revenue += rev;
+
+        // Scent Family
+        if (!scentFamilyCounts[family]) {
+          scentFamilyCounts[family] = { family, qty: 0, revenue: 0 };
+        }
+        scentFamilyCounts[family].qty += qty;
+        scentFamilyCounts[family].revenue += rev;
+      }
+    });
+
+    const topProducts = Object.values(productCounts)
+      .sort((a, b) => b.qty - a.qty)
+      .slice(0, 5);
+
+    const scentFamilies = Object.values(scentFamilyCounts)
+      .sort((a, b) => b.qty - a.qty);
+
+    // Fetch low stock alerts (variants with stock <= 5)
+    const { data: lowStockData } = await supabaseAdmin
+      .from('product_variants')
+      .select('id, size, unit, stock, sku, products(id, name, slug, images)')
+      .lte('stock', 5)
+      .order('stock', { ascending: true })
+      .limit(10);
+
+    const lowStockAlerts = (lowStockData || []).map((item: any) => {
+      const prod = Array.isArray(item.products) ? item.products[0] : item.products;
+      return {
+        id: item.id,
+        size: item.size,
+        unit: item.unit,
+        stock: item.stock,
+        sku: item.sku,
+        productName: prod?.name || "Unknown Product",
+        productImage: prod?.images?.[0] || null,
+      };
+    });
+
+    res.json({
+      summary: {
+        totalOrders,
+        totalRevenue,
+        avgOrderValue,
+        totalDiscount,
+        pendingOrders: (statusDistribution['pending_payment'] || 0) + (statusDistribution['confirmed'] || 0),
+      },
+      statusDistribution,
+      timeline,
+      topProducts,
+      scentFamilies,
+      lowStockAlerts,
+    });
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+

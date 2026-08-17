@@ -5,9 +5,21 @@ import s from "./AboutHero.module.css";
 export function AboutHero() {
   return (
     <section className={s.section}>
+      {/* Background Video */}
+      <video
+        className={s.bgVideo}
+        src="/video2.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
+      <div className={s.videoOverlay} />
+
       <div className={s.blobWrap}>
         <GradientBlob size={900} reactToMouse={true} />
       </div>
+
       <div className={s.circlesWrap}>
         {[700, 450, 220].map((size, i) => (
           <div
@@ -19,14 +31,15 @@ export function AboutHero() {
               top: "50%",
               right: "-10%",
               transform: "translateY(-50%)",
-              borderColor: "rgba(212,175,55,0.1)",
+              borderColor: "var(--color-circle-border, rgba(212,175,55,0.1))",
             }}
           />
         ))}
       </div>
+
       <div
         className="container"
-        style={{ position: "relative", zIndex: 1, padding: "6rem 2rem" }}
+        style={{ position: "relative", zIndex: 2, padding: "6rem 2rem" }}
       >
         <motion.div
           initial={{ opacity: 0, y: 30 }}

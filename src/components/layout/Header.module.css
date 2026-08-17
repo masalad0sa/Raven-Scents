@@ -161,12 +161,20 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background: #111;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
   border-radius: 10px;
   padding: 0.5rem;
-  min-width: 180px;
+  min-width: 200px;
   z-index: 200;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Reset the hero-header's inline --color-text override so dropdown text
+   always reads the body-level (correct) colour tokens */
+.dropdown,
+.dropdown * {
+  --color-text-override: initial;
 }
 
 .dropdownEmail {
@@ -175,7 +183,7 @@
   color: var(--color-text-muted);
   padding: 0.4rem 0.75rem 0.75rem;
   margin: 0;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  border-bottom: 1px solid var(--color-card-border);
 }
 
 .dropdownLink {
@@ -203,7 +211,7 @@
   width: 100%;
   background: none;
   border: none;
-  border-top: 1px solid rgba(212, 175, 55, 0.1);
+  border-top: 1px solid var(--color-card-border);
   border-radius: 0;
   padding: 0.6rem 0.75rem;
   color: #f87171;

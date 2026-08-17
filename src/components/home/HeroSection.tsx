@@ -171,7 +171,7 @@ export function HeroSection({
             initial="hidden"
             animate="visible"
             custom={1}
-            className={s.tagline}
+            className={s.heroSubtitle}
           >
             New Collection — 2025
           </motion.p>
@@ -231,24 +231,6 @@ export function HeroSection({
           playsInline
         />
         <div className={s.rightVideoOverlay} />
-
-        {/* Concentric Circle HUD rings */}
-        <div className={s.circlesWrap}>
-          {[600, 400, 200].map((size, i) => (
-            <div
-              key={i}
-              className="hud-circle"
-              style={{
-                width: size,
-                height: size,
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                borderColor: "rgba(212, 175, 55, 0.18)",
-              }}
-            />
-          ))}
-        </div>
 
         {/* Horizontal Auto-Slider Product Card */}
         <div

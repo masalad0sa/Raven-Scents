@@ -5,9 +5,9 @@
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(13, 13, 13, 0.97);
+  background: var(--color-header-bg);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid var(--color-header-border);
   height: 60px;
   display: flex;
   align-items: center;
@@ -18,14 +18,14 @@
 .adminLogo {
   font-family: var(--font-sans);
   font-size: 1.1rem;
-  color: #d4af37;
+  color: var(--color-gold);
   letter-spacing: 0.05em;
   cursor: pointer;
   text-decoration: none;
 }
 
 .adminBadge {
-  color: #9a9590;
+  color: var(--color-text-muted);
   font-size: 0.65rem;
   letter-spacing: 0.25em;
   font-family: var(--font-sans);
@@ -33,7 +33,7 @@
 }
 
 .adminSep {
-  color: rgba(212, 175, 55, 0.3);
+  color: var(--color-card-border);
   font-family: var(--font-sans);
   font-size: 0.6rem;
   margin: 0 1rem;
@@ -55,7 +55,7 @@
   font-size: 0.62rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #9a9590;
+  color: var(--color-text-muted);
   text-decoration: none;
   border-bottom: 2px solid transparent;
   transition: color 0.2s, border-color 0.2s, background 0.2s;
@@ -67,14 +67,14 @@
 }
 
 .navLink:hover {
-  color: #e8e4dc;
-  background: rgba(212, 175, 55, 0.04);
+  color: var(--color-text);
+  background: rgba(212, 175, 55, 0.06);
 }
 
 .navLinkActive {
   composes: navLink;
-  color: #e8e4dc;
-  border-bottom-color: #d4af37;
+  color: var(--color-text);
+  border-bottom-color: var(--color-gold);
 }
 
 .spacer {
@@ -83,10 +83,10 @@
 
 .storeBtn {
   background: none;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid var(--color-card-border);
   border-radius: 4px;
   cursor: pointer;
-  color: #9a9590;
+  color: var(--color-text-muted);
   padding: 0.35rem 0.85rem;
   font-family: var(--font-sans);
   font-size: 0.6rem;
@@ -96,6 +96,6 @@
 }
 
 .storeBtn:hover {
-  color: #d4af37;
-  border-color: rgba(212, 175, 55, 0.5);
+  color: var(--color-gold);
+  border-color: var(--color-gold);
 }

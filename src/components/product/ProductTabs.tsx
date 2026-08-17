@@ -61,7 +61,7 @@ function FragrancePyramid({
                       ? "#8a7e6b, #9a9590"
                       : "#0d0d0d, #1a1a1a"
                 })`,
-                color: index === 2 ? "var(--color-text)" : "#0d0d0d",
+                color: index === 2 ? "#ffffff" : "#0d0d0d",
               }}
             >
               <div className={s.tierHeader}>
