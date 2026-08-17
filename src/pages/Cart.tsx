@@ -7,6 +7,7 @@ import { useIsMobile } from "../hooks/useIsMobile";
 import { Header, Footer } from "../components/layout";
 import { SEO } from "../components/seo";
 import { CartItemsList, CartSummary } from "../components/cart";
+import { shippingSettingsApi, type ShippingSettings } from "../lib/api";
 import s from "./styles/Cart.module.css";
 
 export default function Cart() {
@@ -34,8 +35,39 @@ export default function Cart() {
     };
   }, [isLight]);
 
+  const [shippingSettings, setShippingSettings] = useState<ShippingSettings>({
+    id: "default-shipping-settings",
+    free_shipping_threshold: 0,
+    standard_shipping_fee: 0,
+    currency: "INR",
+    is_active: true,
+    updated_at: new Date().toISOString(),
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    shippingSettingsApi
+      .get()
+      .then((settings) => {
+        if (active) setShippingSettings(settings);
+      })
+      .catch(() => {
+        if (active) {
+          setShippingSettings((prev) => ({ ...prev, currency: "INR" }));
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const subtotal = getSubtotal();
-  const shippingFee = subtotal >= 5000 ? 0 : 299;
+  const shippingFee =
+    subtotal >= shippingSettings.free_shipping_threshold
+      ? 0
+      : shippingSettings.standard_shipping_fee;
   const discount = appliedCoupon
     ? Math.round((subtotal * appliedCoupon.pct) / 100)
     : 0;

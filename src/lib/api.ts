@@ -506,6 +506,30 @@ function toQuery(params: AdminOrderFilters): string {
   return q.toString();
 }
 
+export interface ShippingSettings {
+  id: string;
+  free_shipping_threshold: number;
+  standard_shipping_fee: number;
+  currency: string;
+  is_active: boolean;
+  updated_at: string;
+}
+
+export interface ShippingSettingsUpdate {
+  free_shipping_threshold: number;
+  standard_shipping_fee: number;
+  currency: string;
+}
+
+export const shippingSettingsApi = {
+  get: () => apiFetch<ShippingSettings>("/admin/shipping-settings"),
+  update: (payload: ShippingSettingsUpdate) =>
+    apiFetch<ShippingSettings>("/admin/shipping-settings", {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+};
+
 export const adminOrdersApi = {
   getAll: (filters: AdminOrderFilters = {}) =>
     apiFetch<PaginatedOrders>(`/admin/orders?${toQuery(filters)}`),
