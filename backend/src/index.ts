@@ -14,6 +14,16 @@ import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:3000",
+  ...(process.env.FRONTEND_URL || "")
+    .split(",")
+    .map((url) => url.trim())
+    .filter(Boolean),
+];
 
 // ── Security Middleware ─────────────────────────────
 app.use(helmet());
@@ -23,7 +33,26 @@ app.use(helmet());
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      const isDeploymentHost =
+        /^https:\/\/[a-z0-9-]+\.(vercel\.app|netlify\.app|railway\.app)$/i.test(
+          origin,
+        ) ||
+        /^https:\/\/localhost(:\d+)?$/i.test(origin) ||
+        /^https:\/\/127\.0\.0\.1(:\d+)?$/i.test(origin);
+
+      if (isDeploymentHost) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   }),
 );

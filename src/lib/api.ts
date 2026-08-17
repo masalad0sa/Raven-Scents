@@ -13,7 +13,17 @@ import type {
   OrderStats,
 } from "../types";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim();
+const BASE_API_URL =
+  configuredApiUrl &&
+  !configuredApiUrl.includes("localhost") &&
+  !configuredApiUrl.includes("127.0.0.1")
+    ? configuredApiUrl.replace(/\/$/, "")
+    : import.meta.env.DEV
+      ? "http://localhost:3001/api"
+      : "/api";
+
+const API_BASE = BASE_API_URL;
 const IS_LOCALHOST = API_BASE.includes("localhost");
 const SKIP_BACKEND = IS_LOCALHOST && !import.meta.env.DEV;
 
@@ -314,8 +324,6 @@ export const productsApi = {
   },
 };
 
-
-
 // ── Orders ──────────────────────────────────────────
 export const ordersApi = {
   create: (payload: OrderPayload) =>
@@ -502,14 +510,11 @@ export const adminOrdersApi = {
   getAll: (filters: AdminOrderFilters = {}) =>
     apiFetch<PaginatedOrders>(`/admin/orders?${toQuery(filters)}`),
 
-  getById: (id: string) =>
-    apiFetch<AdminOrderDetail>(`/admin/orders/${id}`),
+  getById: (id: string) => apiFetch<AdminOrderDetail>(`/admin/orders/${id}`),
 
-  getStats: () =>
-    apiFetch<OrderStats>("/admin/orders/stats"),
+  getStats: () => apiFetch<OrderStats>("/admin/orders/stats"),
 
-  getAnalytics: () =>
-    apiFetch<any>("/admin/analytics"),
+  getAnalytics: () => apiFetch<any>("/admin/analytics"),
 
   updateStatus: (id: string, status: string) =>
     apiFetch<Order>(`/admin/orders/${id}/status`, {
@@ -575,10 +580,13 @@ export const paymentsApi = {
     }),
 
   mockCheckout: (payload: CreatePaymentOrderPayload) =>
-    apiFetch<{ success: boolean; order_id: string; status: string }>("/payments/mock-checkout", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+    apiFetch<{ success: boolean; order_id: string; status: string }>(
+      "/payments/mock-checkout",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    ),
 
   verify: (payload: VerifyPaymentPayload) =>
     apiFetch<VerifyPaymentResponse>("/payments/verify", {
